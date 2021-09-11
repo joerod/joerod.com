@@ -10,18 +10,16 @@ html, body {
 }
 
 main {
-  margin: auto;
-  width: 50%;
-  padding: 20px;
-}
-
-main > h1 {
   text-align: center;
   width: 560px; /* you have to have a size or this method doesn't work */
   height: 315px; /* think about making these max-width instead - might give you some more responsiveness */
-
   position: absolute; /* positions out of the flow, but according to the nearest parent */
   top: 0; right: 0; /* confuse it i guess */
   bottom: 0; left: 0;
   margin: auto; /* make em equal */
+}
+
+main > h1 {
+  text-align: center;
+  font-size: 3.5em;
 }
