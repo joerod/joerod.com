@@ -2,7 +2,8 @@
   font-family: Arial, Helvetica, sans-serif;
 }
 
-html, body {
+html,
+body {
   margin: auto;
   border: 0;
   padding: 0;
@@ -13,8 +14,10 @@ main {
   text-align: center;
   width: 560px; /* you have to have a size or this method doesn't work */
   height: 315px; /* think about making these max-width instead - might give you some more responsiveness */
-  top: 0; right: 0; /* confuse it i guess */
-  bottom: 0; left: 0;
+  top: 0;
+  right: 0; /* confuse it i guess */
+  bottom: 0;
+  left: 0;
   margin: auto; /* make em equal */
 }
 
@@ -26,7 +29,7 @@ main > h1 {
 .container {
   position: relative;
   overflow: hidden;
-  width: 100%;
+  width: 90%;
 }
 
 .responsive-iframe {
