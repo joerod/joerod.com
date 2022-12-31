@@ -7,35 +7,40 @@
   <title>JoeRod.com</title>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script>
-    $( document ).ready(function() {
-      var xmas_videos = [
-      'K5BPKi6h44s', // Booby Traps
+  $(document).ready(function () {
+    var xmas_videos = [
+      'rgEP1niScLc', // Setting the Trap
+      'S7OWoc-j8qQ', // home alone
       'E3RQVcNUcTA', // Home Alone 2: Lost in New York (1992) - Give It to Me Scene
-      's1LUXQWzCno', // Peanuts
-      'tR_Z1LUDQuQ']// Nutcracker Ballet
+      'GPG3zSgm_Qo', // Peanuts
+      'tR_Z1LUDQuQ'] // Nutcracker Ballet
 
-      var regular_videos = [
-      'CMNry4PE93Y', //turtles
-      'dQw4w9WgXcQ', //rick roll
-      '6GsCmnZnllk', //Mets
+    var regular_videos = [
+      'CMNry4PE93Y',  // turtles
+      'dQw4w9WgXcQ',  // rick roll
+      '6GsCmnZnllk',  // Mets
       'kR2O_xuVvIU',  // What are those?!?!
-      '1VbZE6YhjKk'] // corn
+      '1VbZE6YhjKk']  // corn
 
-      var now = new Date()  // get the current date
+    var now = new Date()  // get the current date
 
-      if (now.getMonth() == 11) {
-        var videos = xmas_videos
-      } else if (now.getMonth() == 0 && now.getDate == 12) { // Christmas
-        var videos = 'DtrIWQ8J9jw'
-      } else if (now.getMonth() == 10 && now.getDate <= 17 && now.getDate >= 31) { // halloween
-        var videos = 'xiSIQzwIPzQ'
-      } else {
-        var videos = regular_videos
-      }
-      var index=Math.floor(Math.random() * videos.length);
-      var html='<iframe src="https://www.youtube.com/embed/' + videos[index] + '?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
-      $('.video').append(html);
-      });
+    if (now.getMonth() == 11) {
+      var videos = xmas_videos
+    } else if (now.getMonth() == 0 && now.getDate == 12) { // Christmas
+      var videos = 'DtrIWQ8J9jw'
+    } else if (now.getMonth() == 9 && now.getDate <= 17 && now.getDate >= 31) { // halloween
+      var videos = 'xiSIQzwIPzQ'
+    } else if (now.getMonth() == 0 && now.getDate == 1) { // new years
+      var videos = 'vdLuk2Agamk'
+    } else if (now.getMonth() == 10 && now.getDate <= 17 && now.getDate >= 31) { // thanksgiving
+      var videos = 'AORGKS6y_qI'
+    }else {
+      var videos = regular_videos
+    }
+    var index = Math.floor(Math.random() * videos.length)
+    var html = '<iframe src="https://www.youtube.com/embed/' + videos[index] + '?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+    $('.video').append(html)
+  })
     </script>
 </head>
 <body>
