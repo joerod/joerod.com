@@ -1,55 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="styles.css">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
   <title>JoeRod.com</title>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script>
-  $(document).ready(function () {
-    var xmas_videos = [
-      'rgEP1niScLc', // Setting the Trap
-      'S7OWoc-j8qQ', // home alone
-      'E3RQVcNUcTA', // Home Alone 2: Lost in New York (1992) - Give It to Me Scene
-      'GPG3zSgm_Qo', // Peanuts
-      'tR_Z1LUDQuQ'] // Nutcracker Ballet
+    $(document).ready(function () {
+      var xmas_videos = [
+        'rgEP1niScLc', // Setting the Trap
+        'S7OWoc-j8qQ', // home alone
+        'E3RQVcNUcTA', // Home Alone 2: Lost in New York (1992) - Give It to Me Scene
+        'GPG3zSgm_Qo', // Peanuts
+        'tR_Z1LUDQuQ'  // Nutcracker Ballet
+      ];
 
-    var regular_videos = [
-      'CMNry4PE93Y',  // turtles
-      'dQw4w9WgXcQ',  // rick roll
-      '6GsCmnZnllk',  // Mets
-      'kR2O_xuVvIU',  // What are those?!?!
-      '1VbZE6YhjKk']  // corn
+      var regular_videos = [
+        'CMNry4PE93Y',  // turtles
+        'dQw4w9WgXcQ',  // rick roll
+        '6GsCmnZnllk',  // Mets
+        'kR2O_xuVvIU',  // What are those?!?!
+        '1VbZE6YhjKk'   // corn
+      ];
 
-    var now = new Date()  // get the current date
+      var now = new Date(); // get the current date
 
-    if (now.getMonth() == 11) {
-      var videos = xmas_videos
-    } else if (now.getMonth() == 11 && now.getDate == 12) { // Christmas
-      var videos = 'DtrIWQ8J9jw'
-    } else if (now.getMonth() == 9 && now.getDate <= 17 && now.getDate >= 31) { // halloween
-      var videos = 'xiSIQzwIPzQ'
-    } else if (now.getMonth() == 0 && now.getDate == 1) { // new years
-      var videos = 'vdLuk2Agamk'
-    } else if (now.getMonth() == 10 && now.getDate <= 17 && now.getDate >= 31) { // thanksgiving
-      var videos = 'AORGKS6y_qI'
-    }else {
-      var videos = regular_videos
-    }
-    var index = Math.floor(Math.random() * videos.length)
-    var html = '<iframe src="https://www.youtube.com/embed/' + videos[index] + '?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
-    $('.video').append(html)
-  })
-    </script>
+      if (now.getMonth() == 11) {
+        var videos = xmas_videos;
+      } else if (now.getMonth() == 11 && now.getDate() == 12) { // Christmas
+        var videos = ['DtrIWQ8J9jw'];
+      } else if (now.getMonth() == 9 && now.getDate() <= 31 && now.getDate() >= 17) { // Halloween
+        var videos = ['xiSIQzwIPzQ'];
+      } else if (now.getMonth() == 0 && now.getDate() == 1) { // New Year's
+        var videos = ['vdLuk2Agamk'];
+      } else if (now.getMonth() == 10 && now.getDate() <= 31 && now.getDate() >= 17) { // Thanksgiving
+        var videos = ['AORGKS6y_qI'];
+      } else {
+        var videos = regular_videos;
+      }
+
+      var index = Math.floor(Math.random() * videos.length);
+      var html = '<iframe src="https://www.youtube.com/embed/' + videos[index] + '?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+      $('.video').append(html);
+
+      setTimeout(function () {
+        $('#site-name').addClass('active');
+      }, 1000);
+
+      setTimeout(function () {
+        $('#site-name').removeClass('active');
+      }, 5000);
+    });
+  </script>
 </head>
 <body>
   <main>
-    <h1>JoeRod.com</h1>
+    <h1 id="site-name">JoeRod.com</h1>
     <br>
     <div class="video-container">
       <div class="video"></div>
-  </div>
-</main>
+    </div>
+  </main>
+  <footer>
+    <a href="https://twitter.com/joerodr">
+      <img src="twitter_logo.png" alt="Twitter" width="20px" height="20px">
+      Follow @joerodr
+    </a>
+    <p>Donate Bitcoin: <img src="bitcoin_logo.png" alt="Bitcoin" width="20px" height="20px"> bc1qpg4577k7536dqrv0r6nw8t36c73gtncnerm7k24tljdl9xrnxjus02vsz0</p>
+  </footer>
 </body>
 </html>
