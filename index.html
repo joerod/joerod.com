@@ -3,11 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles_xmas.css">
   <title>JoeRod.com</title>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script>
+      // load css based on date
+      document.addEventListener("DOMContentLoaded", () => {
+      // Define stylesheets based on date ranges
+      const stylesheets = {
+        "christmas": {
+          start: new Date(new Date().getFullYear(), 11, 1), // December 1
+          end: new Date(new Date().getFullYear(), 11, 31), // December 31
+          url: "styles_xmas.css"
+        },
+        "default": {
+          url: "styles.css"
+        }
+      };
+
+      // Get the current date
+      const today = new Date();
+
+      // Determine which stylesheet to use
+      let selectedStylesheet = stylesheets.default.url; // Default stylesheet
+      for (const key in stylesheets) {
+        const { start, end, url } = stylesheets[key];
+        if (start && end && today >= start && today <= end) {
+          selectedStylesheet = url;
+          break;
+        }
+      }
+      // Add the stylesheet to the document
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = selectedStylesheet;
+      document.head.appendChild(link);
+    })
     $(document).ready(function () {
+
       var xmas_videos = [
         'rgEP1niScLc', // Setting the Trap
         'S7OWoc-j8qQ', // home alone
@@ -29,9 +62,7 @@
         'kR2O_xuVvIU',  // What are those?!?!
         '1VbZE6YhjKk'   // corn
       ];
-
       var now = new Date(); // get the current date
-
       if (now.getMonth() == 11) {
         var videos = xmas_videos;
       } else if (now.getMonth() == 11 && now.getDate() == 12) { // Christmas
