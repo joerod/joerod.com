@@ -7,6 +7,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap');
 
     :root {
       --primary-color: #667eea;
@@ -58,13 +59,37 @@
     }
 
     .site-title {
-      font-family: 'Playfair Display', serif;
+      font-family: 'Dancing Script', cursive;
       font-size: 2.5rem;
-      font-weight: 400;
-      font-style: italic;
+      font-weight: 700;
+      font-style: normal;
       color: #ffffff;
       text-shadow: 0 2px 15px rgba(0, 0, 0, 0.4);
       letter-spacing: 0.5px;
+      animation: titleColorShift 15s ease infinite;
+    }
+
+    @keyframes titleColorShift {
+      0% {
+        color: #1e3a8a;
+        text-shadow: 0 2px 15px rgba(255, 255, 255, 0.4);
+      }
+      25% {
+        color: #ffffff;
+        text-shadow: 0 2px 15px rgba(0, 0, 0, 0.4);
+      }
+      50% {
+        color: #1e3a8a;
+        text-shadow: 0 2px 15px rgba(255, 255, 255, 0.4);
+      }
+      75% {
+        color: #ffffff;
+        text-shadow: 0 2px 15px rgba(0, 0, 0, 0.4);
+      }
+      100% {
+        color: #1e3a8a;
+        text-shadow: 0 2px 15px rgba(255, 255, 255, 0.4);
+      }
     }
 
     .glass {
@@ -144,6 +169,36 @@
       margin-top: 0.75rem;
       padding-top: 0.75rem;
       border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .bitcoin-price {
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      text-align: center;
+    }
+
+    .bitcoin-price-title {
+      font-size: 0.7rem;
+      opacity: 0.8;
+      margin-bottom: 0.4rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.3rem;
+    }
+
+    .bitcoin-price-title img {
+      width: 12px;
+      height: 12px;
+      filter: brightness(0) invert(1);
+    }
+
+    .bitcoin-price-value {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #fbbf24;
     }
 
     .sports-title {
@@ -248,23 +303,28 @@
     }
 
     .bitcoin-address {
+      color: var(--text-color);
+      text-decoration: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 50px;
+      backdrop-filter: blur(20px);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
       font-size: 0.75rem;
-      opacity: 0.7;
-      padding: 0.75rem 1rem;
-      border-radius: 10px;
-      background: rgba(0, 0, 0, 0.2);
-      backdrop-filter: blur(10px);
+      min-width: 140px;
+      justify-content: center;
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
       word-break: break-all;
       max-width: 300px;
-      transition: all 0.3s ease;
     }
 
     .bitcoin-address:hover {
-      opacity: 1;
-      background: rgba(0, 0, 0, 0.3);
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     }
 
     .bitcoin-address img {
@@ -335,7 +395,7 @@
 
       .bitcoin-address {
         font-size: 0.7rem;
-        padding: 0.8rem 1rem;
+        padding: 0.8rem 1.2rem;
         max-width: 90%;
         width: 100%;
         max-width: 280px;
@@ -388,7 +448,7 @@
 
       .bitcoin-address {
         font-size: 0.65rem;
-        padding: 0.7rem 0.8rem;
+        padding: 0.7rem 1rem;
         max-width: 95%;
       }
 
@@ -449,11 +509,14 @@
       }
 
       .bitcoin-address:hover {
-        background: rgba(0, 0, 0, 0.2);
+        background: rgba(255, 255, 255, 0.1);
+        transform: none;
+        box-shadow: none;
       }
 
       .bitcoin-address:active {
-        background: rgba(0, 0, 0, 0.4);
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(0.98);
       }
     }
 
@@ -473,17 +536,21 @@
         }
       });
 
-      // Load sports scores with updated 2025 data
+      // Load sports scores with updated 2025 data - prioritizing Mets, Knicks, Jets, Rangers
       async function loadSportsScores() {
         try {
-          // NY teams with latest 2025 records where available
+          // Priority NY teams first (Mets, Knicks, Jets, Rangers), with current season status
           const teams = [
-            { name: 'Mets', sport: 'MLB', record: '63-52', status: '2nd NL East' },
-            { name: 'Yankees', sport: 'MLB', record: '61-54', status: '3rd AL East' },
-            { name: 'NYCFC', sport: 'MLS', record: '11-5-8', status: '2025 Season' },
-            { name: 'Red Bulls', sport: 'MLS', record: '9-6-10', status: '2025 Season' },
-            { name: 'Liberty', sport: 'WNBA', record: '32-8', status: '1st East 2024' },
-            { name: 'Gotham FC', sport: 'NWSL', record: '3rd Place', status: '2024 Final' }
+            { name: 'Mets', sport: 'MLB', record: '63-52', status: '2nd NL East', current: true },
+            { name: 'Knicks', sport: 'NBA', record: '51-31', status: '3rd East', current: false },
+            { name: 'Jets', sport: 'NFL', record: '7-10', status: '3rd AFC East', current: false },
+            { name: 'Rangers', sport: 'NHL', record: '39-36-7', status: '5th Metro', current: false },
+            { name: 'Yankees', sport: 'MLB', record: '61-54', status: '3rd AL East', current: true },
+            { name: 'Nets', sport: 'NBA', record: '26-56', status: '12th East', current: false },
+            { name: 'NYCFC', sport: 'MLS', record: '11-5-8', status: '2025 Season', current: true },
+            { name: 'Red Bulls', sport: 'MLS', record: '9-6-10', status: '2025 Season', current: true },
+            { name: 'Liberty', sport: 'WNBA', record: '32-8', status: '1st East 2024', current: true },
+            { name: 'Gotham FC', sport: 'NWSL', record: '3rd Place', status: '2025 Season', current: true }
           ];
 
           const scoresContainer = document.getElementById('sports-scores');
@@ -492,14 +559,40 @@
           teams.forEach(team => {
             const teamDiv = document.createElement('div');
             teamDiv.className = 'team-score';
+            const seasonIndicator = team.current ? ' (current)' : ' (last)';
             teamDiv.innerHTML = `
-              <span class="team-name">${team.name}</span>
+              <span class="team-name">${team.name}${seasonIndicator}</span>
               <span class="team-record">${team.record}</span>
             `;
             scoresContainer.appendChild(teamDiv);
           });
         } catch (error) {
           document.getElementById('sports-scores').innerHTML = '<div class="sports-title">Scores unavailable</div>';
+        }
+      }
+
+      // Load Bitcoin price using CoinGecko free API
+      async function loadBitcoinPrice() {
+        try {
+          const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
+          const data = await response.json();
+
+          if (data.bitcoin && data.bitcoin.usd) {
+            const price = data.bitcoin.usd;
+            const formattedPrice = new Intl.NumberFormat('en-US', {
+              style: 'currency',
+              currency: 'USD',
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0
+            }).format(price);
+
+            document.getElementById('bitcoin-price-value').textContent = formattedPrice;
+          } else {
+            throw new Error('Bitcoin price not found');
+          }
+        } catch (error) {
+          console.error('Bitcoin price loading error:', error);
+          document.getElementById('bitcoin-price-value').textContent = 'Price unavailable';
         }
       }
 
@@ -558,9 +651,10 @@
       }
 
       $(document).ready(function () {
-        // Load weather and sports
+        // Load weather, sports, and bitcoin price
         loadWeather();
         loadSportsScores();
+        loadBitcoinPrice();
 
         var xmas_videos = [
           'rgEP1niScLc', // Setting the Trap
@@ -588,7 +682,15 @@
           'dQw4w9WgXcQ',  // rick roll
           '6GsCmnZnllk',  // Mets
           'kR2O_xuVvIU',  // What are those?!?!
-          '1VbZE6YhjKk'   // corn
+          '1VbZE6YhjKk',  // corn
+          'ohz8_IafGwE',  // Tommy Boy - "Fat guy in a little coat"
+          'S2XvxDaIwCw',  // Tommy Boy - Chris Farley car scene
+          '7wrw19K_g_M',  // Back to the Future 2 - Nike sneakers power laces scene
+          'rzQAC8kPJxo',  // Jordan dunk
+          '7ujwjqIldwU',  // Mets Buckner
+          '5UDoSc-fRpg',  // Mets RBI baseball Buckner
+          'pCTfxOrX4k8',  // Starks Dunk
+          'Dr0m5bWAgk0'   // Rangers win cup
         ];
 
         var now = new Date();
@@ -634,7 +736,7 @@
 </head>
 <body>
   <header class="fixed-header">
-    <div class="site-title">joerod.com</div>
+    <div class="site-title">JoeRod.com</div>
   </header>
 
   <div class="weather-widget">
@@ -645,6 +747,14 @@
 
     <div id="sports-scores" class="sports-scores">
       <div class="sports-title loading">Loading scores...</div>
+    </div>
+
+    <div class="bitcoin-price">
+      <div class="bitcoin-price-title">
+        <img src="https://cdnjs.cloudflare.com/ajax/libs/simple-icons/9.18.0/bitcoin.svg" alt="Bitcoin">
+        Bitcoin Price
+      </div>
+      <div id="bitcoin-price-value" class="bitcoin-price-value loading">Loading...</div>
     </div>
   </div>
 
