@@ -1,10 +1,12 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>JoeRod.com</title>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap');
@@ -18,11 +20,7 @@
       --glass-border: rgba(255, 255, 255, 0.2);
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -44,18 +42,12 @@
     }
 
     .fixed-header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
+      position: fixed; top: 0; left: 0; right: 0;
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(20px);
       border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-      z-index: 1000;
-      padding: 15px 20px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      z-index: 1000; padding: 15px 20px;
+      display: flex; justify-content: center; align-items: center;
     }
 
     .site-title {
@@ -70,34 +62,14 @@
     }
 
     @keyframes titleColorShift {
-      0% {
-        color: #1e3a8a;
-        text-shadow: 0 2px 15px rgba(255, 255, 255, 0.4);
-      }
-      25% {
-        color: #ffffff;
-        text-shadow: 0 2px 15px rgba(0, 0, 0, 0.4);
-      }
-      50% {
-        color: #1e3a8a;
-        text-shadow: 0 2px 15px rgba(255, 255, 255, 0.4);
-      }
-      75% {
-        color: #ffffff;
-        text-shadow: 0 2px 15px rgba(0, 0, 0, 0.4);
-      }
-      100% {
-        color: #1e3a8a;
-        text-shadow: 0 2px 15px rgba(255, 255, 255, 0.4);
-      }
+      0%   { color: #1e3a8a; text-shadow: 0 2px 15px rgba(255,255,255,0.4); }
+      25%  { color: #ffffff; text-shadow: 0 2px 15px rgba(0,0,0,0.4); }
+      50%  { color: #1e3a8a; text-shadow: 0 2px 15px rgba(255,255,255,0.4); }
+      75%  { color: #ffffff; text-shadow: 0 2px 15px rgba(0,0,0,0.4); }
+      100% { color: #1e3a8a; text-shadow: 0 2px 15px rgba(255,255,255,0.4); }
     }
 
-    .glass {
-      background: var(--glass-bg);
-      backdrop-filter: blur(20px);
-      border: 1px solid var(--glass-border);
-      border-radius: 20px;
-    }
+    .glass { background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 20px; }
 
     main {
       display: flex;
@@ -119,11 +91,7 @@
       transform: translateY(30px);
       transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-
-    #site-name.active {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    #site-name.active { opacity: 1; transform: translateY(0); }
 
     .weather-widget {
       position: fixed;
@@ -134,50 +102,34 @@
       backdrop-filter: blur(20px);
       background: rgba(255, 255, 255, 0.15);
       border: 1px solid rgba(255, 255, 255, 0.2);
-      min-width: 200px;
+      min-width: 220px;
       text-align: center;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
       max-height: calc(100vh - 110px);
       overflow-y: auto;
     }
 
-    .weather-icon {
-      font-size: 2rem;
-      margin-bottom: 0.3rem;
-      display: block;
-    }
-
-    .weather-location {
-      font-size: 0.9rem;
-      opacity: 0.8;
-      margin-bottom: 0.5rem;
-    }
-
-    .weather-temp {
-      font-size: 2rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-    }
-
-    .weather-desc {
+    /* NYC time line (kept) */
+    .ny-time {
       font-size: 0.85rem;
-      opacity: 0.9;
-      text-transform: capitalize;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      margin-bottom: 0.4rem;
+      opacity: 0.95;
     }
 
-    .sports-scores {
-      margin-top: 0.75rem;
-      padding-top: 0.75rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.2);
-    }
+    .weather-icon { font-size: 2rem; margin-bottom: 0.3rem; display: block; }
+    .weather-location { font-size: 0.9rem; opacity: 0.8; margin-bottom: 0.5rem; } /* class retained, element removed */
+    .weather-temp { font-size: 2rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .weather-desc { font-size: 0.85rem; opacity: 0.9; text-transform: capitalize; }
 
+    /* Bitcoin first */
     .bitcoin-price {
       margin-top: 0.75rem;
       padding-top: 0.75rem;
       border-top: 1px solid rgba(255, 255, 255, 0.2);
       text-align: center;
     }
-
     .bitcoin-price-title {
       font-size: 0.7rem;
       opacity: 0.8;
@@ -188,43 +140,49 @@
       justify-content: center;
       gap: 0.3rem;
     }
+    .bitcoin-price-title img { width: 12px; height: 12px; filter: brightness(0) invert(1); }
+    .bitcoin-price-value { font-size: 0.8rem; font-weight: 600; color: #fbbf24; }
 
-    .bitcoin-price-title img {
-      width: 12px;
-      height: 12px;
-      filter: brightness(0) invert(1);
+    /* Scores after Bitcoin, scrollable inner box */
+    .sports-scores {
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      text-align: left;
     }
-
-    .bitcoin-price-value {
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: #fbbf24;
-    }
-
     .sports-title {
       font-size: 0.7rem;
       opacity: 0.8;
       margin-bottom: 0.4rem;
       font-weight: 600;
+      text-align: center;           /* CENTERED LINE */
+      width: 100%;
     }
 
-    .team-score {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.2rem;
-      font-size: 0.65rem;
-      padding: 0.1rem 0;
+    .scores-scroll {
+      max-height: 240px;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      padding-right: 6px;
     }
 
-    .team-name {
-      font-weight: 500;
-    }
+    /* scrollbar styling */
+    .scores-scroll::-webkit-scrollbar { width: 8px; }
+    .scores-scroll::-webkit-scrollbar-track { background: rgba(255,255,255,0.08); border-radius: 8px; }
+    .scores-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.25); border-radius: 8px; }
+    .scores-scroll::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.35); }
 
-    .team-record {
-      opacity: 0.7;
-      font-size: 0.6rem;
-    }
+    .league-block { margin-bottom: 0.5rem; }
+    .league-name { font-size: 0.7rem; opacity: 0.85; margin: 0.4rem 0 0.2rem; font-weight: 600; }
+
+    /* Record under score */
+    .game-line { display: flex; justify-content: space-between; gap: 0.6rem; padding: 0.2rem 0; }
+    .game-left { display:flex; gap:0.5rem; align-items:flex-start; min-width:0; }
+    .team-col { display:flex; flex-direction:column; min-width:0; }
+    .team-main { font-size: 0.65rem; line-height: 1.15; white-space: nowrap; }
+    .team-sub { font-size: 0.6rem; opacity: 0.78; line-height: 1.1; white-space: nowrap; margin-top: -1px; }
+    .at { opacity: 0.8; font-size: 0.65rem; padding: 0 2px; align-self: center; }
+    .game-status { opacity: 0.85; font-size: 0.6rem; white-space: nowrap; align-self: center; }
 
     .video-container {
       width: 100%;
@@ -237,19 +195,8 @@
       padding-bottom: 33.75%;
       height: 0;
     }
-
-    .video-container:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
-    }
-
-    .video iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
+    .video-container:hover { transform: translateY(-5px); box-shadow: 0 20px 50px rgba(0,0,0,0.4); }
+    .video iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
     footer {
       padding: 2rem;
@@ -266,7 +213,6 @@
       margin-bottom: 1.5rem;
       flex-wrap: wrap;
     }
-
     .social-link {
       display: flex;
       align-items: center;
@@ -283,23 +229,24 @@
       min-width: 140px;
       justify-content: center;
     }
+    .social-link:hover { background: rgba(255, 255, 255, 0.2); transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); }
+    .social-link img, .social-link svg { width: 18px; height: 18px; filter: brightness(0) invert(1); }
 
-    .social-link:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    /* Donate, same font as header, smaller size */
+    .donate-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+      margin-top: 1rem;
     }
-
-    .social-link img {
-      width: 18px;
-      height: 18px;
-      filter: brightness(0) invert(1);
-    }
-
-    .social-link svg {
-      width: 18px;
-      height: 18px;
-      fill: currentColor;
+    .donate-title {
+      font-family: 'Dancing Script', cursive;
+      font-weight: 700;
+      font-size: 1.4rem; /* smaller than header */
+      color: #fff;
+      text-shadow: 0 2px 15px rgba(0, 0, 0, 0.4);
+      letter-spacing: 0.5px;
     }
 
     .bitcoin-address {
@@ -318,480 +265,500 @@
       align-items: center;
       gap: 0.5rem;
       word-break: break-all;
-      max-width: 300px;
+      max-width: 720px;
     }
-
-    .bitcoin-address:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    }
-
-    .bitcoin-address img {
-      width: 16px;
-      height: 16px;
-      flex-shrink: 0;
-      filter: brightness(0) invert(1);
-    }
+    .bitcoin-address:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+    .bitcoin-address img { width: 16px; height: 16px; flex-shrink: 0; filter: brightness(0) invert(1); }
 
     /* Mobile-first responsive design */
     @media (max-width: 768px) {
-      body {
-        padding-top: 70px;
-        overflow-y: auto;
-        height: auto;
-        min-height: 100vh;
-      }
-
-      .fixed-header {
-        padding: 10px 15px;
-      }
-
-      .site-title {
-        font-size: 2rem;
-      }
-
-      .weather-widget {
-        position: static;
-        margin: 1rem auto;
-        width: 100%;
-        max-width: 280px;
-        max-height: none;
-        order: -1;
-      }
-
-      main {
-        padding: 0.5rem;
-        order: 0;
-      }
-
-      .video-container {
-        margin: 1rem 0;
-        max-width: 100%;
-        padding-bottom: 56.25%; /* 16:9 aspect ratio for mobile */
-      }
-
-      .social-links {
-        gap: 0.8rem;
-        flex-direction: column;
-        align-items: center;
-      }
-
-      .social-link {
-        font-size: 0.9rem;
-        padding: 0.8rem 1.2rem;
-        min-width: 200px;
-        width: 100%;
-        max-width: 280px;
-        /* Improve touch targets */
-        min-height: 44px;
-        touch-action: manipulation;
-      }
-
-      .social-link img, .social-link svg {
-        width: 18px;
-        height: 18px;
-      }
-
-      .bitcoin-address {
-        font-size: 0.7rem;
-        padding: 0.8rem 1.2rem;
-        max-width: 90%;
-        width: 100%;
-        max-width: 280px;
-        /* Improve touch targets */
-        min-height: 44px;
-        touch-action: manipulation;
-      }
-
-      .bitcoin-address img {
-        width: 16px;
-        height: 16px;
-      }
-
-      footer {
-        padding: 1.5rem 1rem;
-        order: 1;
-      }
+      body { padding-top: 70px; overflow-y: auto; height: auto; min-height: 100vh; }
+      .fixed-header { padding: 10px 15px; }
+      .site-title { font-size: 2rem; }
+      .weather-widget { position: static; margin: 1rem auto; width: 100%; max-width: 300px; max-height: none; order: -1; }
+      main { padding: 0.5rem; order: 0; }
+      .video-container { margin: 1rem 0; max-width: 100%; padding-bottom: 56.25%; }
+      .social-links { gap: 0.8rem; flex-direction: column; align-items: center; }
+      .social-link { font-size: 0.9rem; padding: 0.8rem 1.2rem; min-width: 200px; width: 100%; max-width: 280px; min-height: 44px; touch-action: manipulation; }
+      .bitcoin-address { font-size: 0.75rem; padding: 0.8rem 1.2rem; max-width: 95%; min-height: 44px; touch-action: manipulation; }
+      .scores-scroll { max-height: 220px; }
+      footer { padding: 1.5rem 1rem; }
     }
 
     @media (max-width: 480px) {
-      body {
-        padding-top: 65px;
-      }
-
-      .fixed-header {
-        padding: 8px 12px;
-      }
-
-      .site-title {
-        font-size: 1.8rem;
-      }
-
-      .weather-widget {
-        margin: 0.8rem auto;
-        max-width: 95%;
-        padding: 0.8rem;
-      }
-
-      .social-link {
-        font-size: 0.85rem;
-        padding: 0.7rem 1rem;
-        min-width: 180px;
-        max-width: 95%;
-      }
-
-      .social-link img, .social-link svg {
-        width: 16px;
-        height: 16px;
-      }
-
-      .bitcoin-address {
-        font-size: 0.65rem;
-        padding: 0.7rem 1rem;
-        max-width: 95%;
-      }
-
-      .bitcoin-address img {
-        width: 14px;
-        height: 14px;
-      }
-
-      main {
-        padding: 0.3rem;
-      }
-
-      footer {
-        padding: 1rem 0.5rem;
-      }
+      body { padding-top: 65px; }
+      .fixed-header { padding: 8px 12px; }
+      .site-title { font-size: 1.8rem; }
+      .weather-widget { margin: 0.8rem auto; max-width: 95%; padding: 0.8rem; }
+      .social-link { font-size: 0.85rem; padding: 0.7rem 1rem; min-width: 180px; max-width: 95%; }
+      .bitcoin-address { font-size: 0.7rem; padding: 0.7rem 1rem; max-width: 95%; }
+      footer { padding: 1rem 0.5rem; }
     }
 
     /* Landscape mobile optimization */
     @media (max-width: 768px) and (orientation: landscape) {
-      body {
-        padding-top: 60px;
-      }
-
-      .fixed-header {
-        padding: 8px 15px;
-      }
-
-      .site-title {
-        font-size: 1.8rem;
-      }
-
-      .weather-widget {
-        position: fixed;
-        top: 70px;
-        right: 10px;
-        margin: 0;
-        max-width: 180px;
-        font-size: 0.8rem;
-      }
-
-      .video-container {
-        max-width: 70%;
-        margin: 0.5rem auto;
-      }
+      body { padding-top: 60px; }
+      .fixed-header { padding: 8px 15px; }
+      .site-title { font-size: 1.8rem; }
+      .weather-widget { position: fixed; top: 70px; right: 10px; margin: 0; max-width: 220px; font-size: 0.8rem; }
+      .video-container { max-width: 70%; margin: 0.5rem auto; }
+      .scores-scroll { max-height: 160px; }
     }
 
     /* Touch improvements */
     @media (hover: none) and (pointer: coarse) {
-      .social-link:hover {
-        background: rgba(255, 255, 255, 0.1);
-        transform: none;
-        box-shadow: none;
-      }
-
-      .social-link:active {
-        background: rgba(255, 255, 255, 0.3);
-        transform: scale(0.98);
-      }
-
-      .bitcoin-address:hover {
-        background: rgba(255, 255, 255, 0.1);
-        transform: none;
-        box-shadow: none;
-      }
-
-      .bitcoin-address:active {
-        background: rgba(255, 255, 255, 0.3);
-        transform: scale(0.98);
-      }
+      .social-link:hover { background: rgba(255, 255, 255, 0.1); transform: none; box-shadow: none; }
+      .social-link:active { background: rgba(255, 255, 255, 0.3); transform: scale(0.98); }
+      .bitcoin-address:hover { background: rgba(255, 255, 255, 0.1); transform: none; box-shadow: none; }
+      .bitcoin-address:active { background: rgba(255, 255, 255, 0.3); transform: scale(0.98); }
     }
 
-    .loading {
-      color: rgba(255, 255, 255, 0.7);
-      font-size: 0.8rem;
-    }
+    .loading { color: rgba(255, 255, 255, 0.7); font-size: 0.8rem; }
   </style>
+
   <script>
-      // Load CSS based on date (Christmas theme)
-      document.addEventListener("DOMContentLoaded", () => {
-        const now = new Date();
-        if (now.getMonth() === 11) { // December
-          document.documentElement.style.setProperty('--primary-color', '#dc2626');
-          document.documentElement.style.setProperty('--secondary-color', '#166534');
-          document.documentElement.style.setProperty('--accent-color', '#fbbf24');
-        }
-      });
-
-      // Load sports scores using ESPN's free public API
-      async function loadSportsScores() {
-        try {
-          const scoresContainer = document.getElementById('sports-scores');
-          scoresContainer.innerHTML = '<div class="sports-title">NY Sports</div>';
-
-          // ESPN API endpoints for different leagues
-          const apis = [
-            { league: 'MLB', url: 'https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/teams', teams: ['mets', 'yankees'] },
-            { league: 'NBA', url: 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams', teams: ['knicks', 'nets'] },
-            { league: 'NFL', url: 'https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams', teams: ['jets'] },
-            { league: 'NHL', url: 'https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/teams', teams: ['rangers'] }
-          ];
-
-          // Priority NY teams with fallback data
-          const fallbackTeams = [
-            { name: 'Mets', league: 'MLB', record: '63-52', status: '2nd NL East', current: true },
-            { name: 'Knicks', league: 'NBA', record: '51-31', status: '3rd East', current: false },
-            { name: 'Jets', league: 'NFL', record: '7-10', status: '3rd AFC East', current: false },
-            { name: 'Rangers', league: 'NHL', record: '39-36-7', status: '5th Metro', current: false },
-            { name: 'Yankees', league: 'MLB', record: '61-54', status: '3rd AL East', current: true },
-            { name: 'Nets', league: 'NBA', record: '26-56', status: '12th East', current: false }
-          ];
-
-          // Try to fetch from ESPN API, fallback to static data if it fails
-          let foundApiData = false;
-
-          for (const api of apis) {
-            try {
-              const response = await fetch(api.url);
-              if (response.ok) {
-                const data = await response.json();
-                // Process ESPN data here - this is complex as ESPN's structure varies
-                // For now, we'll use fallback data but the API structure is ready
-                foundApiData = true;
-                break;
-              }
-            } catch (error) {
-              console.log(`ESPN API failed for ${api.league}, using fallback data`);
-            }
-          }
-
-          // Display teams (using fallback data for now, but ESPN API structure is ready)
-          fallbackTeams.forEach(team => {
-            const teamDiv = document.createElement('div');
-            teamDiv.className = 'team-score';
-            const seasonIndicator = team.current ? ' (current)' : ' (last)';
-            teamDiv.innerHTML = `
-              <span class="team-name">${team.name}${seasonIndicator}</span>
-              <span class="team-record">${team.record}</span>
-            `;
-            scoresContainer.appendChild(teamDiv);
-          });
-
-        } catch (error) {
-          console.error('Sports scores loading error:', error);
-          document.getElementById('sports-scores').innerHTML = '<div class="sports-title">Scores unavailable</div>';
-        }
+    // Load CSS based on date, Christmas theme tweak
+    document.addEventListener("DOMContentLoaded", () => {
+      const now = new Date();
+      if (now.getMonth() === 11) {
+        document.documentElement.style.setProperty('--primary-color', '#dc2626');
+        document.documentElement.style.setProperty('--secondary-color', '#166534');
+        document.documentElement.style.setProperty('--accent-color', '#fbbf24');
       }
+    });
 
-      // Load Bitcoin price using CoinGecko free API
-      async function loadBitcoinPrice() {
-        try {
-          const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
-          const data = await response.json();
+    // ===== Helper: date format YYYYMMDD =====
+    function yyyymmdd(date = new Date()) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const d = String(date.getDate()).padStart(2, '0');
+      return `${y}${m}${d}`;
+    }
 
-          if (data.bitcoin && data.bitcoin.usd) {
-            const price = data.bitcoin.usd;
-            const formattedPrice = new Intl.NumberFormat('en-US', {
-              style: 'currency',
-              currency: 'USD',
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0
-            }).format(price);
-
-            document.getElementById('bitcoin-price-value').textContent = formattedPrice;
-          } else {
-            throw new Error('Bitcoin price not found');
-          }
-        } catch (error) {
-          console.error('Bitcoin price loading error:', error);
-          document.getElementById('bitcoin-price-value').textContent = 'Price unavailable';
-        }
+    // ===== NYC TIME (24-hour) above weather, auto-update =====
+    function updateNYTime() {
+      try {
+        const opts = {
+          timeZone: 'America/New_York',
+          weekday: 'short',
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false
+        };
+        const nowStr = new Intl.DateTimeFormat('en-US', opts).format(new Date());
+        const el = document.getElementById('ny-time');
+        if (el) el.textContent = `NYC • ${nowStr}`;
+      } catch (e) {
+        const el = document.getElementById('ny-time');
+        if (el) el.textContent = 'NYC • Time unavailable';
       }
+    }
 
-      async function loadWeather() {
-        try {
-          // Using OpenWeatherMap API with your API key
-          const response = await fetch('https://api.openweathermap.org/data/2.5/weather?q=New%20York,NY,US&appid=ea033866cb220b2bb944e00b54306c14&units=imperial');
-          const data = await response.json();
+    // ===== Bitcoin price (CoinGecko free API) =====
+    async function loadBitcoinPrice() {
+      try {
+        const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd', { cache: 'no-store' });
+        const data = await response.json();
+        const price = data?.bitcoin?.usd;
+        document.getElementById('bitcoin-price-value').textContent =
+          price ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(price)
+                : 'Price unavailable';
+      } catch (error) {
+        console.error('Bitcoin price loading error:', error);
+        document.getElementById('bitcoin-price-value').textContent = 'Price unavailable';
+      }
+    }
 
-          if (response.ok) {
-            // Set weather icon based on condition
-            const weatherIcons = {
-              'clear sky': '☀️',
-              'few clouds': '🌤️',
-              'scattered clouds': '⛅',
-              'broken clouds': '☁️',
-              'shower rain': '🌧️',
-              'rain': '🌧️',
-              'thunderstorm': '⛈️',
-              'snow': '❄️',
-              'mist': '🌫️'
-            };
+    // ===== Weather (nighttime moon icon using sunrise/sunset) =====
+    async function loadWeather() {
+      try {
+        const response = await fetch('https://api.openweathermap.org/data/2.5/weather?q=New%20York,NY,US&appid=ea033866cb220b2bb944e00b54306c14&units=imperial');
+        const data = await response.json();
 
-            const description = data.weather[0].description.toLowerCase();
-            const icon = weatherIcons[description] || '🌤️';
-
-            document.getElementById('weather-icon').textContent = icon;
-            document.getElementById('weather-temp').textContent = `${Math.round(data.main.temp)}°F`;
-            document.getElementById('weather-desc').textContent = data.weather[0].description;
-          } else {
-            throw new Error('Weather API error');
-          }
-        } catch (error) {
-          console.error('Weather loading error:', error);
-          // Fallback to mock weather if API fails
-          const weatherConditions = ['sunny', 'cloudy', 'partly cloudy', 'light rain', 'snow', 'thunderstorm'];
-          const randomCondition = weatherConditions[Math.floor(Math.random() * weatherConditions.length)];
-          const mockWeather = {
-            main: { temp: Math.floor(Math.random() * 30) + 45 },
-            weather: [{ description: randomCondition }]
-          };
-
+        if (response.ok) {
           const weatherIcons = {
-            'sunny': '☀️',
-            'cloudy': '☁️',
-            'partly cloudy': '⛅',
-            'light rain': '🌧️',
-            'snow': '❄️',
-            'thunderstorm': '⛈️'
+            'clear sky': '☀️', 'few clouds': '🌤️', 'scattered clouds': '⛅', 'broken clouds': '☁️',
+            'shower rain': '🌧️', 'rain': '🌧️', 'thunderstorm': '⛈️', 'snow': '❄️', 'mist': '🌫️'
           };
 
-          document.getElementById('weather-icon').textContent = weatherIcons[randomCondition] || '🌤️';
-          document.getElementById('weather-temp').textContent = `${mockWeather.main.temp}°F`;
-          document.getElementById('weather-desc').textContent = mockWeather.weather[0].description;
+          // Night detection via sunrise/sunset (all in UTC)
+          const nowUtc = Math.floor(Date.now() / 1000);
+          const sunrise = data.sys?.sunrise;
+          const sunset = data.sys?.sunset;
+          const isNight = (typeof sunrise === 'number' && typeof sunset === 'number')
+            ? (nowUtc < sunrise || nowUtc > sunset)
+            : false;
+
+          const description = data.weather[0].description.toLowerCase();
+          let icon = weatherIcons[description] || '🌤️';
+          if (isNight) icon = '🌙';
+
+          document.getElementById('weather-icon').textContent = icon;
+          document.getElementById('weather-temp').textContent = `${Math.round(data.main.temp)}°F`;
+          document.getElementById('weather-desc').textContent = data.weather[0].description;
+        } else {
+          throw new Error('Weather API error');
         }
+      } catch (error) {
+        console.error('Weather loading error:', error);
+        const weatherIcons = { 'sunny': '☀️', 'cloudy': '☁️', 'partly cloudy': '⛅', 'light rain': '🌧️', 'snow': '❄️', 'thunderstorm': '⛈️' };
+        const weatherConditions = ['sunny', 'cloudy', 'partly cloudy', 'light rain'];
+        const randomCondition = weatherConditions[Math.floor(Math.random() * weatherConditions.length)];
+        const temp = Math.floor(Math.random() * 30) + 45;
+
+        // Simple fallback night guess by hour (local browser)
+        const hour = new Date().getHours();
+        const isNightFallback = (hour < 6 || hour >= 19);
+
+        document.getElementById('weather-icon').textContent = isNightFallback ? '🌙' : (weatherIcons[randomCondition] || '🌤️');
+        document.getElementById('weather-temp').textContent = `${temp}°F`;
+        document.getElementById('weather-desc').textContent = randomCondition;
+      }
+    }
+
+    // ===== Scores: Only NY teams, records under scores =====
+    const TEAM_ORDER_PRIORITY = [
+      'Mets', 'Yankees',
+      'Knicks',
+      'Jets', 'Giants',
+      'Rangers',
+      'NYCFC', 'Red Bulls',
+      'Liberty',
+      'Gotham FC'
+    ];
+
+    const ALLOW_BY_LEAGUE = {
+      MLB: [
+        { label: 'Mets',    rx: [/\bnew york mets\b/i, /\bmets\b/i, /\bNYM\b/i] },
+        { label: 'Yankees', rx: [/\bnew york yankees\b/i, /\byankees\b/i, /\bNYY\b/i] },
+      ],
+      NBA: [
+        { label: 'Knicks',  rx: [/\bnew york knicks\b/i, /\bknicks\b/i, /\bNYK\b/i] },
+      ],
+      NFL: [
+        { label: 'Jets',    rx: [/\bnew york jets\b/i, /\bjets\b/i, /\bNYJ\b/i] },
+        { label: 'Giants',  rx: [/\bnew york giants\b/i, /\bgiants\b/i, /\bNYG\b/i] },
+      ],
+      NHL: [
+        { label: 'Rangers', rx: [/\bnew york rangers\b/i, /\brangers\b/i, /\bNYR\b/i] },
+      ],
+      MLS: [
+        { label: 'NYCFC',     rx: [/\bnycfc\b/i, /\bnew york city fc\b/i] },
+        { label: 'Red Bulls', rx: [/\bnew york red bulls\b/i, /\bred bulls\b/i, /\bNYRB\b/i] },
+      ],
+      WNBA: [
+        { label: 'Liberty', rx: [/\bnew york liberty\b/i, /\bliberty\b/i, /\bNYL\b/i] },
+      ],
+      NWSL: [
+        { label: 'Gotham FC', rx: [/\bgotham fc\b/i, /\bgotham\b/i, /nj\/ny/i, /\bNJNY\b/i] },
+      ],
+    };
+
+    const LEAGUES = [
+      { key:'MLB',   path:'baseball/mlb' },
+      { key:'NBA',   path:'basketball/nba' },
+      { key:'NFL',   path:'football/nfl' },
+      { key:'NHL',   path:'hockey/nhl' },
+      { key:'MLS',   path:'soccer/usa.1' },
+      { key:'WNBA',  path:'basketball/wnba' },
+      { key:'NWSL',  path:'soccer/usa.nwsl' },
+    ];
+
+    function teamString(t) {
+      const parts = [
+        t?.team?.displayName, t?.team?.shortDisplayName, t?.team?.name,
+        t?.team?.abbreviation, t?.team?.location, t?.team?.nickname
+      ].filter(Boolean);
+      return parts.join(' ').toLowerCase();
+    }
+
+    function matchLocalLabelForLeague(teamObj, leagueKey) {
+      const s = teamString(teamObj);
+      const allow = ALLOW_BY_LEAGUE[leagueKey] || [];
+      for (const entry of allow) {
+        if (entry.rx.some(r => r.test(s))) return entry.label;
+      }
+      return null;
+    }
+
+    function bestLocalLabelForEvent(ev, leagueKey) {
+      const teams = ev.competitions?.[0]?.competitors || [];
+      const labels = teams.map(t => matchLocalLabelForLeague(t, leagueKey)).filter(Boolean);
+      if (!labels.length) return null;
+      labels.sort((a, b) => {
+        const ia = TEAM_ORDER_PRIORITY.indexOf(a);
+        const ib = TEAM_ORDER_PRIORITY.indexOf(b);
+        return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
+      });
+      return labels[0];
+    }
+
+    function eventHasScore(ev) {
+      const comps = ev.competitions?.[0]?.competitors || [];
+      return comps.some(t => t && t.score !== undefined && t.score !== null && t.score !== '');
+    }
+
+    function getRecordSummary(competitor) {
+      if (Array.isArray(competitor?.records) && competitor.records.length) {
+        const overall = competitor.records.find(r => /overall/i.test(r.name)) || competitor.records[0];
+        if (overall?.summary) return overall.summary;
+      }
+      if (competitor?.record && typeof competitor.record === 'string') return competitor.record;
+      if (competitor?.team?.record && typeof competitor.team.record === 'string') return competitor.team.record;
+      return '';
+    }
+
+    function formatStatus(ev) {
+      const comp = ev.competitions?.[0];
+      const st = comp?.status?.type;
+      if (!st) return '—';
+      if (st.state === 'pre') {
+        const t = comp.date ? new Date(comp.date) : null;
+        return t ? t.toLocaleTimeString([], { hour:'numeric', minute:'2-digit' }) : (st.shortDetail || 'Scheduled');
+      }
+      if (st.state === 'in')  return st.shortDetail || 'Live';
+      if (st.state === 'post') return st.shortDetail || 'Final';
+      return st.shortDetail || '—';
+    }
+
+    async function fetchLeague(leaguePath, dateStr) {
+      const url = `https://site.api.espn.com/apis/site/v2/sports/${leaguePath}/scoreboard?dates=${dateStr}`;
+      const res = await fetch(url, { cache: 'no-store' });
+      if (!res.ok) throw new Error(`ESPN ${leaguePath} failed`);
+      return res.json();
+    }
+
+    function renderGamesInto(container, leagueLabel, events) {
+      if (!events.length) return;
+      const block = document.createElement('div');
+      block.className = 'league-block';
+
+      const title = document.createElement('div');
+      title.className = 'league-name';
+      title.textContent = leagueLabel;
+      block.appendChild(title);
+
+      for (const ev of events) {
+        const comp = ev.competitions?.[0];
+        const teams = comp?.competitors || [];
+        const away = teams.find(t => t.homeAway === 'away');
+        const home = teams.find(t => t.homeAway === 'home');
+
+        const awayName  = away?.team?.shortDisplayName || away?.team?.displayName || 'Away';
+        const homeName  = home?.team?.shortDisplayName || home?.team?.displayName || 'Home';
+        const awayScore = away?.score ?? '';
+        const homeScore = home?.score ?? '';
+
+        const awayRec = getRecordSummary(away);
+        const homeRec = getRecordSummary(home);
+
+        const status    = formatStatus(ev);
+
+        const line = document.createElement('div');
+        line.className = 'game-line';
+        line.innerHTML = `
+          <div class="game-left">
+            <div class="team-col">
+              <div class="team-main">${awayName} ${awayScore}</div>
+              ${awayRec ? `<div class="team-sub">(${awayRec})</div>` : ''}
+            </div>
+            <span class="at">@</span>
+            <div class="team-col">
+              <div class="team-main">${homeName} ${homeScore}</div>
+              ${homeRec ? `<div class="team-sub">(${homeRec})</div>` : ''}
+            </div>
+          </div>
+          <div class="game-status">${status}</div>
+        `;
+        block.appendChild(line);
       }
 
-      $(document).ready(function () {
-        // Load weather, sports, and bitcoin price
-        loadWeather();
-        loadSportsScores();
-        loadBitcoinPrice();
+      container.appendChild(block);
+    }
 
-        var xmas_videos = [
-          'rgEP1niScLc', // Setting the Trap
-          'S7OWoc-j8qQ', // home alone
-          'hZ9q3PtiYu8', // home alone, Kevin
-          'E3RQVcNUcTA', // Home Alone 2: Lost in New York (1992) - Give It to Me Scene
-          'GPG3zSgm_Qo', // Peanuts
-          'tR_Z1LUDQuQ', // Nutcracker Ballet
-          'kSkyv8EUEsU', // frosty the snowman
-          'uIsgSQvsRj8', // a christmas story
-          'e-r8hvTFVb8', // a christmas story
-          'myzC3f0j9kw', // national lampoon christmas
-          'LznVSn7Ud9o' // Mickey and The Muppet Christmas Carol
-        ];
+    async function loadSportsScores() {
+      try {
+        const scoresContainer = document.getElementById('sports-scores');
 
-        var american_holiday_videos = [
-          'dJxj1mou03M', // Full Metal Jacket - Marines
-          '4GJArpnLqGY', // Born on the 4th of July
-          'U1mlCPMYtPk', // America F Yeah South Park
-          'N_lCmBvYMRs'  // Whitney Houston Super Bowl
-        ];
+        // Title and scroll host
+        scoresContainer.innerHTML = `
+          <div class="sports-title">Today's NY Scores (${new Date().toLocaleDateString([], {weekday:'short', month:'short', day:'numeric'})})</div>
+          <div class="scores-scroll" id="scores-scroll"></div>
+        `;
+        const scrollHost = document.getElementById('scores-scroll');
 
-        var regular_videos = [
-          'CMNry4PE93Y',  // turtles
-          'dQw4w9WgXcQ',  // rick roll
-          '6GsCmnZnllk',  // Mets
-          'kR2O_xuVvIU',  // What are those?!?!
-          '1VbZE6YhjKk',  // corn
-          'ohz8_IafGwE',  // Tommy Boy - "Fat guy in a little coat"
-          'S2XvxDaIwCw',  // Tommy Boy - Chris Farley car scene
-          '7wrw19K_g_M',  // Back to the Future 2 - Nike sneakers power laces scene
-          'TkyLnWm1iCs',  // Back to the Future 2 - Hoverboard scene
-          '5ztwns5PkJY',  // Back to the Future 2 - future mcfly
-          'GV01B5kVsC0',  // Her
-          'rzQAC8kPJxo',  // Jordan dunk
-          '7ujwjqIldwU',  // Mets Buckner
-          '5UDoSc-fRpg',  // Mets RBI baseball Buckner
-          'pCTfxOrX4k8',  // Starks Dunk
-          'Dr0m5bWAgk0',  // Rangers win cup
-          'lMDkxFnUTZs',  // Goodfellas - Spida
-          'voDqfVthTpA',  // Goodfellas - Karen
-          'y8p1iG-6d-w',  // Bronxtale - Door test
-          '-riX6Xbvb8w',  // Casino
-          'Abr_LU822rQ',  // Is it the shoes (Mars Blackmon)
-          '9m_12SGXNKw',   // Scarface - say hello to my little friend
-          'JJmqCKtJnxM',  // Budweiser - Wassup
-          'NZJrGuC92U8',   // napoleon dynamite
-          'sZywE0AT1qY'   // Coming to america - barbershop
-        ];
+        const dateStr = yyyymmdd(new Date());
 
-        var now = new Date();
-        var videos;
+        // Loop leagues, fetch, filter for NY teams only
+        for (const lg of LEAGUES) {
+          try {
+            const data = await fetchLeague(lg.path, dateStr);
 
-        if (now.getMonth() == 11) { // December - Christmas
-          videos = xmas_videos;
-        } else if (now.getMonth() == 11 && now.getDate() == 25) { // Christmas Day
-          videos = ['DtrIWQ8J9jw'];
-        } else if (now.getMonth() == 6 && now.getDate() == 4) { // July 4th - Independence Day
-          videos = american_holiday_videos;
-        } else if (now.getMonth() == 4 && now.getDate() >= 25 && now.getDate() <= 31) { // Memorial Day (last Monday in May)
-          videos = american_holiday_videos;
-        } else if (now.getMonth() == 1 && now.getDate() >= 12 && now.getDate() <= 22) { // Presidents Day (3rd Monday in Feb)
-          videos = american_holiday_videos;
-        } else if (now.getMonth() == 8 && now.getDate() >= 1 && now.getDate() <= 7) { // Labor Day (1st Monday in Sept)
-          videos = american_holiday_videos;
-        } else if (now.getMonth() == 10 && now.getDate() == 11) { // Veterans Day
-          videos = american_holiday_videos;
-        } else if (now.getMonth() == 9 && now.getDate() <= 31 && now.getDate() >= 17) { // Halloween
-          videos = ['xiSIQzwIPzQ'];
-        } else if (now.getMonth() == 0 && now.getDate() == 1) { // New Year's
-          videos = ['vdLuk2Agamk'];
-        } else if (now.getMonth() == 10 && now.getDate() <= 31 && now.getDate() >= 17) { // Thanksgiving
-          videos = ['AORGKS6y_qI'];
-        } else {
-          videos = regular_videos;
+            // Tag each event with local label, filter out non-NY for this league
+            let nyEvents = (data.events || []).map(ev => {
+              ev.__localLabel = bestLocalLabelForEvent(ev, lg.key);
+              return ev;
+            }).filter(ev => ev.__localLabel);
+
+            // Sort: scored games first, then by your priority list, then by start time
+            nyEvents.sort((a, b) => {
+              const as = eventHasScore(a), bs = eventHasScore(b);
+              if (as !== bs) return bs - as; // scored on top
+              const ia = TEAM_ORDER_PRIORITY.indexOf(a.__localLabel);
+              const ib = TEAM_ORDER_PRIORITY.indexOf(b.__localLabel);
+              const pa = ia === -1 ? 999 : ia;
+              const pb = ib === -1 ? 999 : ib;
+              if (pa !== pb) return pa - pb;
+              const ta = new Date(a.competitions?.[0]?.date || 0).getTime();
+              const tb = new Date(b.competitions?.[0]?.date || 0).getTime();
+              return ta - tb;
+            });
+
+            // Render into scroll area, grouped by league
+            const temp = document.createElement('div');
+            renderGamesInto(temp, lg.key, nyEvents);
+            if (temp.firstChild) scrollHost.appendChild(temp.firstChild);
+
+          } catch (err) {
+            console.log(err);
+            const block = document.createElement('div');
+            block.className = 'league-block';
+            block.innerHTML = `<div class="league-name">${lg.key}</div><div class="game-line"><span class="game-left">Scores unavailable</span></div>`;
+            scrollHost.appendChild(block);
+          }
         }
 
-        var index = Math.floor(Math.random() * videos.length);
-        var html = '<iframe src="https://www.youtube.com/embed/' + videos[index] + '?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
-        $('.video').append(html);
+      } catch (error) {
+        console.error('Sports scores loading error:', error);
+        document.getElementById('sports-scores').innerHTML = '<div class="sports-title">Scores unavailable</div>';
+      }
+    }
 
-        setTimeout(function () {
-          $('#site-name').addClass('active');
-        }, 1000);
+    // ===== Page init =====
+    $(document).ready(function () {
+      // Time, Weather, Bitcoin, then Scores
+      updateNYTime();
+      setInterval(updateNYTime, 60 * 1000);
 
-        setTimeout(function () {
-          $('#site-name').removeClass('active');
-        }, 5000);
-      });
+      loadWeather();
+      loadBitcoinPrice().then(loadSportsScores);
+
+      // Videos (kept full lists)
+      var xmas_videos = [
+        'rgEP1niScLc', // Setting the Trap
+        'S7OWoc-j8qQ', // Home Alone
+        'hZ9q3PtiYu8', // Home Alone, Kevin
+        'E3RQVcNUcTA', // Home Alone 2, Give It to Me
+        'GPG3zSgm_Qo', // Peanuts
+        'tR_Z1LUDQuQ', // Nutcracker Ballet
+        'kSkyv8EUEsU', // Frosty the Snowman
+        'uIsgSQvsRj8', // A Christmas Story
+        'e-r8hvTFVb8', // A Christmas Story
+        'myzC3f0j9kw', // National Lampoon Christmas
+        'LznVSn7Ud9o'  // Mickey and The Muppet Christmas Carol
+      ];
+
+      var american_holiday_videos = [
+        'dJxj1mou03M', // Full Metal Jacket
+        '4GJArpnLqGY', // Born on the 4th of July
+        'U1mlCPMYtPk', // America F Yeah
+        'N_lCmBvYMRs'  // Whitney Houston Super Bowl
+      ];
+
+      var regular_videos = [
+        'CMNry4PE93Y',  // turtles
+        'dQw4w9WgXcQ',  // rick roll
+        '6GsCmnZnllk',  // Mets
+        'kR2O_xuVvIU',  // What are those?!?!
+        '1VbZE6YhjKk',  // corn
+        'ohz8_IafGwE',  // Tommy Boy, coat
+        'S2XvxDaIwCw',  // Tommy Boy, car scene
+        '7wrw19K_g_M',  // BTTF 2, Nike scene
+        'TkyLnWm1iCs',  // BTTF 2, Hoverboard
+        '5ztwns5PkJY',  // BTTF 2, future McFly
+        'GV01B5kVsC0',  // Her
+        'rzQAC8kPJxo',  // Jordan dunk
+        '7ujwjqIldwU',  // Mets Buckner
+        '5UDoSc-fRpg',  // Mets RBI Buckner
+        'pCTfxOrX4k8',  // Starks Dunk
+        'Dr0m5bWAgk0',  // Rangers win cup
+        'lMDkxFnUTZs',  // Goodfellas, Spida
+        'voDqfVthTpA',  // Goodfellas, Karen
+        'y8p1iG-6d-w',  // Bronx Tale, door test
+        '-riX6Xbvb8w',  // Casino
+        'Abr_LU822rQ',  // Mars Blackmon
+        '9m_12SGXNKw',  // Scarface
+        'JJmqCKtJnxM',  // Budweiser, Wassup
+        'NZJrGuC92U8',  // Napoleon Dynamite
+        'sZywE0AT1qY'   // Coming to America, barbershop
+      ];
+
+      var now = new Date();
+      var videos;
+
+      if (now.getMonth() == 11) {
+        videos = xmas_videos;
+      } else if (now.getMonth() == 11 && now.getDate() == 25) {
+        videos = ['DtrIWQ8J9jw'];
+      } else if (now.getMonth() == 6 && now.getDate() == 4) {
+        videos = american_holiday_videos;
+      } else if (now.getMonth() == 4 && now.getDate() >= 25 && now.getDate() <= 31) {
+        videos = american_holiday_videos;
+      } else if (now.getMonth() == 1 && now.getDate() >= 12 && now.getDate() <= 22) {
+        videos = american_holiday_videos;
+      } else if (now.getMonth() == 8 && now.getDate() >= 1 && now.getDate() <= 7) {
+        videos = american_holiday_videos;
+      } else if (now.getMonth() == 10 && now.getDate() == 11) {
+        videos = american_holiday_videos;
+      } else if (now.getMonth() == 9 && now.getDate() <= 31 && now.getDate() >= 17) {
+        videos = ['xiSIQzwIPzQ'];
+      } else if (now.getMonth() == 0 && now.getDate() == 1) {
+        videos = ['vdLuk2Agamk'];
+      } else if (now.getMonth() == 10 && now.getDate() <= 31 && now.getDate() >= 17) {
+        videos = ['AORGKS6y_qI'];
+      } else {
+        videos = regular_videos;
+      }
+
+      var index = Math.floor(Math.random() * videos.length);
+      var html = '<iframe src="https://www.youtube.com/embed/' + videos[index] + '?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+      $('.video').append(html);
+
+      setTimeout(function () { $('#site-name').addClass('active'); }, 1000);
+      setTimeout(function () { $('#site-name').removeClass('active'); }, 5000);
+    });
   </script>
 </head>
+
 <body>
   <header class="fixed-header">
     <div class="site-title">JoeRod.com</div>
   </header>
 
   <div class="weather-widget">
-    <div class="weather-location">NYC</div>
+    <!-- NYC time (24h) kept for clarity -->
+    <div id="ny-time" class="ny-time">NYC • —</div>
+
+    <!-- Removed the separate "NYC" label above the weather for cleaner layout -->
     <div id="weather-icon" class="weather-icon">🌤️</div>
     <div id="weather-temp" class="weather-temp loading">Loading...</div>
     <div id="weather-desc" class="weather-desc loading">Getting weather...</div>
 
-    <div id="sports-scores" class="sports-scores">
-      <div class="sports-title loading">Loading scores...</div>
-    </div>
-
+    <!-- Bitcoin first -->
     <div class="bitcoin-price">
       <div class="bitcoin-price-title">
         <img src="https://cdnjs.cloudflare.com/ajax/libs/simple-icons/9.18.0/bitcoin.svg" alt="Bitcoin">
         Bitcoin Price
       </div>
       <div id="bitcoin-price-value" class="bitcoin-price-value loading">Loading...</div>
+    </div>
+
+    <!-- Scrollable scores under Bitcoin -->
+    <div id="sports-scores" class="sports-scores">
+      <div class="sports-title loading">Loading scores...</div>
     </div>
   </div>
 
@@ -812,7 +779,7 @@
 
       <a href="https://instagram.com/joerodr" class="social-link" target="_blank" rel="noopener noreferrer">
         <svg viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.59-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
         </svg>
         @joerodr
       </a>
@@ -832,10 +799,14 @@
       </a>
     </div>
 
-    <div class="bitcoin-address">
-      <img src="https://cdnjs.cloudflare.com/ajax/libs/simple-icons/9.18.0/bitcoin.svg" alt="Bitcoin">
-      bc1qpg4577k7536dqrv0r6nw8t36c73gtncnerm7k24tljdl9xrnxjus02vsz0
+    <div class="donate-wrap">
+      <div class="donate-title">Donate</div>
+      <div class="bitcoin-address">
+        <img src="https://cdnjs.cloudflare.com/ajax/libs/simple-icons/9.18.0/bitcoin.svg" alt="Bitcoin">
+        bc1qpg4577k7536dqrv0r6nw8t36c73gtncnerm7k24tljdl9xrnxjus02vsz0
+      </div>
     </div>
   </footer>
 </body>
 </html>
+```
