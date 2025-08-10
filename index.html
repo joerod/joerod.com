@@ -4,6 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>JoeRod.com</title>
+
+  <!-- Inline SVG favicon: solid deep blue JR (diagonal). -->
+  <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3Cfilter id='s' x='-20%25' y='-20%25' width='140%25' height='140%25'%3E%3CfeDropShadow dx='0' dy='1' stdDeviation='1' flood-color='black' flood-opacity='0.55'/%3E%3C/filter%3E%3C/defs%3E%3Crect width='64' height='64' fill='none'/%3E%3Cpath d='M18 10 q8 0 8 8 v13 q0 6 -4 9 t-9 2 q-3 0 -6 -1 l2 -6 q2 1 4 1 q3 0 4.5 -1.5 t1.5 -4.5 v-12 q0 -1.8 -1 -2.9 t-3 -1.1 h-2 v-4 h5z' fill='%231e3a8a' filter='url(%23s)'/%3E%3Cpath d='M31 28 h8 q8 0 8 8 q0 5 -4 7 l6 9 h-8 l-5 -8 h-3 v8 h-6 v-24 z m6 5 v7 h3 q3 0 3 -3 q0 -4 -3 -4 h-3z' fill='%231e3a8a' filter='url(%23s)'/%3E%3C/svg%3E" />
+
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
   <style>
@@ -177,6 +182,14 @@
     .game-status { opacity: 0.85; font-size: 0.6rem; white-space: nowrap; align-self: center; }
     .game-line.live .team-main { color: var(--live-color); font-weight: 800; }
 
+    /* Fade animation for score updates */
+    .score {
+      transition: opacity 180ms ease;
+    }
+    .score-updating {
+      opacity: 0.2;
+    }
+
     .video-container {
       width: 100%;
       max-width: 600px;
@@ -217,26 +230,26 @@
     .social-links {
       display: flex;
       justify-content: center;
-      gap: 0.8rem;
-      margin-bottom: 1.5rem;
+      gap: 0.5rem;
+      margin-bottom: 1.2rem;
       flex-wrap: wrap;
     }
     .social-link {
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.4rem;
       color: var(--text-color);
       text-decoration: none;
-      padding: 0.6rem 1rem;
+      padding: 0.45rem 0.75rem;
       border-radius: 50px;
       backdrop-filter: blur(20px);
       background: rgba(255, 255, 255, 0.1);
       border: 1px solid rgba(255, 255, 255, 0.2);
       transition: all 0.3s ease;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
     .social-link:hover { background: rgba(255, 255, 255, 0.2); transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); }
-    .social-link img { width: 18px; height: 18px; filter: brightness(0) invert(1); }
+    .social-link img { width: 16px; height: 16px; filter: brightness(0) invert(1); }
 
     .donate-wrap {
       display: flex;
@@ -257,7 +270,7 @@
     .bitcoin-address {
       color: var(--text-color);
       text-decoration: none;
-      padding: 0.75rem 1.5rem;
+      padding: 0.75rem 1.2rem;
       border-radius: 50px;
       backdrop-filter: blur(20px);
       background: rgba(255, 255, 255, 0.1);
@@ -281,9 +294,9 @@
       main { padding: 0.5rem; order: 0; }
       .video-container { margin: 0.6rem 0; max-width: 100%; padding-bottom: 56.25%; }
       .video-controls { max-width: 100%; }
-      .social-links { gap: 0.6rem; }
-      .social-link { font-size: 0.9rem; padding: 0.7rem 1rem; }
-      .bitcoin-address { font-size: 0.75rem; padding: 0.8rem 1.2rem; max-width: 95%; }
+      .social-links { gap: 0.45rem; }
+      .social-link { font-size: 0.85rem; padding: 0.45rem 0.75rem; }
+      .bitcoin-address { font-size: 0.75rem; padding: 0.8rem 1rem; max-width: 95%; }
       .scores-scroll { max-height: 220px; }
       footer { padding: 1.5rem 1rem; }
     }
@@ -293,7 +306,7 @@
       .fixed-header { padding: 8px 12px; }
       .site-title { font-size: 1.8rem; }
       .weather-widget { margin: 0.8rem auto; max-width: 95%; padding: 0.8rem; }
-      .social-link { font-size: 0.85rem; padding: 0.7rem 1rem; }
+      .social-link { font-size: 0.82rem; padding: 0.4rem 0.7rem; }
       .bitcoin-address { font-size: 0.7rem; padding: 0.7rem 1rem; max-width: 95%; }
       footer { padding: 1rem 0.5rem; }
     }
@@ -335,7 +348,7 @@
       return `${y}${m}${d}`;
     }
 
-    // NYC time (24h) every second
+    // NYC time (24h) — no seconds
     function updateNYTime() {
       try {
         const opts = {
@@ -346,7 +359,6 @@
           day: 'numeric',
           hour: '2-digit',
           minute: '2-digit',
-          second: '2-digit',
           hour12: false
         };
         const nowStr = new Intl.DateTimeFormat('en-US', opts).format(new Date());
@@ -418,7 +430,7 @@
       }
     }
 
-    // ---- NY teams only with your exact order ----
+    // ---- NY teams in your exact order ----
     const TEAM_ORDER_PRIORITY = [
       'Mets',
       'Knicks',
@@ -443,7 +455,6 @@
       ],
       NFL: [
         { label: 'Giants',  rx: [/\bnew york giants\b/i, /\bgiants\b/i, /\bNYG\b/i] },
-        { label: 'Jets',    rx: [/\bnew york jets\b/i, /\bjets\b/i, /\bNYJ\b/i] },
       ],
       NHL: [
         { label: 'Rangers', rx: [/\bnew york rangers\b/i, /\brangers\b/i, /\bNYR\b/i] },
@@ -534,6 +545,7 @@
       return res.json();
     }
 
+    // ---------- BUILD (initial) ----------
     function renderGamesInto(container, leagueLabel, events) {
       if (!events.length) return;
       const block = document.createElement('div');
@@ -563,19 +575,21 @@
 
         const line = document.createElement('div');
         line.className = 'game-line' + (isLive ? ' live' : '');
+        line.setAttribute('data-event-id', ev.id);
+
         line.innerHTML = `
           <div class="game-left">
             <div class="team-col">
-              <div class="team-main">${awayName} - ${awayScore}</div>
+              <div class="team-main">${awayName} - <span class="score" id="score-${ev.id}-away" data-event-id="${ev.id}" data-side="away">${awayScore}</span></div>
               ${awayRec ? `<div class="team-sub">(${awayRec})</div>` : ''}
             </div>
             <span class="at">@</span>
             <div class="team-col">
-              <div class="team-main">${homeName} - ${homeScore}</div>
+              <div class="team-main">${homeName} - <span class="score" id="score-${ev.id}-home" data-event-id="${ev.id}" data-side="home">${homeScore}</span></div>
               ${homeRec ? `<div class="team-sub">(${homeRec})</div>` : ''}
             </div>
           </div>
-          <div class="game-status">${statusText}</div>
+          <div class="game-status" id="status-${ev.id}">${statusText}</div>
         `;
         block.appendChild(line);
       }
@@ -583,56 +597,151 @@
       container.appendChild(block);
     }
 
-    async function loadSportsScores() {
-      try {
-        const scoresContainer = document.getElementById('sports-scores');
-        scoresContainer.innerHTML = `
-          <div class="sports-title">Today's NY Scores (${new Date().toLocaleDateString([], {weekday:'short', month:'short', day:'numeric'})})</div>
-          <div class="scores-scroll" id="scores-scroll"></div>
-        `;
-        const scrollHost = document.getElementById('scores-scroll');
+    async function buildSportsScores() {
+      const scoresContainer = document.getElementById('sports-scores');
+      scoresContainer.innerHTML = `
+        <div class="sports-title">Today's NY Scores (${new Date().toLocaleDateString([], {weekday:'short', month:'short', day:'numeric'})})</div>
+        <div class="scores-scroll" id="scores-scroll"></div>
+      `;
+      const scrollHost = document.getElementById('scores-scroll');
+      const dateStr = yyyymmdd(new Date());
+      let hasLiveOverall = false;
 
+      for (const lg of LEAGUES) {
+        try {
+          const data = await fetchLeague(lg.path, dateStr);
+
+          let nyEvents = (data.events || []).map(ev => {
+            ev.__localLabel = bestLocalLabelForEvent(ev, lg.key);
+            return ev;
+          }).filter(ev => ev.__localLabel);
+
+          // Scored games first, then by your order, then by start time
+          nyEvents.sort((a, b) => {
+            const as = eventHasScore(a), bs = eventHasScore(b);
+            if (as !== bs) return bs - as;
+            const ia = TEAM_ORDER_PRIORITY.indexOf(a.__localLabel);
+            const ib = TEAM_ORDER_PRIORITY.indexOf(b.__localLabel);
+            const pa = ia === -1 ? 999 : ia;
+            const pb = ib === -1 ? 999 : ib;
+            if (pa !== pb) return pa - pb;
+            const ta = new Date(a.competitions?.[0]?.date || 0).getTime();
+            const tb = new Date(b.competitions?.[0]?.date || 0).getTime();
+            return ta - tb;
+          });
+
+          if (nyEvents.some(ev => ev.competitions?.[0]?.status?.type?.state === 'in')) {
+            hasLiveOverall = true;
+          }
+
+          const temp = document.createElement('div');
+          renderGamesInto(temp, lg.key, nyEvents);
+          if (temp.firstChild) scrollHost.appendChild(temp.firstChild);
+
+        } catch (err) {
+          console.log(err);
+          const block = document.createElement('div');
+          block.className = 'league-block';
+          block.innerHTML = `<div class="league-name">${lg.key}</div><div class="game-line"><span class="game-left">Scores unavailable</span></div>`;
+          scrollHost.appendChild(block);
+        }
+      }
+
+      // Set up/tear down interval based on live games
+      manageScoresInterval(hasLiveOverall);
+    }
+
+    // ---------- REFRESH (scores only) ----------
+    let scoresRefreshTimer = null;
+    let refreshing = false;
+
+    function manageScoresInterval(hasLive) {
+      if (hasLive && !scoresRefreshTimer) {
+        scoresRefreshTimer = setInterval(refreshScoresOnly, 30000); // 30s
+      } else if (!hasLive && scoresRefreshTimer) {
+        clearInterval(scoresRefreshTimer);
+        scoresRefreshTimer = null;
+      }
+    }
+
+    async function refreshScoresOnly() {
+      if (refreshing) return;
+      refreshing = true;
+
+      try {
         const dateStr = yyyymmdd(new Date());
+        let hasLiveOverall = false;
 
         for (const lg of LEAGUES) {
           try {
             const data = await fetchLeague(lg.path, dateStr);
-
             let nyEvents = (data.events || []).map(ev => {
               ev.__localLabel = bestLocalLabelForEvent(ev, lg.key);
               return ev;
             }).filter(ev => ev.__localLabel);
 
-            // Scored games first, then by your order, then by start time
-            nyEvents.sort((a, b) => {
-              const as = eventHasScore(a), bs = eventHasScore(b);
-              if (as !== bs) return bs - as;
-              const ia = TEAM_ORDER_PRIORITY.indexOf(a.__localLabel);
-              const ib = TEAM_ORDER_PRIORITY.indexOf(b.__localLabel);
-              const pa = ia === -1 ? 999 : ia;
-              const pb = ib === -1 ? 999 : ib;
-              if (pa !== pb) return pa - pb;
-              const ta = new Date(a.competitions?.[0]?.date || 0).getTime();
-              const tb = new Date(b.competitions?.[0]?.date || 0).getTime();
-              return ta - tb;
+            if (nyEvents.some(ev => ev.competitions?.[0]?.status?.type?.state === 'in')) {
+              hasLiveOverall = true;
+            }
+
+            // Update only existing nodes
+            nyEvents.forEach(ev => {
+              const comp = ev.competitions?.[0];
+              const teams = comp?.competitors || [];
+              const away = teams.find(t => t.homeAway === 'away');
+              const home = teams.find(t => t.homeAway === 'home');
+              const awayScore = (away?.score ?? '').toString();
+              const homeScore = (home?.score ?? '').toString();
+
+              // Scores
+              const awayEl = document.getElementById(`score-${ev.id}-away`);
+              const homeEl = document.getElementById(`score-${ev.id}-home`);
+              if (awayEl && awayEl.textContent !== awayScore) {
+                awayEl.classList.add('score-updating');
+                // Force reflow so transition triggers even if class toggles quickly
+                void awayEl.offsetWidth;
+                awayEl.textContent = awayScore;
+                setTimeout(() => awayEl.classList.remove('score-updating'), 180);
+              }
+              if (homeEl && homeEl.textContent !== homeScore) {
+                homeEl.classList.add('score-updating');
+                void homeEl.offsetWidth;
+                homeEl.textContent = homeScore;
+                setTimeout(() => homeEl.classList.remove('score-updating'), 180);
+              }
+
+              // Live class + status text
+              const line = document.querySelector(`.game-line[data-event-id="${ev.id}"]`);
+              if (line) {
+                const isLive = (comp?.status?.type?.state === 'in');
+                line.classList.toggle('live', !!isLive);
+
+                const statusEl = document.getElementById(`status-${ev.id}`);
+                if (statusEl) {
+                  const statusText = (function(){
+                    const st = comp?.status?.type;
+                    if (!st) return '—';
+                    if (st.state === 'pre') {
+                      const t = comp.date ? new Date(comp.date) : null;
+                      return t ? t.toLocaleTimeString([], { hour:'numeric', minute:'2-digit' }) : (st.shortDetail || 'Scheduled');
+                    }
+                    if (st.state === 'in')  return st.shortDetail || 'Live';
+                    if (st.state === 'post') return st.shortDetail || 'Final';
+                    return st.shortDetail || '—';
+                  })();
+                  if (statusEl.textContent !== statusText) statusEl.textContent = statusText;
+                }
+              }
             });
 
-            const temp = document.createElement('div');
-            renderGamesInto(temp, lg.key, nyEvents);
-            if (temp.firstChild) scrollHost.appendChild(temp.firstChild);
-
-          } catch (err) {
-            console.log(err);
-            const block = document.createElement('div');
-            block.className = 'league-block';
-            block.innerHTML = `<div class="league-name">${lg.key}</div><div class="game-line"><span class="game-left">Scores unavailable</span></div>`;
-            scrollHost.appendChild(block);
+          } catch (e) {
+            console.log('Refresh error for league', lg.key, e);
           }
         }
 
-      } catch (error) {
-        console.error('Sports scores loading error:', error);
-        document.getElementById('sports-scores').innerHTML = '<div class="sports-title">Scores unavailable</div>';
+        manageScoresInterval(hasLiveOverall);
+      } finally {
+        refreshing = false;
       }
     }
 
@@ -655,7 +764,7 @@
     function pickVideoList() {
       const now = new Date();
       if (now.getMonth() == 11) {
-        if (now.getMonth() == 11 && now.getDate() == 25) return ['DtrIWQ8J9jw'];
+        if (now.getDate() == 25) return ['DtrIWQ8J9jw'];
         return xmas_videos;
       } else if (now.getMonth() == 6 && now.getDate() == 4) {
         return american_holiday_videos;
@@ -688,11 +797,12 @@
     }
 
     $(document).ready(function () {
+      // Time (no seconds)
       updateNYTime();
-      setInterval(updateNYTime, 1000);
+      setInterval(updateNYTime, 1000 * 30);
 
       loadWeather();
-      loadBitcoinPrice().then(loadSportsScores);
+      loadBitcoinPrice().then(buildSportsScores);
 
       loadRandomVideo();
 
@@ -739,6 +849,7 @@
 
   <footer>
     <div class="social-links">
+      <!-- ORDER: Twitter/X, Instagram, TikTok, Facebook, YouTube, Spotify, GitHub, LinkedIn -->
       <a href="https://x.com/joerodr" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter) @joerodr">
         <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/x.svg" alt="X (Twitter)" />
         @joerodr
@@ -767,6 +878,11 @@
       <a href="https://open.spotify.com/playlist/5OYeC1eQC0Zf925B1YXcBm?si=ecb7ab53786b4550" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="Spotify Playlist">
         <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/spotify.svg" alt="Spotify" />
         My Playlist
+      </a>
+
+      <a href="https://github.com/joerod" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="GitHub @joerod">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/github.svg" alt="GitHub" />
+        @joerod
       </a>
 
       <a href="https://www.linkedin.com/in/joerodr/" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
