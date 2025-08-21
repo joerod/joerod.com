@@ -268,41 +268,6 @@
     .social-link:hover { background: rgba(255, 255, 255, 0.2); transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); }
     .social-link img { width: 16px; height: 16px; filter: brightness(0) invert(1); }
 
-    .donate-wrap {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.6rem;
-      margin-top: 1rem;
-    }
-    .donate-title {
-      font-family: 'Dancing Script', cursive;
-      font-weight: 700;
-      font-size: 1.4rem;
-      color: #fff;
-      text-shadow: 0 2px 15px rgba(0, 0, 0, 0.4);
-      letter-spacing: 0.5px;
-    }
-
-    .bitcoin-address {
-      color: var(--text-color);
-      text-decoration: none;
-      padding: 0.75rem 1.2rem;
-      border-radius: 50px;
-      backdrop-filter: blur(20px);
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      transition: all 0.3s ease;
-      font-size: 0.75rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      word-break: break-all;
-      max-width: 720px;
-    }
-    .bitcoin-address:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-    .bitcoin-address img { width: 16px; height: 16px; filter: brightness(0) invert(1); }
-
     @media (max-width: 768px) {
       body { padding-top: 70px; overflow-y: auto; height: auto; min-height: 100vh; }
       .fixed-header { padding: 10px 15px; }
@@ -313,7 +278,6 @@
       .video-controls { max-width: 100%; }
       .social-links { gap: 0.45rem; }
       .social-link { font-size: 0.85rem; padding: 0.45rem 0.75rem; }
-      .bitcoin-address { font-size: 0.75rem; padding: 0.8rem 1rem; max-width: 95%; }
       .scores-scroll { max-height: 220px; }
       footer { padding: 1.5rem 1rem; }
     }
@@ -324,7 +288,6 @@
       .site-title { font-size: 1.8rem; }
       .weather-widget { margin: 0.8rem auto; max-width: 95%; padding: 0.8rem; }
       .social-link { font-size: 0.82rem; padding: 0.4rem 0.7rem; }
-      .bitcoin-address { font-size: 0.7rem; padding: 0.7rem 1rem; max-width: 95%; }
       footer { padding: 1rem 0.5rem; }
     }
 
@@ -340,8 +303,6 @@
     @media (hover: none) and (pointer: coarse) {
       .social-link:hover { background: rgba(255, 255, 255, 0.1); transform: none; box-shadow: none; }
       .social-link:active { background: rgba(255, 255, 255, 0.3); transform: scale(0.98); }
-      .bitcoin-address:hover { background: rgba(255, 255, 255, 0.1); transform: none; box-shadow: none; }
-      .bitcoin-address:active { background: rgba(255, 255, 255, 0.3); transform: scale(0.98); }
     }
 
     .loading { color: rgba(255, 255, 255, 0.7); font-size: 0.8rem; }
@@ -384,6 +345,45 @@
       } catch (e) {
         const el = document.getElementById('ny-time');
         if (el) el.textContent = 'NYC • Time unavailable';
+      }
+    }
+
+    // Weather function using OpenWeatherMap API
+    async function loadWeather() {
+      try {
+        const API_KEY = 'ea033866cb220b2bb944e00b54306c14';
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=New York,NY,US&appid=${API_KEY}&units=imperial`;
+
+        const response = await fetch(url, { cache: 'no-store', mode: 'cors' });
+        const data = await response.json();
+
+        if (data.cod === 200) {
+          // Update weather icon
+          const iconCode = data.weather[0].icon;
+          const iconMap = {
+            '01d': '☀️', '01n': '🌙', '02d': '⛅', '02n': '☁️',
+            '03d': '☁️', '03n': '☁️', '04d': '☁️', '04n': '☁️',
+            '09d': '🌧️', '09n': '🌧️', '10d': '🌦️', '10n': '🌧️',
+            '11d': '⛈️', '11n': '⛈️', '13d': '❄️', '13n': '❄️',
+            '50d': '🌫️', '50n': '🌫️'
+          };
+          document.getElementById('weather-icon').textContent = iconMap[iconCode] || '🌤️';
+
+          // Update temperature
+          const temp = Math.round(data.main.temp);
+          document.getElementById('weather-temp').textContent = `${temp}°F`;
+
+          // Update description
+          document.getElementById('weather-desc').textContent = data.weather[0].description;
+
+        } else {
+          throw new Error('Weather API returned error');
+        }
+      } catch (error) {
+        console.error('Weather loading error:', error);
+        document.getElementById('weather-icon').textContent = '🌤️';
+        document.getElementById('weather-temp').textContent = 'Weather unavailable';
+        document.getElementById('weather-desc').textContent = 'Unable to load weather';
       }
     }
 
@@ -442,7 +442,7 @@
       };
 
       try {
-        const url = `https://financialmodelingprep.com/api/v3/quote/%5EGSPC,%5EDJI,%5EIXIC?apikey=${encodeURIComponent(FMP_KEY)}`;
+        const url = `https://financialmodelingprep.com/api/v3/quote/AMZN,MSFT,TSLA,GOOGL?apikey=FMP_KEY)}`;
         const res = await fetch(url, { cache: 'no-store', mode: 'cors' });
         if (!res.ok) throw new Error('FMP failed');
         const data = await res.json();
@@ -943,14 +943,6 @@
         <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/linkedin.svg" alt="LinkedIn" />
         LinkedIn
       </a>
-    </div>
-
-    <div class="donate-wrap">
-      <div class="donate-title">Send Bitcoin</div>
-      <div class="bitcoin-address">
-        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/bitcoin.svg" alt="Bitcoin">
-        bc1qpg4577k7536dqrv0r6nw8t36c73gtncnerm7k24tljdl9xrnxjus02vsz0
-      </div>
     </div>
   </footer>
 </body>
