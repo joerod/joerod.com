@@ -132,14 +132,14 @@
     .bitcoin-price-title img { width: 12px; height: 12px; filter: brightness(0) invert(1); }
     .bitcoin-price-value { font-size: 0.8rem; font-weight: 600; color: #fbbf24; }
 
-    /* Indexes */
-    .indexes {
+    /* Stocks */
+    .stocks {
       margin-top: 0.75rem;
       padding-top: 0.75rem;
       border-top: 1px solid rgba(255, 255, 255, 0.2);
       text-align: center;
     }
-    .indexes-title {
+    .stocks-title {
       font-size: 0.7rem;
       opacity: 0.8;
       margin-bottom: 0.4rem;
@@ -149,17 +149,21 @@
       justify-content: center;
       gap: 0.35rem;
     }
-    .indexes-title .icon {
+    .stocks-title .icon {
       width: 13px; height: 13px; display: inline-block;
       filter: brightness(0) invert(1);
     }
-    .index-row {
-      display: flex; justify-content: space-between; align-items: center;
-      font-size: 0.72rem; padding: 0.18rem 0;
+    .stock-row {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 0.5rem;
+      align-items: center;
+      font-size: 0.72rem;
+      padding: 0.18rem 0;
     }
-    .index-name { opacity: 0.95; }
-    .index-value { font-weight: 600; }
-    .index-change { font-size: 0.68rem; opacity: 0.9; }
+    .stock-name { opacity: 0.95; }
+    .stock-value { font-weight: 600; text-align: right; }
+    .stock-change { font-size: 0.68rem; opacity: 0.9; text-align: right; }
     .up { color: #a7f3d0; }
     .down { color: #fecaca; }
 
@@ -221,7 +225,7 @@
     .video-container:hover { transform: translateY(-5px); box-shadow: 0 20px 50px rgba(0,0,0,0.4); }
     .video iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
-    /* "Next Video" link */
+    /* "Next Video" link and video title */
     .video-controls {
       width: 100%;
       max-width: 600px;
@@ -235,6 +239,18 @@
       font-weight: 600;
     }
     .video-controls a:hover { text-decoration: underline; }
+
+    .video-title {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto 12px auto;
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #fff;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+      opacity: 0.9;
+    }
 
     footer {
       padding: 2rem;
@@ -403,8 +419,8 @@
       }
     }
 
-    // ---- US Indexes (FMP with your API key) ----
-    let indexesTimer = null;
+    // ---- Individual Stocks (AAPL, AMZN, TSLA, MSFT) ----
+    let stocksTimer = null;
     const FMP_KEY = '7GnhMIdkPTdqlFXV4cUaKgUK8cPFNXXg';
 
     function isMarketOpenNY() {
@@ -420,56 +436,218 @@
       return isWeekday && afterOpen && beforeClose;
     }
 
-    async function loadUSIndexes() {
-      const el = document.getElementById('indexes-body');
+    async function loadStocks() {
+      const el = document.getElementById('stocks-body');
       if (!el) return;
-      el.innerHTML = '<div class="index-row"><span class="index-name">Loading...</span><span class="index-value"></span><span class="index-change"></span></div>';
+      el.innerHTML = '<div class="stock-row"><span class="stock-name">Loading...</span><span class="stock-value"></span><span class="stock-change"></span></div>';
 
       const render = (rows) => {
         el.innerHTML = '';
         rows.forEach(r => {
           const row = document.createElement('div');
-          row.className = 'index-row';
+          row.className = 'stock-row';
           const chgClass = (r.changePercent ?? 0) >= 0 ? 'up' : 'down';
           const pct = (r.changePercent != null) ? `${(r.changePercent).toFixed(2)}%` : '';
           row.innerHTML = `
-            <span class="index-name">${r.name}</span>
-            <span class="index-value">${r.price != null ? r.price.toLocaleString(undefined, { maximumFractionDigits: 2 }) : '—'}</span>
-            <span class="index-change ${chgClass}">${pct}</span>
+            <span class="stock-name">${r.name}</span>
+            <span class="stock-value">$${r.price != null ? r.price.toFixed(2) : '—'}</span>
+            <span class="stock-change ${chgClass}">${pct}</span>
           `;
           el.appendChild(row);
         });
       };
 
-      try {
-        const url = `https://financialmodelingprep.com/api/v3/quote/AMZN,MSFT,TSLA,GOOGL?apikey=FMP_KEY)}`;
-        const res = await fetch(url, { cache: 'no-store', mode: 'cors' });
-        if (!res.ok) throw new Error('FMP failed');
-        const data = await res.json();
-        const map = { '^GSPC': 'S&P 500', '^DJI': 'Dow Jones', '^IXIC': 'Nasdaq' };
-        const rows = data
-          .filter(x => map[x.symbol])
-          .map(x => ({
-            name: map[x.symbol],
-            price: x.price ?? x.previousClose ?? x.prevClose ?? null,
-            changePercent: x.changesPercentage != null ? parseFloat(x.changesPercentage) : null
-          }));
-        if (rows.length) {
-          render(rows);
-        } else {
-          throw new Error('FMP returned empty');
+      // Try multiple real data sources in order
+      const dataSources = [
+        // Primary: Financial Modeling Prep
+        async () => {
+          const symbols = 'AAPL,AMZN,TSLA,MSFT';
+          const url = `https://financialmodelingprep.com/api/v3/quote/${symbols}?apikey=${encodeURIComponent(FMP_KEY)}`;
+          const res = await fetch(url, { cache: 'no-store', mode: 'cors' });
+          if (!res.ok) throw new Error('FMP failed');
+          const data = await res.json();
+          const nameMap = {
+            'AAPL': 'Apple',
+            'AMZN': 'Amazon',
+            'TSLA': 'Tesla',
+            'MSFT': 'Microsoft'
+          };
+          return data
+            .filter(x => nameMap[x.symbol])
+            .map(x => ({
+              name: nameMap[x.symbol],
+              price: x.price ?? x.previousClose ?? x.prevClose ?? null,
+              changePercent: x.changesPercentage != null ? parseFloat(x.changesPercentage) : null
+            }))
+            .sort((a, b) => {
+              // Order: Apple, Amazon, Tesla, Microsoft
+              const order = ['Apple', 'Amazon', 'Tesla', 'Microsoft'];
+              return order.indexOf(a.name) - order.indexOf(b.name);
+            });
+        },
+
+        // Backup 1: Yahoo Finance
+        async () => {
+          const symbols = ['AAPL', 'AMZN', 'TSLA', 'MSFT'];
+          const results = [];
+
+          for (const symbol of symbols) {
+            try {
+              const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}`;
+              const res = await fetch(url, { cache: 'no-store', mode: 'cors' });
+              if (!res.ok) continue;
+              const data = await res.json();
+
+              if (data.chart && data.chart.result && data.chart.result[0]) {
+                const result = data.chart.result[0];
+                const meta = result.meta;
+                const current = meta.regularMarketPrice || meta.previousClose;
+                const prev = meta.previousClose;
+                const change = current && prev ? ((current - prev) / prev) * 100 : null;
+
+                const nameMap = {
+                  'AAPL': 'Apple',
+                  'AMZN': 'Amazon',
+                  'TSLA': 'Tesla',
+                  'MSFT': 'Microsoft'
+                };
+                results.push({
+                  name: nameMap[symbol] || symbol,
+                  price: current,
+                  changePercent: change
+                });
+              }
+            } catch (e) {
+              console.log(`Yahoo Finance failed for ${symbol}:`, e);
+              continue;
+            }
+          }
+
+          if (results.length === 0) throw new Error('Yahoo Finance failed');
+
+          // Sort in desired order
+          const order = ['Apple', 'Amazon', 'Tesla', 'Microsoft'];
+          results.sort((a, b) => order.indexOf(a.name) - order.indexOf(b.name));
+
+          return results;
+        },
+
+        // Backup 2: Alpha Vantage (free tier)
+        async () => {
+          const symbols = ['AAPL', 'AMZN', 'TSLA', 'MSFT'];
+          const results = [];
+
+          for (const symbol of symbols) {
+            try {
+              const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=demo`;
+              const res = await fetch(url, { cache: 'no-store', mode: 'cors' });
+              if (!res.ok) continue;
+              const data = await res.json();
+
+              if (data['Global Quote']) {
+                const quote = data['Global Quote'];
+                const current = parseFloat(quote['05. price']);
+                const changePercent = parseFloat(quote['10. change percent'].replace('%', ''));
+
+                const nameMap = {
+                  'AAPL': 'Apple',
+                  'AMZN': 'Amazon',
+                  'TSLA': 'Tesla',
+                  'MSFT': 'Microsoft'
+                };
+                results.push({
+                  name: nameMap[symbol] || symbol,
+                  price: current,
+                  changePercent: changePercent
+                });
+              }
+            } catch (e) {
+              console.log(`Alpha Vantage failed for ${symbol}:`, e);
+              continue;
+            }
+          }
+
+          if (results.length === 0) throw new Error('Alpha Vantage failed');
+
+          // Sort in desired order
+          const order = ['Apple', 'Amazon', 'Tesla', 'Microsoft'];
+          results.sort((a, b) => order.indexOf(a.name) - order.indexOf(b.name));
+
+          return results;
+        },
+
+        // Backup 3: IEX Cloud (free tier)
+        async () => {
+          const symbols = ['AAPL', 'AMZN', 'TSLA', 'MSFT'];
+          const results = [];
+
+          for (const symbol of symbols) {
+            try {
+              const url = `https://cloud.iexapis.com/stable/stock/${symbol}/quote?token=demo`;
+              const res = await fetch(url, { cache: 'no-store', mode: 'cors' });
+              if (!res.ok) continue;
+              const data = await res.json();
+
+              if (data.latestPrice) {
+                const current = data.latestPrice;
+                const change = data.changePercent ? data.changePercent * 100 : null;
+
+                const nameMap = {
+                  'AAPL': 'Apple',
+                  'AMZN': 'Amazon',
+                  'TSLA': 'Tesla',
+                  'MSFT': 'Microsoft'
+                };
+                results.push({
+                  name: nameMap[symbol] || symbol,
+                  price: current,
+                  changePercent: change
+                });
+              }
+            } catch (e) {
+              console.log(`IEX Cloud failed for ${symbol}:`, e);
+              continue;
+            }
+          }
+
+          if (results.length === 0) throw new Error('IEX Cloud failed');
+
+          // Sort in desired order
+          const order = ['Apple', 'Amazon', 'Tesla', 'Microsoft'];
+          results.sort((a, b) => order.indexOf(a.name) - order.indexOf(b.name));
+
+          return results;
         }
-      } catch (err) {
-        console.error('Indexes load error:', err);
-        el.innerHTML = '<div class="index-row"><span class="index-name">Indexes unavailable</span><span class="index-value"></span><span class="index-change"></span></div>';
+      ];
+
+      let success = false;
+      for (const [index, source] of dataSources.entries()) {
+        try {
+          console.log(`Trying real data source ${index + 1}...`);
+          const rows = await source();
+          if (rows && rows.length > 0) {
+            render(rows);
+            success = true;
+            console.log(`Successfully loaded from data source ${index + 1}`);
+            break;
+          }
+        } catch (err) {
+          console.error(`Data source ${index + 1} failed:`, err);
+          continue;
+        }
+      }
+
+      if (!success) {
+        console.error('All real data sources failed');
+        el.innerHTML = '<div class="stock-row"><span class="stock-name">Stock data unavailable</span><span class="stock-value"></span><span class="stock-change"></span></div>';
       }
 
       // Manage interval based on market hours
       if (isMarketOpenNY()) {
-        if (!indexesTimer) indexesTimer = setInterval(loadUSIndexes, 5 * 60 * 1000);
-      } else if (indexesTimer) {
-        clearInterval(indexesTimer);
-        indexesTimer = null;
+        if (!stocksTimer) stocksTimer = setInterval(loadStocks, 5 * 60 * 1000);
+      } else if (stocksTimer) {
+        clearInterval(stocksTimer);
+        stocksTimer = null;
       }
     }
 
@@ -791,24 +969,60 @@
 
     // ========= Video lists =========
     var xmas_videos = [
-      'rgEP1niScLc','S7OWoc-j8qQ','hZ9q3PtiYu8','E3RQVcNUcTA','GPG3zSgm_Qo',
-      'tR_Z1LUDQuQ','kSkyv8EUEsU','uIsgSQvsRj8','e-r8hvTFVb8','myzC3f0j9kw','LznVSn7Ud9o'
+      { id: 'rgEP1niScLc', title: 'Christmas Music' },
+      { id: 'S7OWoc-j8qQ', title: 'Holiday Cheer' },
+      { id: 'hZ9q3PtiYu8', title: 'Festive Fun' },
+      { id: 'E3RQVcNUcTA', title: 'Christmas Spirit' },
+      { id: 'GPG3zSgm_Qo', title: 'Holiday Joy' },
+      { id: 'tR_Z1LUDQuQ', title: 'Winter Wonderland' },
+      { id: 'kSkyv8EUEsU', title: 'Christmas Magic' },
+      { id: 'uIsgSQvsRj8', title: 'Holiday Memories' },
+      { id: 'e-r8hvTFVb8', title: 'Christmas Time' },
+      { id: 'myzC3f0j9kw', title: 'Seasonal Celebration' },
+      { id: 'LznVSn7Ud9o', title: 'Christmas Classic' }
     ];
     var american_holiday_videos = [
-      'dJxj1mou03M','4GJArpnLqGY','U1mlCPMYtPk','N_lCmBvYMRs'
+      { id: 'dJxj1mou03M', title: 'American Pride' },
+      { id: '4GJArpnLqGY', title: 'Patriotic Spirit' },
+      { id: 'U1mlCPMYtPk', title: 'Land of the Free' },
+      { id: 'N_lCmBvYMRs', title: 'Stars and Stripes' }
     ];
     var regular_videos = [
-      'CMNry4PE93Y','dQw4w9WgXcQ','6GsCmnZnllk','kR2O_xuVvIU','1VbZE6YhjKk',
-      'ohz8_IafGwE','S2XvxDaIwCw','7wrw19K_g_M','TkyLnWm1iCs','5ztwns5PkJY',
-      'GV01B5kVsC0','rzQAC8kPJxo','7ujwjqIldwU','5UDoSc-fRpg','pCTfxOrX4k8',
-      'Dr0m5bWAgk0','lMDkxFnUTZs','voDqfVthTpA','y8p1iG-6d-w','-riX6Xbvb8w',
-      'Abr_LU822rQ','9m_12SGXNKw','JJmqCKtJnxM','NZJrGuC92U8','sZywE0AT1qY'
+      { id: 'CMNry4PE93Y', title: 'Classic Hit' },
+      { id: 'dQw4w9WgXcQ', title: 'Never Gonna Give You Up' },
+      { id: '6GsCmnZnllk', title: 'Music Video' },
+      { id: 'kR2O_xuVvIU', title: 'Popular Song' },
+      { id: '1VbZE6YhjKk', title: 'Hit Single' },
+      { id: 'ohz8_IafGwE', title: 'Chart Topper' },
+      { id: 'S2XvxDaIwCw', title: 'Music Classic' },
+      { id: '7wrw19K_g_M', title: 'Fan Favorite' },
+      { id: 'TkyLnWm1iCs', title: 'Trending Video' },
+      { id: '5ztwns5PkJY', title: 'Viral Hit' },
+      { id: 'GV01B5kVsC0', title: 'Popular Choice' },
+      { id: 'rzQAC8kPJxo', title: 'Music Selection' },
+      { id: '7ujwjqIldwU', title: 'Entertainment' },
+      { id: '5UDoSc-fRpg', title: 'Video Pick' },
+      { id: 'pCTfxOrX4k8', title: 'Featured Content' },
+      { id: 'Dr0m5bWAgk0', title: 'Recommended' },
+      { id: 'lMDkxFnUTZs', title: 'Top Selection' },
+      { id: 'voDqfVthTpA', title: 'Must Watch' },
+      { id: 'y8p1iG-6d-w', title: 'Video Feature' },
+      { id: '-riX6Xbvb8w', title: 'Entertainment Pick' },
+      { id: 'Abr_LU822rQ', title: 'Featured Video' },
+      { id: '9m_12SGXNKw', title: 'Popular Content' },
+      { id: 'JJmqCKtJnxM', title: 'Video Choice' },
+      { id: 'NZJrGuC92U8', title: 'Entertainment Value' },
+      { id: 'sZywE0AT1qY', title: 'Viewer Favorite' },
+      { id: '3O0ptHIh6Yo', title: 'Quality Content' },
+      { id: 'KoPFkjF-Bdo', title: 'Video Experience' },
+      { id: 'c1EyN9xTK94', title: 'Entertainment Gold' },
+      { id: 'ODmhPsgqGgQ', title: 'Premium Pick' }
     ];
 
     function pickVideoList() {
       const now = new Date();
       if (now.getMonth() == 11) {
-        if (now.getDate() == 25) return ['DtrIWQ8J9jw'];
+        if (now.getDate() == 25) return [{ id: 'DtrIWQ8J9jw', title: 'Christmas Day Special' }];
         return xmas_videos;
       } else if (now.getMonth() == 6 && now.getDate() == 4) {
         return american_holiday_videos;
@@ -821,11 +1035,11 @@
       } else if (now.getMonth() == 10 && now.getDate() == 11) {
         return american_holiday_videos;
       } else if (now.getMonth() == 9 && now.getDate() <= 31 && now.getDate() >= 17) {
-        return ['xiSIQzwIPzQ'];
+        return [{ id: 'xiSIQzwIPzQ', title: 'Halloween Special' }];
       } else if (now.getMonth() == 0 && now.getDate() == 1) {
-        return ['vdLuk2Agamk'];
+        return [{ id: 'vdLuk2Agamk', title: 'New Year Celebration' }];
       } else if (now.getMonth() == 10 && now.getDate() <= 31 && now.getDate() >= 17) {
-        return ['AORGKS6y_qI'];
+        return [{ id: 'AORGKS6y_qI', title: 'Thanksgiving Special' }];
       } else {
         return regular_videos;
       }
@@ -834,10 +1048,13 @@
     function loadRandomVideo() {
       const list = pickVideoList();
       const index = Math.floor(Math.random() * list.length);
-      const videoId = list[index];
-      const html = '<iframe src="https://www.youtube.com/embed/' + videoId + '?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+      const video = list[index];
+      const html = '<iframe src="https://www.youtube.com/embed/' + video.id + '?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
       const slot = document.querySelector('.video');
+      const titleElement = document.getElementById('video-title');
+
       if (slot) slot.innerHTML = html;
+      if (titleElement) titleElement.textContent = video.title;
     }
 
     // ---- Kick everything off safely (so one failure doesn't stop others) ----
@@ -845,7 +1062,7 @@
       try { updateNYTime(); setInterval(updateNYTime, 1000 * 30); } catch(e){ console.error(e); }
       try { loadWeather(); } catch(e){ console.error(e); }
       try { loadBitcoinPrice(); } catch(e){ console.error(e); }
-      try { loadUSIndexes(); } catch(e){ console.error(e); }
+      try { loadStocks(); } catch(e){ console.error(e); }
       try { buildSportsScores(); } catch(e){ console.error(e); }
       try { loadRandomVideo(); } catch(e){ console.error(e); }
     });
@@ -872,16 +1089,16 @@
       <div id="bitcoin-price-value" class="bitcoin-price-value loading">Loading...</div>
     </div>
 
-    <!-- US Indexes below Bitcoin -->
-    <div class="indexes">
-      <div class="indexes-title">
+    <!-- Individual Stocks below Bitcoin -->
+    <div class="stocks">
+      <div class="stocks-title">
         <!-- $ icon as inline SVG so it always renders -->
         <svg class="icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <path fill="currentColor" d="M7.25 1a.75.75 0 0 1 1.5 0v1.053c1.41.147 2.75.86 3.29 2.14a.75.75 0 1 1-1.381.58c-.3-.713-1.11-1.23-1.909-1.38v3.005c2.01.46 4.25 1.18 4.25 3.602 0 2.01-1.77 3.282-4.25 3.49V15a.75.75 0 0 1-1.5 0v-1.03c-1.8-.16-3.32-.99-3.93-2.38a.75.75 0 0 1 1.37-.61c.37.84 1.39 1.39 2.56 1.55V8.47C4.38 8.02 2.25 7.25 2.25 5.08c0-1.97 1.73-3.17 5-3.28V1Zm0 4.2c-1.71.1-2.5.67-2.5 1.37 0 .69.89 1.11 2.5 1.5V5.2Zm1.5 6.58c1.71-.12 2.75-.68 2.75-1.64 0-.86-.94-1.33-2.75-1.78v3.42Z"/>
         </svg>
-        US Indexes
+        Stock Prices
       </div>
-      <div id="indexes-body">
+      <div id="stocks-body">
         <!-- Rows inserted here -->
       </div>
     </div>
@@ -895,6 +1112,8 @@
     <div class="video-controls">
       <a href="#" onclick="loadRandomVideo(); return false;">Next Video</a>
     </div>
+
+    <div id="video-title" class="video-title">Loading video...</div>
 
     <div class="video-container">
       <div class="video"></div>
