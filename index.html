@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>JoeRod.com</title>
 
   <!-- Inline SVG favicon: solid deep blue JR (diagonal). -->
   <link rel="icon" type="image/svg+xml"
-        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3Cfilter id='s' x='-20%25' y='-20%25' width='140%25' height='140%25'%3E%3CfeDropShadow dx='0' dy='1' stdDeviation='1' flood-color='black' flood-opacity='0.55'/%3E%3C/filter%3E%3C/defs%3E%3Crect width='64' height='64' fill='none'/%3E%3Cpath d='M18 10 q8 0 8 8 v13 q0 6 -4 9 t-9 2 q-3 0 -6 -1 l2 -6 q2 1 4 1 q3 0 4.5 -1.5 t1.5 -4.5 v-12 q0 -1.8 -1 -2.9 t-3 -1.1 h-2 v-4 h5z' fill='%231e3a8a' filter='url(%23s)'/%3E%3Cpath d='M31 28 h8 q8 0 8 8 q0 5 -4 7 l6 9 h-8 l-5 -8 h-3 v8 h-6 v-24 z m6 5 v7 h3 q3 0 3 -3 q0 -4 -3 -4 h-3z' fill='%231e3a8a' filter='url(%23s)'/%3E%3C/svg%3E" />
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3Cfilter id='s' x='-20%25' y='-20%25' width='140%25' height='140%25'%3E%3CfeDropShadow dx='0' dy='1' stdDeviation='1' flood-color='black' flood-opacity='0.55'/%3E%3C/filter%3E%3C/defs%3E%3Crect width='64' height='64' fill='none'/%3E%3Cpath d='M18 10 q8 0 8 8 v13 q0 6 -4 9 t-9 2 q-3 0 -6 -1 l2 -6 q2 1 4 1 q3 0 4.5 -1.5 t1.5 -4.5 v-12 q0 -1.8 -1 -2.9 t-3 -1.1 h-2 v-4 h5z' fill='%231e3a8a' filter='url(%23s)'/%3E%3Cpath d='M31 28 h8 q8 0 8 8 q0 5 -4 7 l6 9 h-8 l-5 -8 h-3 v8 h-6 v-24 z m6 5 v7 h3 q3 0 3 -3 q0 -4 -3 -4 h-3z' fill='%231e3a8a' filter='url(%23s)'/%3E%3C/svg%3E" />
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
 
@@ -22,10 +23,15 @@
       --text-color: #ffffff;
       --glass-bg: rgba(255, 255, 255, 0.1);
       --glass-border: rgba(255, 255, 255, 0.2);
-      --live-score-color: #86efac; /* pale green for live scores */
+      --live-score-color: #86efac;
+      /* pale green for live scores */
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -41,18 +47,32 @@
     }
 
     @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
     }
 
     .fixed-header {
-      position: fixed; top: 0; left: 0; right: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(20px);
       border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-      z-index: 1000; padding: 15px 20px;
-      display: flex; justify-content: center; align-items: center;
+      z-index: 1000;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     .site-title {
@@ -66,14 +86,38 @@
     }
 
     @keyframes titleColorShift {
-      0%   { color: #1e3a8a; text-shadow: 0 2px 15px rgba(255,255,255,0.4); }
-      25%  { color: #ffffff; text-shadow: 0 2px 15px rgba(0,0,0,0.4); }
-      50%  { color: #1e3a8a; text-shadow: 0 2px 15px rgba(255,255,255,0.4); }
-      75%  { color: #ffffff; text-shadow: 0 2px 15px rgba(0,0,0,0.4); }
-      100% { color: #1e3a8a; text-shadow: 0 2px 15px rgba(255,255,255,0.4); }
+      0% {
+        color: #1e3a8a;
+        text-shadow: 0 2px 15px rgba(255, 255, 255, 0.4);
+      }
+
+      25% {
+        color: #ffffff;
+        text-shadow: 0 2px 15px rgba(0, 0, 0, 0.4);
+      }
+
+      50% {
+        color: #1e3a8a;
+        text-shadow: 0 2px 15px rgba(255, 255, 255, 0.4);
+      }
+
+      75% {
+        color: #ffffff;
+        text-shadow: 0 2px 15px rgba(0, 0, 0, 0.4);
+      }
+
+      100% {
+        color: #1e3a8a;
+        text-shadow: 0 2px 15px rgba(255, 255, 255, 0.4);
+      }
     }
 
-    .glass { background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 20px; }
+    .glass {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+    }
 
     main {
       display: flex;
@@ -109,9 +153,23 @@
       opacity: 0.95;
     }
 
-    .weather-icon { font-size: 2rem; margin-bottom: 0.3rem; display: block; }
-    .weather-temp { font-size: 2rem; font-weight: 600; margin-bottom: 0.5rem; }
-    .weather-desc { font-size: 0.85rem; opacity: 0.9; text-transform: capitalize; }
+    .weather-icon {
+      font-size: 2rem;
+      margin-bottom: 0.3rem;
+      display: block;
+    }
+
+    .weather-temp {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .weather-desc {
+      font-size: 0.85rem;
+      opacity: 0.9;
+      text-transform: capitalize;
+    }
 
     .bitcoin-price {
       margin-top: 0.75rem;
@@ -119,6 +177,7 @@
       border-top: 1px solid rgba(255, 255, 255, 0.2);
       text-align: center;
     }
+
     .bitcoin-price-title {
       font-size: 0.7rem;
       opacity: 0.8;
@@ -129,16 +188,27 @@
       justify-content: center;
       gap: 0.3rem;
     }
-    .bitcoin-price-title img { width: 12px; height: 12px; filter: brightness(0) invert(1); }
-    .bitcoin-price-value { font-size: 0.8rem; font-weight: 600; color: #fbbf24; }
+
+    .bitcoin-price-title img {
+      width: 12px;
+      height: 12px;
+      filter: brightness(0) invert(1);
+    }
+
+    .bitcoin-price-value {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #fbbf24;
+    }
+
 
     /* Stocks */
     .stocks {
       margin-top: 0.75rem;
       padding-top: 0.75rem;
       border-top: 1px solid rgba(255, 255, 255, 0.2);
-      text-align: center;
     }
+
     .stocks-title {
       font-size: 0.7rem;
       opacity: 0.8;
@@ -147,25 +217,52 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      /* header centered */
       gap: 0.35rem;
     }
+
     .stocks-title .icon {
-      width: 13px; height: 13px; display: inline-block;
+      width: 13px;
+      height: 13px;
+      display: inline-block;
       filter: brightness(0) invert(1);
     }
+
     .stock-row {
       display: grid;
-      grid-template-columns: 1fr auto auto;
+      grid-template-columns: 1fr 1fr 1fr;
+      /* all columns equal width */
       gap: 0.5rem;
       align-items: center;
       font-size: 0.72rem;
       padding: 0.18rem 0;
     }
-    .stock-name { opacity: 0.95; }
-    .stock-value { font-weight: 600; text-align: right; }
-    .stock-change { font-size: 0.68rem; opacity: 0.9; text-align: right; }
-    .up { color: #a7f3d0; }
-    .down { color: #fecaca; }
+
+    .stock-name {
+      opacity: 0.95;
+      text-align: left;
+    }
+
+    .stock-value {
+      font-weight: 600;
+      text-align: center;
+      /* now truly centered */
+    }
+
+    .stock-change {
+      font-size: 0.68rem;
+      opacity: 0.9;
+      text-align: center;
+      /* now truly centered */
+    }
+
+    .up {
+      color: #a7f3d0;
+    }
+
+    .down {
+      color: #fecaca;
+    }
 
     .sports-scores {
       margin-top: 0.75rem;
@@ -173,6 +270,7 @@
       border-top: 1px solid rgba(255, 255, 255, 0.2);
       text-align: left;
     }
+
     .sports-title {
       font-size: 0.7rem;
       opacity: 0.8;
@@ -188,28 +286,98 @@
       overscroll-behavior: contain;
       padding-right: 6px;
     }
-    .scores-scroll::-webkit-scrollbar { width: 8px; }
-    .scores-scroll::-webkit-scrollbar-track { background: rgba(255,255,255,0.08); border-radius: 8px; }
-    .scores-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.25); border-radius: 8px; }
-    .scores-scroll::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.35); }
 
-    .league-block { margin-bottom: 0.5rem; }
-    .league-name { font-size: 0.7rem; opacity: 0.85; margin: 0.4rem 0 0.2rem; font-weight: 600; }
+    .scores-scroll::-webkit-scrollbar {
+      width: 8px;
+    }
 
-    .game-line { display: flex; justify-content: space-between; gap: 0.6rem; padding: 0.2rem 0; }
-    .game-left { display:flex; gap:0.5rem; align-items:flex-start; min-width:0; }
-    .team-col { display:flex; flex-direction:column; min-width:0; }
-    .team-main { font-size: 0.65rem; line-height: 1.15; white-space: nowrap; }
-    .team-sub { font-size: 0.6rem; opacity: 0.78; line-height: 1.1; white-space: nowrap; margin-top: -1px; }
-    .at { opacity: 0.8; font-size: 0.65rem; padding: 0 2px; align-self: center; }
-    .game-status { opacity: 0.85; font-size: 0.6rem; white-space: nowrap; align-self: center; }
+    .scores-scroll::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+    }
+
+    .scores-scroll::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 8px;
+    }
+
+    .scores-scroll::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    .league-block {
+      margin-bottom: 0.5rem;
+    }
+
+    .league-name {
+      font-size: 0.7rem;
+      opacity: 0.85;
+      margin: 0.4rem 0 0.2rem;
+      font-weight: 600;
+    }
+
+    .game-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.6rem;
+      padding: 0.2rem 0;
+    }
+
+    .game-left {
+      display: flex;
+      gap: 0.5rem;
+      align-items: flex-start;
+      min-width: 0;
+    }
+
+    .team-col {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .team-main {
+      font-size: 0.65rem;
+      line-height: 1.15;
+      white-space: nowrap;
+    }
+
+    .team-sub {
+      font-size: 0.6rem;
+      opacity: 0.78;
+      line-height: 1.1;
+      white-space: nowrap;
+      margin-top: -1px;
+    }
+
+    .at {
+      opacity: 0.8;
+      font-size: 0.65rem;
+      padding: 0 2px;
+      align-self: center;
+    }
+
+    .game-status {
+      opacity: 0.85;
+      font-size: 0.6rem;
+      white-space: nowrap;
+      align-self: center;
+    }
 
     /* In-progress: only the numeric score turns green */
-    .game-line.live .score { color: var(--live-score-color); font-weight: 800; }
+    .game-line.live .score {
+      color: var(--live-score-color);
+      font-weight: 800;
+    }
 
     /* Fade animation for score updates */
-    .score { transition: opacity 180ms ease; }
-    .score-updating { opacity: 0.2; }
+    .score {
+      transition: opacity 180ms ease;
+    }
+
+    .score-updating {
+      opacity: 0.2;
+    }
 
     .video-container {
       width: 100%;
@@ -222,8 +390,19 @@
       padding-bottom: 33.75%;
       height: 0;
     }
-    .video-container:hover { transform: translateY(-5px); box-shadow: 0 20px 50px rgba(0,0,0,0.4); }
-    .video iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+    .video-container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    }
+
+    .video iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
 
     /* "Next Video" link and video title */
     .video-controls {
@@ -233,12 +412,16 @@
       text-align: left;
       font-size: 0.95rem;
     }
+
     .video-controls a {
       color: #fff;
       text-decoration: none;
       font-weight: 600;
     }
-    .video-controls a:hover { text-decoration: underline; }
+
+    .video-controls a:hover {
+      text-decoration: underline;
+    }
 
     .video-title {
       width: 100%;
@@ -267,6 +450,7 @@
       margin-bottom: 1.2rem;
       flex-wrap: wrap;
     }
+
     .social-link {
       display: inline-flex;
       align-items: center;
@@ -281,47 +465,155 @@
       transition: all 0.3s ease;
       font-size: 0.85rem;
     }
-    .social-link:hover { background: rgba(255, 255, 255, 0.2); transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); }
-    .social-link img { width: 16px; height: 16px; filter: brightness(0) invert(1); }
+
+    .social-link:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .social-link img {
+      width: 16px;
+      height: 16px;
+      filter: brightness(0) invert(1);
+    }
 
     @media (max-width: 768px) {
-      body { padding-top: 70px; overflow-y: auto; height: auto; min-height: 100vh; }
-      .fixed-header { padding: 10px 15px; }
-      .site-title { font-size: 2rem; }
-      .weather-widget { position: static; margin: 1rem auto; width: 100%; max-width: 300px; max-height: none; order: -1; }
-      main { padding: 0.5rem; order: 0; }
-      .video-container { margin: 0.6rem 0; max-width: 100%; padding-bottom: 56.25%; }
-      .video-controls { max-width: 100%; }
-      .social-links { gap: 0.45rem; }
-      .social-link { font-size: 0.85rem; padding: 0.45rem 0.75rem; }
-      .scores-scroll { max-height: 220px; }
-      footer { padding: 1.5rem 1rem; }
+      body {
+        padding-top: 70px;
+        overflow-y: auto;
+        height: auto;
+        min-height: 100vh;
+      }
+
+      .fixed-header {
+        padding: 10px 15px;
+      }
+
+      .site-title {
+        font-size: 2rem;
+      }
+
+      .weather-widget {
+        position: static;
+        margin: 1rem auto;
+        width: 100%;
+        max-width: 300px;
+        max-height: none;
+        order: -1;
+      }
+
+      main {
+        padding: 0.5rem;
+        order: 0;
+      }
+
+      .video-container {
+        margin: 0.6rem 0;
+        max-width: 100%;
+        padding-bottom: 56.25%;
+      }
+
+      .video-controls {
+        max-width: 100%;
+      }
+
+      .social-links {
+        gap: 0.45rem;
+      }
+
+      .social-link {
+        font-size: 0.85rem;
+        padding: 0.45rem 0.75rem;
+      }
+
+      .scores-scroll {
+        max-height: 220px;
+      }
+
+      footer {
+        padding: 1.5rem 1rem;
+      }
     }
 
     @media (max-width: 480px) {
-      body { padding-top: 65px; }
-      .fixed-header { padding: 8px 12px; }
-      .site-title { font-size: 1.8rem; }
-      .weather-widget { margin: 0.8rem auto; max-width: 95%; padding: 0.8rem; }
-      .social-link { font-size: 0.82rem; padding: 0.4rem 0.7rem; }
-      footer { padding: 1rem 0.5rem; }
+      body {
+        padding-top: 65px;
+      }
+
+      .fixed-header {
+        padding: 8px 12px;
+      }
+
+      .site-title {
+        font-size: 1.8rem;
+      }
+
+      .weather-widget {
+        margin: 0.8rem auto;
+        max-width: 95%;
+        padding: 0.8rem;
+      }
+
+      .social-link {
+        font-size: 0.82rem;
+        padding: 0.4rem 0.7rem;
+      }
+
+      footer {
+        padding: 1rem 0.5rem;
+      }
     }
 
     @media (max-width: 768px) and (orientation: landscape) {
-      body { padding-top: 60px; }
-      .fixed-header { padding: 8px 15px; }
-      .site-title { font-size: 1.8rem; }
-      .weather-widget { position: fixed; top: 70px; right: 10px; margin: 0; max-width: 220px; font-size: 0.8rem; }
-      .video-container { max-width: 70%; margin: 0.5rem auto; }
-      .scores-scroll { max-height: 160px; }
+      body {
+        padding-top: 60px;
+      }
+
+      .fixed-header {
+        padding: 8px 15px;
+      }
+
+      .site-title {
+        font-size: 1.8rem;
+      }
+
+      .weather-widget {
+        position: fixed;
+        top: 70px;
+        right: 10px;
+        margin: 0;
+        max-width: 220px;
+        font-size: 0.8rem;
+      }
+
+      .video-container {
+        max-width: 70%;
+        margin: 0.5rem auto;
+      }
+
+      .scores-scroll {
+        max-height: 160px;
+      }
     }
 
     @media (hover: none) and (pointer: coarse) {
-      .social-link:hover { background: rgba(255, 255, 255, 0.1); transform: none; box-shadow: none; }
-      .social-link:active { background: rgba(255, 255, 255, 0.3); transform: scale(0.98); }
+      .social-link:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: none;
+        box-shadow: none;
+      }
+
+      .social-link:active {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(0.98);
+      }
     }
 
-    .loading { color: rgba(255, 255, 255, 0.7); font-size: 0.8rem; }
+    .loading {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.8rem;
+    }
   </style>
 
   <script>
@@ -411,7 +703,7 @@
         const price = data?.bitcoin?.usd;
         document.getElementById('bitcoin-price-value').textContent =
           price ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(price)
-                : 'Price unavailable';
+            : 'Price unavailable';
       } catch (error) {
         console.error('Bitcoin price loading error:', error);
         const el = document.getElementById('bitcoin-price-value');
@@ -653,26 +945,26 @@
 
     // ---- Sports (NY teams ordered) ----
     const TEAM_ORDER_PRIORITY = [
-      'Mets','Knicks','Rangers','Yankees','Giants','Nets','NYCFC','Red Bulls','Liberty','Gotham FC'
+      'Mets', 'Knicks', 'Rangers', 'Yankees', 'Giants', 'Nets', 'NYCFC', 'Red Bulls', 'Liberty', 'Gotham FC'
     ];
 
     const ALLOW_BY_LEAGUE = {
       MLB: [
-        { label: 'Mets',    rx: [/\bnew york mets\b/i, /\bmets\b/i, /\bNYM\b/i] },
+        { label: 'Mets', rx: [/\bnew york mets\b/i, /\bmets\b/i, /\bNYM\b/i] },
         { label: 'Yankees', rx: [/\bnew york yankees\b/i, /\byankees\b/i, /\bNYY\b/i] },
       ],
       NBA: [
-        { label: 'Knicks',  rx: [/\bnew york knicks\b/i, /\bknicks\b/i, /\bNYK\b/i] },
-        { label: 'Nets',    rx: [/\bbrooklyn nets\b/i, /\bnets\b/i, /\bBKN\b/i] },
+        { label: 'Knicks', rx: [/\bnew york knicks\b/i, /\bknicks\b/i, /\bNYK\b/i] },
+        { label: 'Nets', rx: [/\bbrooklyn nets\b/i, /\bnets\b/i, /\bBKN\b/i] },
       ],
       NFL: [
-        { label: 'Giants',  rx: [/\bnew york giants\b/i, /\bgiants\b/i, /\bNYG\b/i] },
+        { label: 'Giants', rx: [/\bnew york giants\b/i, /\bgiants\b/i, /\bNYG\b/i] },
       ],
       NHL: [
         { label: 'Rangers', rx: [/\bnew york rangers\b/i, /\brangers\b/i, /\bNYR\b/i] },
       ],
       MLS: [
-        { label: 'NYCFC',     rx: [/\bnycfc\b/i, /\bnew york city fc\b/i] },
+        { label: 'NYCFC', rx: [/\bnycfc\b/i, /\bnew york city fc\b/i] },
         { label: 'Red Bulls', rx: [/\bnew york red bulls\b/i, /\bred bulls\b/i, /\bNYRB\b/i] },
       ],
       WNBA: [
@@ -684,13 +976,13 @@
     };
 
     const LEAGUES = [
-      { key:'MLB',   path:'baseball/mlb' },
-      { key:'NBA',   path:'basketball/nba' },
-      { key:'NFL',   path:'football/nfl' },
-      { key:'NHL',   path:'hockey/nhl' },
-      { key:'MLS',   path:'soccer/usa.1' },
-      { key:'WNBA',  path:'basketball/wnba' },
-      { key:'NWSL',  path:'soccer/usa.nwsl' },
+      { key: 'MLB', path: 'baseball/mlb' },
+      { key: 'NBA', path: 'basketball/nba' },
+      { key: 'NFL', path: 'football/nfl' },
+      { key: 'NHL', path: 'hockey/nhl' },
+      { key: 'MLS', path: 'soccer/usa.1' },
+      { key: 'WNBA', path: 'basketball/wnba' },
+      { key: 'NWSL', path: 'soccer/usa.nwsl' },
     ];
 
     function teamString(t) {
@@ -743,9 +1035,9 @@
       if (!st) return '—';
       if (st.state === 'pre') {
         const t = comp.date ? new Date(comp.date) : null;
-        return t ? t.toLocaleTimeString([], { hour:'numeric', minute:'2-digit' }) : (st.shortDetail || 'Scheduled');
+        return t ? t.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) : (st.shortDetail || 'Scheduled');
       }
-      if (st.state === 'in')  return st.shortDetail || 'Live';
+      if (st.state === 'in') return st.shortDetail || 'Live';
       if (st.state === 'post') return st.shortDetail || 'Final';
       return st.shortDetail || '—';
     }
@@ -777,8 +1069,8 @@
         const away = theAway || {};
         const home = theHome || {};
 
-        const awayName  = away?.team?.shortDisplayName || away?.team?.displayName || 'Away';
-        const homeName  = home?.team?.shortDisplayName || home?.team?.displayName || 'Home';
+        const awayName = away?.team?.shortDisplayName || away?.team?.displayName || 'Away';
+        const homeName = home?.team?.shortDisplayName || home?.team?.displayName || 'Home';
         const awayScore = away?.score ?? '';
         const homeScore = home?.score ?? '';
 
@@ -818,7 +1110,7 @@
         if (!scoresContainer) return;
 
         scoresContainer.innerHTML = `
-          <div class="sports-title">Today's NY Scores (${new Date().toLocaleDateString([], {weekday:'short', month:'short', day:'numeric'})})</div>
+          <div class="sports-title">Today's NY Scores (${new Date().toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' })})</div>
           <div class="scores-scroll" id="scores-scroll"></div>
         `;
         const scrollHost = document.getElementById('scores-scroll');
@@ -940,14 +1232,14 @@
 
                 const statusEl = document.getElementById(`status-${ev.id}`);
                 if (statusEl) {
-                  const statusText = (function(){
+                  const statusText = (function () {
                     const st = comp?.status?.type;
                     if (!st) return '—';
                     if (st.state === 'pre') {
                       const t = comp.date ? new Date(comp.date) : null;
-                      return t ? t.toLocaleTimeString([], { hour:'numeric', minute:'2-digit' }) : (st.shortDetail || 'Scheduled');
+                      return t ? t.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) : (st.shortDetail || 'Scheduled');
                     }
-                    if (st.state === 'in')  return st.shortDetail || 'Live';
+                    if (st.state === 'in') return st.shortDetail || 'Live';
                     if (st.state === 'post') return st.shortDetail || 'Final';
                     return st.shortDetail || '—';
                   })();
@@ -968,61 +1260,63 @@
     }
 
     // ========= Video lists =========
+    // ========= Video lists =========
     var xmas_videos = [
-      { id: 'rgEP1niScLc', title: 'Christmas Music' },
-      { id: 'S7OWoc-j8qQ', title: 'Holiday Cheer' },
-      { id: 'hZ9q3PtiYu8', title: 'Festive Fun' },
-      { id: 'E3RQVcNUcTA', title: 'Christmas Spirit' },
-      { id: 'GPG3zSgm_Qo', title: 'Holiday Joy' },
-      { id: 'tR_Z1LUDQuQ', title: 'Winter Wonderland' },
-      { id: 'kSkyv8EUEsU', title: 'Christmas Magic' },
-      { id: 'uIsgSQvsRj8', title: 'Holiday Memories' },
-      { id: 'e-r8hvTFVb8', title: 'Christmas Time' },
-      { id: 'myzC3f0j9kw', title: 'Seasonal Celebration' },
-      { id: 'LznVSn7Ud9o', title: 'Christmas Classic' }
+      { id: 'rgEP1niScLc' }, // Home Alone (1990) – 'Setting the Trap' scene [1080p]
+      { id: 'S7OWoc-j8qQ' }, // Home Alone (1990) - Thirsty for More? Scene (4/5) | Movieclips
+      { id: 'hZ9q3PtiYu8' }, // Home Alone (1990) - Scaring Marv Scene (2/5) | Movieclips
+      { id: 'E3RQVcNUcTA' }, // Home Alone (1990) - 'Buzz's Girlfriend' Scene (3/5) | Movieclips
+      { id: 'GPG3zSgm_Qo' }, // Home Alone (1990) - 'Fuller, Go Easy on the Pepsi' Scene (1/5) | Movieclips
+      { id: 'tR_Z1LUDQuQ' }, // Experience The Nutcracker Ballet in Stunning HD
+      { id: 'kSkyv8EUEsU' }, // Christmas Magic
+      { id: 'uIsgSQvsRj8' }, // Holiday Memories
+      { id: 'e-r8hvTFVb8' }, // Christmas Time
+      { id: 'myzC3f0j9kw' }, // Seasonal Celebration
+      { id: 'LznVSn7Ud9o' }  // Christmas Classic
     ];
     var american_holiday_videos = [
-      { id: 'dJxj1mou03M', title: 'American Pride' },
-      { id: '4GJArpnLqGY', title: 'Patriotic Spirit' },
-      { id: 'U1mlCPMYtPk', title: 'Land of the Free' },
-      { id: 'N_lCmBvYMRs', title: 'Stars and Stripes' }
+      { id: 'dJxj1mou03M' }, // American Pride
+      { id: '4GJArpnLqGY' }, // Patriotic Spirit
+      { id: 'U1mlCPMYtPk' }, // Land of the Free
+      { id: 'N_lCmBvYMRs' }  // Stars and Stripes
     ];
     var regular_videos = [
-      { id: 'CMNry4PE93Y', title: 'Classic Hit' },
-      { id: 'dQw4w9WgXcQ', title: 'Never Gonna Give You Up' },
-      { id: '6GsCmnZnllk', title: 'Music Video' },
-      { id: 'kR2O_xuVvIU', title: 'Popular Song' },
-      { id: '1VbZE6YhjKk', title: 'Hit Single' },
-      { id: 'ohz8_IafGwE', title: 'Chart Topper' },
-      { id: 'S2XvxDaIwCw', title: 'Music Classic' },
-      { id: '7wrw19K_g_M', title: 'Fan Favorite' },
-      { id: 'TkyLnWm1iCs', title: 'Trending Video' },
-      { id: '5ztwns5PkJY', title: 'Viral Hit' },
-      { id: 'GV01B5kVsC0', title: 'Popular Choice' },
-      { id: 'rzQAC8kPJxo', title: 'Music Selection' },
-      { id: '7ujwjqIldwU', title: 'Entertainment' },
-      { id: '5UDoSc-fRpg', title: 'Video Pick' },
-      { id: 'pCTfxOrX4k8', title: 'Featured Content' },
-      { id: 'Dr0m5bWAgk0', title: 'Recommended' },
-      { id: 'lMDkxFnUTZs', title: 'Top Selection' },
-      { id: 'voDqfVthTpA', title: 'Must Watch' },
-      { id: 'y8p1iG-6d-w', title: 'Video Feature' },
-      { id: '-riX6Xbvb8w', title: 'Entertainment Pick' },
-      { id: 'Abr_LU822rQ', title: 'Featured Video' },
-      { id: '9m_12SGXNKw', title: 'Popular Content' },
-      { id: 'JJmqCKtJnxM', title: 'Video Choice' },
-      { id: 'NZJrGuC92U8', title: 'Entertainment Value' },
-      { id: 'sZywE0AT1qY', title: 'Viewer Favorite' },
-      { id: '3O0ptHIh6Yo', title: 'Quality Content' },
-      { id: 'KoPFkjF-Bdo', title: 'Video Experience' },
-      { id: 'c1EyN9xTK94', title: 'Entertainment Gold' },
-      { id: 'ODmhPsgqGgQ', title: 'Premium Pick' }
+      { id: 'CMNry4PE93Y' }, // Classic Hit
+      { id: 'dQw4w9WgXcQ' }, // Never Gonna Give You Up
+      { id: '6GsCmnZnllk' }, // Music Video
+      { id: 'kR2O_xuVvIU' }, // Popular Song
+      { id: '1VbZE6YhjKk' }, // Hit Single
+      { id: 'ohz8_IafGwE' }, // Chart Topper
+      { id: 'S2XvxDaIwCw' }, // Music Classic
+      { id: '7wrw19K_g_M' }, // Fan Favorite
+      { id: 'TkyLnWm1iCs' }, // Trending Video
+      { id: '5ztwns5PkJY' }, // Viral Hit
+      { id: 'GV01B5kVsC0' }, // Popular Choice
+      { id: 'rzQAC8kPJxo' }, // Music Selection
+      { id: '7ujwjqIldwU' }, // Entertainment
+      { id: '5UDoSc-fRpg' }, // Video Pick
+      { id: 'pCTfxOrX4k8' }, // Featured Content
+      { id: 'Dr0m5bWAgk0' }, // Recommended
+      { id: 'lMDkxFnUTZs' }, // Top Selection
+      { id: 'voDqfVthTpA' }, // Must Watch
+      { id: 'y8p1iG-6d-w' }, // Video Feature
+      { id: '-riX6Xbvb8w' }, // Entertainment Pick
+      { id: 'Abr_LU822rQ' }, // Featured Video
+      { id: '9m_12SGXNKw' }, // Popular Content
+      { id: 'JJmqCKtJnxM' }, // Video Choice
+      { id: 'NZJrGuC92U8' }, // Entertainment Value
+      { id: 'sZywE0AT1qY' }, // Viewer Favorite
+      { id: '3O0ptHIh6Yo' }, // Quality Content
+      { id: 'KoPFkjF-Bdo' }, // Video Experience
+      { id: 'c1EyN9xTK94' }, // Entertainment Gold
+      { id: 'ODmhPsgqGgQ' }  // Premium Pick
     ];
 
+    // Function to pick the appropriate video list based on the current date
     function pickVideoList() {
       const now = new Date();
       if (now.getMonth() == 11) {
-        if (now.getDate() == 25) return [{ id: 'DtrIWQ8J9jw', title: 'Christmas Day Special' }];
+        if (now.getDate() == 25) return [{ id: 'DtrIWQ8J9jw' }]; // Christmas Day Special
         return xmas_videos;
       } else if (now.getMonth() == 6 && now.getDate() == 4) {
         return american_holiday_videos;
@@ -1035,36 +1329,35 @@
       } else if (now.getMonth() == 10 && now.getDate() == 11) {
         return american_holiday_videos;
       } else if (now.getMonth() == 9 && now.getDate() <= 31 && now.getDate() >= 17) {
-        return [{ id: 'xiSIQzwIPzQ', title: 'Halloween Special' }];
+        return [{ id: 'xiSIQzwIPzQ' }]; // Halloween Special
       } else if (now.getMonth() == 0 && now.getDate() == 1) {
-        return [{ id: 'vdLuk2Agamk', title: 'New Year Celebration' }];
+        return [{ id: 'vdLuk2Agamk' }]; // New Year Celebration
       } else if (now.getMonth() == 10 && now.getDate() <= 31 && now.getDate() >= 17) {
-        return [{ id: 'AORGKS6y_qI', title: 'Thanksgiving Special' }];
+        return [{ id: 'AORGKS6y_qI' }]; // Thanksgiving Special
       } else {
         return regular_videos;
       }
     }
 
+    // Function to load a random video from the selected list
     function loadRandomVideo() {
       const list = pickVideoList();
       const index = Math.floor(Math.random() * list.length);
       const video = list[index];
       const html = '<iframe src="https://www.youtube.com/embed/' + video.id + '?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
       const slot = document.querySelector('.video');
-      const titleElement = document.getElementById('video-title');
 
       if (slot) slot.innerHTML = html;
-      if (titleElement) titleElement.textContent = video.title;
     }
 
-    // ---- Kick everything off safely (so one failure doesn't stop others) ----
+    // ---- Kick everything off safely (so one failure loaddoesn't stop others) ----
     $(document).ready(function () {
-      try { updateNYTime(); setInterval(updateNYTime, 1000 * 30); } catch(e){ console.error(e); }
-      try { loadWeather(); } catch(e){ console.error(e); }
-      try { loadBitcoinPrice(); } catch(e){ console.error(e); }
-      try { loadStocks(); } catch(e){ console.error(e); }
-      try { buildSportsScores(); } catch(e){ console.error(e); }
-      try { loadRandomVideo(); } catch(e){ console.error(e); }
+      try { updateNYTime(); setInterval(updateNYTime, 1000 * 30); } catch (e) { console.error(e); }
+      try { loadWeather(); } catch (e) { console.error(e); }
+      try { loadBitcoinPrice(); } catch (e) { console.error(e); }
+      try { loadStocks(); } catch (e) { console.error(e); }
+      try { buildSportsScores(); } catch (e) { console.error(e); }
+      try { loadRandomVideo(); } catch (e) { console.error(e); }
     });
   </script>
 </head>
@@ -1094,7 +1387,8 @@
       <div class="stocks-title">
         <!-- $ icon as inline SVG so it always renders -->
         <svg class="icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <path fill="currentColor" d="M7.25 1a.75.75 0 0 1 1.5 0v1.053c1.41.147 2.75.86 3.29 2.14a.75.75 0 1 1-1.381.58c-.3-.713-1.11-1.23-1.909-1.38v3.005c2.01.46 4.25 1.18 4.25 3.602 0 2.01-1.77 3.282-4.25 3.49V15a.75.75 0 0 1-1.5 0v-1.03c-1.8-.16-3.32-.99-3.93-2.38a.75.75 0 0 1 1.37-.61c.37.84 1.39 1.39 2.56 1.55V8.47C4.38 8.02 2.25 7.25 2.25 5.08c0-1.97 1.73-3.17 5-3.28V1Zm0 4.2c-1.71.1-2.5.67-2.5 1.37 0 .69.89 1.11 2.5 1.5V5.2Zm1.5 6.58c1.71-.12 2.75-.68 2.75-1.64 0-.86-.94-1.33-2.75-1.78v3.42Z"/>
+          <path fill="currentColor"
+            d="M7.25 1a.75.75 0 0 1 1.5 0v1.053c1.41.147 2.75.86 3.29 2.14a.75.75 0 1 1-1.381.58c-.3-.713-1.11-1.23-1.909-1.38v3.005c2.01.46 4.25 1.18 4.25 3.602 0 2.01-1.77 3.282-4.25 3.49V15a.75.75 0 0 1-1.5 0v-1.03c-1.8-.16-3.32-.99-3.93-2.38a.75.75 0 0 1 1.37-.61c.37.84 1.39 1.39 2.56 1.55V8.47C4.38 8.02 2.25 7.25 2.25 5.08c0-1.97 1.73-3.17 5-3.28V1Zm0 4.2c-1.71.1-2.5.67-2.5 1.37 0 .69.89 1.11 2.5 1.5V5.2Zm1.5 6.58c1.71-.12 2.75-.68 2.75-1.64 0-.86-.94-1.33-2.75-1.78v3.42Z" />
         </svg>
         Stock Prices
       </div>
@@ -1113,7 +1407,7 @@
       <a href="#" onclick="loadRandomVideo(); return false;">Next Video</a>
     </div>
 
-    <div id="video-title" class="video-title">Loading video...</div>
+    <!-- <div id="video-title" class="video-title">Loading video...</div> -->
 
     <div class="video-container">
       <div class="video"></div>
@@ -1123,46 +1417,55 @@
   <footer>
     <div class="social-links">
       <!-- ORDER: Twitter/X, Instagram, TikTok, Facebook, YouTube, Spotify, GitHub, LinkedIn -->
-      <a href="https://x.com/joerodr" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter) @joerodr">
+      <a href="https://x.com/joerodr" class="social-link" target="_blank" rel="noopener noreferrer"
+        aria-label="X (Twitter) @joerodr">
         <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/x.svg" alt="X (Twitter)" />
         @joerodr
       </a>
 
-      <a href="https://instagram.com/joerodr" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="Instagram @joerodr">
+      <a href="https://instagram.com/joerodr" class="social-link" target="_blank" rel="noopener noreferrer"
+        aria-label="Instagram @joerodr">
         <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/instagram.svg" alt="Instagram" />
         @joerodr
       </a>
 
-      <a href="https://www.tiktok.com/@joerod45" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="TikTok @joerod45">
+      <a href="https://www.tiktok.com/@joerod45" class="social-link" target="_blank" rel="noopener noreferrer"
+        aria-label="TikTok @joerod45">
         <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/tiktok.svg" alt="TikTok" />
         @joerod45
       </a>
 
-      <a href="https://facebook.com/joerod" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="Facebook joerod">
+      <a href="https://facebook.com/joerod" class="social-link" target="_blank" rel="noopener noreferrer"
+        aria-label="Facebook joerod">
         <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/facebook.svg" alt="Facebook" />
         joerod
       </a>
 
-      <a href="https://www.youtube.com/@joerodr45" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="YouTube @joerodr45">
+      <a href="https://www.youtube.com/@joerodr45" class="social-link" target="_blank" rel="noopener noreferrer"
+        aria-label="YouTube @joerodr45">
         <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/youtube.svg" alt="YouTube" />
         @joerodr45
       </a>
 
-      <a href="https://open.spotify.com/playlist/5OYeC1eQC0Zf925B1YXcBm?si=ecb7ab53786b4550" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="Spotify Playlist">
+      <a href="https://open.spotify.com/playlist/5OYeC1eQC0Zf925B1YXcBm?si=ecb7ab53786b4550" class="social-link"
+        target="_blank" rel="noopener noreferrer" aria-label="Spotify Playlist">
         <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/spotify.svg" alt="Spotify" />
         My Playlist
       </a>
 
-      <a href="https://github.com/joerod" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="GitHub @joerod">
+      <a href="https://github.com/joerod" class="social-link" target="_blank" rel="noopener noreferrer"
+        aria-label="GitHub @joerod">
         <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/github.svg" alt="GitHub" />
         @joerod
       </a>
 
-      <a href="https://www.linkedin.com/in/joerodr/" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+      <a href="https://www.linkedin.com/in/joerodr/" class="social-link" target="_blank" rel="noopener noreferrer"
+        aria-label="LinkedIn">
         <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/linkedin.svg" alt="LinkedIn" />
         LinkedIn
       </a>
     </div>
   </footer>
 </body>
+
 </html>
