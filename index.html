@@ -695,21 +695,62 @@
       }
     }
 
-    // Bitcoin price (CoinGecko)
-    async function loadBitcoinPrice() {
-      try {
-        const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd', { cache: 'no-store', mode: 'cors' });
-        const data = await response.json();
-        const price = data?.bitcoin?.usd;
-        document.getElementById('bitcoin-price-value').textContent =
-          price ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(price)
-            : 'Price unavailable';
-      } catch (error) {
-        console.error('Bitcoin price loading error:', error);
-        const el = document.getElementById('bitcoin-price-value');
-        if (el) el.textContent = 'Price unavailable';
+// Bitcoin price (CoinGecko) with 24h change tracking
+let previousPrice = null;
+
+async function loadBitcoinPrice() {
+  try {
+    const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true', {
+      cache: 'no-store',
+      mode: 'cors'
+    });
+    const data = await response.json();
+    const price = data?.bitcoin?.usd;
+    const change24h = data?.bitcoin?.usd_24h_change;
+
+    const priceElement = document.getElementById('bitcoin-price-value');
+    const changeElement = document.getElementById('bitcoin-price-change');
+
+    if (price) {
+      // Format and display current price
+      priceElement.textContent = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 0
+      }).format(price);
+
+      // Display 24h change if available
+      if (changeElement && change24h !== undefined) {
+        const changePercent = change24h.toFixed(2);
+        const isPositive = change24h > 0;
+
+        changeElement.textContent = `${isPositive ? '+' : ''}${changePercent}%`;
+        changeElement.style.color = isPositive ? '#22c55e' : '#ef4444'; // green for up, red for down
+        changeElement.style.fontWeight = 'bold';
+      }
+
+      // Store current price for next comparison (optional for session-based tracking)
+      previousPrice = price;
+
+    } else {
+      priceElement.textContent = 'Price unavailable';
+      if (changeElement) {
+        changeElement.textContent = '';
+        changeElement.style.color = '';
       }
     }
+  } catch (error) {
+    console.error('Bitcoin price loading error:', error);
+    const priceElement = document.getElementById('bitcoin-price-value');
+    const changeElement = document.getElementById('bitcoin-price-change');
+
+    if (priceElement) priceElement.textContent = 'Price unavailable';
+    if (changeElement) {
+      changeElement.textContent = 'Change unavailable';
+      changeElement.style.color = '#6b7280'; // gray for error
+    }
+  }
+}
 
     // ---- Individual Stocks (AAPL, AMZN, TSLA, MSFT) ----
     let stocksTimer = null;
@@ -1309,7 +1350,14 @@
       { id: '3O0ptHIh6Yo' }, // Quality Content
       { id: 'KoPFkjF-Bdo' }, // Video Experience
       { id: 'c1EyN9xTK94' }, // Entertainment Gold
-      { id: 'ODmhPsgqGgQ' }  // Premium Pick
+      { id: 'ODmhPsgqGgQ' },  // Premium Pick
+      { id: 'jsLUidiYm0w' },   // Uptown Funk
+      { id: 'cgg9byUy-V4' },
+      { id: 'H_yAOI6FLqk' },
+      { id: 'VFIzTzRuSL8' },
+      { id: 'DevuEUSZ6Xk' },
+      { id: 'KS6f1MKpLGM' },
+      { id: 'zE7PKRjrid4' }
     ];
 
     // Function to pick the appropriate video list based on the current date
