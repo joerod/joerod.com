@@ -1322,10 +1322,10 @@
       { id: 'LznVSn7Ud9o' }  // Christmas Classic
     ];
     var american_holiday_videos = [
-      { id: 'dJxj1mou03M' }, // American Pride
-      { id: '4GJArpnLqGY' }, // Patriotic Spirit
-      { id: 'U1mlCPMYtPk' }, // Land of the Free
-      { id: 'N_lCmBvYMRs' }  // Stars and Stripes
+      { id: '7NiGq6q3Z34' },
+      { id: 'TmoeZHnOJKA' },
+      { id: 'U1mlCPMYtPk' },
+      { id: 'N_lCmBvYMRs' }
     ];
     var regular_videos = [
       { id: 'CMNry4PE93Y' }, // Classic Hit
@@ -1377,11 +1377,9 @@
         return xmas_videos;
       } else if (now.getMonth() == 6 && now.getDate() == 4) {
         return american_holiday_videos;
-      } else if (now.getMonth() == 4 && now.getDate() >= 25 && now.getDate() <= 31) {
+      } else if (now.getMonth() == 4 && now.getDate() == 25 ) {
         return american_holiday_videos;
-      } else if (now.getMonth() == 1 && now.getDate() >= 12 && now.getDate() <= 22) {
-        return american_holiday_videos;
-      } else if (now.getMonth() == 8 && now.getDate() >= 1 && now.getDate() <= 7) {
+      } else if (now.getMonth() == 1 && now.getDate() == 12 ) {
         return american_holiday_videos;
       } else if (now.getMonth() == 10 && now.getDate() == 11) {
         return american_holiday_videos;
