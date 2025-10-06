@@ -624,9 +624,11 @@ var regular_videos = [
 ];
 /* 🎃 Halloween list */
 var halloween_videos = [
-  { id: 'Ht3gFCqpFkE' }, { id: 'aDm4L7gjYNs' }, { id: 'gVgsadEybgQ' },
-  { id: 'HcrTqof683A' }, { id: 'cl3sud_uDhc' }, { id: 'E16S5BAkzQ8' }, { id: 'bSxuXQCEC7' }
-];
+  { id: 'Ht3gFCqpFkE' }, { id: 'aDm4L7gjYNs' }, { id: 'gVgsadEybgQ' }, { id: 'bSxuXQCEC7' },
+  { id: 'HcrTqof683A' }, { id: 'cl3sud_uDhc' }, { id: 'E16S5BAkzQ8' }, { id: '3CAQ0iZKP08'},
+  { id: '7bmB4RhsYgQ' }, { id: 'IYmiSXEQ7ys' }, { id: '5tIhwITwhSg' }, { id: 'Vf-TZzGNQL0'},
+  { id: 'cLsAlBG8Qv4' },{ id: 'bLiXjaPqSyY' }
+]
 
 function pickVideoList() {
   const now = new Date();
