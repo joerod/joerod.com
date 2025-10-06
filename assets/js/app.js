@@ -312,7 +312,7 @@ async function loadStocks() {
 
 // ---------- SPORTS (NY teams) ----------
 const TEAM_ORDER_PRIORITY = [
-  'Mets', 'Knicks', 'Rangers', 'Yankees', 'Giants', 'Nets', 'NYCFC', 'Red Bulls', 'Liberty', 'Gotham FC'
+  'Mets', 'Knicks', 'Rangers', 'Jets', 'Yankees', 'Giants', 'Nets', 'NYCFC', 'Red Bulls', 'Liberty', 'Gotham FC'
 ];
 
 const ALLOW_BY_LEAGUE = {
@@ -325,6 +325,7 @@ const ALLOW_BY_LEAGUE = {
     { label: 'Nets',   rx: [/\bbrooklyn nets\b/i, /\bnets\b/i, /\bBKN\b/i] },
   ],
   NFL: [
+    { label: 'Jets', rx: [/\bnew york jets\b/i, /\bjets\b/i, /\bNYJ\b/i] },
     { label: 'Giants', rx: [/\bnew york giants\b/i, /\bgiants\b/i, /\bNYG\b/i] },
   ],
   NHL: [
