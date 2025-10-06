@@ -83,7 +83,17 @@ html.theme-october .scores-scroll::-webkit-scrollbar-thumb:hover { background: r
 
 html.theme-october .video-container { box-shadow: 0 15px 40px rgba(255, 122, 0, 0.18); }
 html.theme-october .video-container:hover { box-shadow: 0 20px 50px rgba(255, 122, 0, 0.28); }
-html.theme-october .video-controls a { color: var(--oct-accent); }
+
+/* 🔒 Force "Next Video" link to always be white during October */
+html.theme-october .video-controls a {
+  color: #ffffff !important;
+  text-shadow: 0 0 5px rgba(0,0,0,0.6);
+}
+html.theme-october .video-controls a:hover {
+  color: #ffffff !important;
+  text-decoration: underline;
+}
+
 html.theme-october .league-name { color: var(--oct-muted); }
 html.theme-october .social-link {
   background: rgba(255, 122, 0, 0.08);
