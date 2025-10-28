@@ -835,8 +835,10 @@ var regular_videos = [
   { id: 'VFIzTzRuSL8' }, { id: 'DevuEUSZ6Xk' },
   { id: 'KS6f1MKpLGM' }, { id: 'zE7PKRjrid4' },
   { id: '73ytL_HAwt8' }, { id: 'M4nFSdNNFQw' },
-  { id: 'EiTYwecY41c' }
-];
+  { id: 'EiTYwecY41c' }, { id: 'W45DRy7M1no' },
+  { id: '4ORMeSJsYIM' }, { id: 'eSOSJ68xOBA' }
+]
+;
 var halloween_videos = [
   { id: 'Ht3gFCqpFkE' }, { id: 'aDm4L7gjYNs' },
   { id: 'gVgsadEybgQ' }, { id: 'bSxuXQCEC7' },
