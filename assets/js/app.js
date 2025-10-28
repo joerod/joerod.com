@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // ===== app.js =====
 // Theme + favicon, NYC time, Weather, Crypto (BTC + ETH),
 // Stocks, NY Sports ticker with off-night message,
@@ -1588,4 +1587,3 @@ function loadRandomVideo() {
   try { buildSportsScores(); } catch (e) {}
   try { loadRandomVideo(); } catch (e) {}
 })();
->>>>>>> 641715cdbf7f44609bfd433fdf75cdc648c7265b
