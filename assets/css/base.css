@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /* ===== base.css =====
    Layout, components, responsive rules, and the DEFAULT (blue) animated gradient.
    Color tokens and month-specific themes live in theme.css.
@@ -427,4 +426,3 @@ footer { padding: 2rem; text-align: center; backdrop-filter: blur(20px); backgro
   .social-link:hover { background: rgba(255, 255, 255, 0.1); transform: none; box-shadow: none; }
   .social-link:active { background: rgba(255, 255, 255, 0.3); transform: scale(0.98); }
 }
->>>>>>> 641715cdbf7f44609bfd433fdf75cdc648c7265b
