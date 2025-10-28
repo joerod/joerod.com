@@ -1,3 +1,135 @@
+<<<<<<< HEAD
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0" />
+  <title>JoeRod.com</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet" />
+
+  <!-- Default favicon (blue JR) – October swap happens in app.js -->
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3Cfilter id='s' x='-20%25' y='-20%25' width='140%25' height='140%25'%3E%3CfeDropShadow dx='0' dy='1' stdDeviation='1' flood-color='black' flood-opacity='0.55'/%3E%3C/filter%3E%3C/defs%3E%3Crect width='64' height='64' fill='none'/%3E%3Cpath d='M18 10 q8 0 8 8 v13 q0 6 -4 9 t-9 2 q-3 0 -6 -1 l2 -6 q2 1 4 1 q3 0 4.5 -1.5 t1.5 -4.5 v-12 q0 -1.8 -1 -2.9 t-3 -1.1 h-2 v-4 h5z' fill='%231e3a8a' filter='url(%23s)'/%3E%3Cpath d='M31 28 h8 q8 0 8 8 q0 5 -4 7 l6 9 h-8 l-5 -8 h-3 v8 h-6 v-24 z m6 5 v7 h3 q3 0 3 -3 q0 -4 -3 -4 h-3z' fill='%231e3a8a' filter='url(%23s)'/%3E%3C/svg%3E" />
+
+  <!-- Styles -->
+<link rel="stylesheet" href="./assets/css/base.css" />
+<link rel="stylesheet" href="./assets/css/theme.css" />
+  <!-- jQuery (needed by your original script logic) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+  <!-- App JS -->
+  <script defer src="./assets/js/app.js"></script>
+</head>
+
+<body>
+  <header class="fixed-header">
+    <div class="site-title">JoeRod.com</div>
+  </header>
+
+  <div class="weather-widget">
+    <div id="ny-time" class="ny-time">NYC • —</div>
+
+    <div id="weather-icon" class="weather-icon">🌤️</div>
+    <div id="weather-temp" class="weather-temp loading">Loading...</div>
+    <div id="weather-desc" class="weather-desc loading">Getting weather...</div>
+
+    
+    <div class="crypto-price">
+      <div class="crypto-price-title">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/bitcoin.svg" alt="Bitcoin">
+        Bitcoin (BTC)
+      </div>
+      <div id="bitcoin-price-value" class="price loading">Loading...</div>
+      <div id="bitcoin-price-change" class="price"></div>
+    </div>
+    
+    <div class="crypto-price">
+      <div class="crypto-price-title">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/ethereum.svg" alt="Ethereum">
+        Ethereum (ETH)
+      </div>
+      <div id="ethereum-price-value" class="price loading">Loading...</div>
+      <div id="ethereum-price-change" class="price"></div>
+    </div>
+
+
+    <div class="stocks">
+      <div class="stocks-title">
+        <svg class="icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path fill="currentColor"
+            d="M7.25 1a.75.75 0 0 1 1.5 0v1.053c1.41.147 2.75.86 3.29 2.14a.75.75 0 1 1-1.381.58c-.3-.713-1.11-1.23-1.909-1.38v3.005c2.01.46 4.25 1.18 4.25 3.602 0 2.01-1.77 3.282-4.25 3.49V15a.75.75 0 0 1-1.5 0v-1.03c-1.8-.16-3.32-.99-3.93-2.38a.75.75 0 0 1 1.37-.61c.37.84 1.39 1.39 2.56 1.55V8.47C4.38 8.02 2.25 7.25 2.25 5.08c0-1.97 1.73-3.17 5-3.28V1Zm0 4.2c-1.71.1-2.5.67-2.5 1.37 0 .69.89 1.11 2.5 1.5V5.2Zm1.5 6.58c1.71-.12 2.75-.68 2.75-1.64 0-.86-.94-1.33-2.75-1.78v3.42Z" />
+        </svg>
+        Stock Prices
+      </div>
+      <div id="stocks-body"></div>
+    </div>
+
+    <div id="sports-scores" class="sports-scores">
+      <div class="sports-title loading">Loading scores...</div>
+    </div>
+  </div>
+
+  <main>
+    <div class="video-controls">
+      <a href="#" onclick="loadRandomVideo(); return false;">Next Video</a>
+    </div>
+
+    <div class="video-container">
+      <div class="video"></div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="social-links">
+      <!-- ORDER: Twitter/X, Instagram, TikTok, Facebook, YouTube, Spotify, GitHub, LinkedIn -->
+      <a href="https://x.com/joerodr" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter) @joerodr">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/x.svg" alt="X (Twitter)" />
+        @joerodr
+      </a>
+
+      <a href="https://instagram.com/joerodr" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="Instagram @joerodr">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/instagram.svg" alt="Instagram" />
+        @joerodr
+      </a>
+
+      <a href="https://www.tiktok.com/@joerod45" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="TikTok @joerod45">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/tiktok.svg" alt="TikTok" />
+        @joerod45
+      </a>
+
+      <a href="https://facebook.com/joerod" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="Facebook joerod">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/facebook.svg" alt="Facebook" />
+        joerod
+      </a>
+
+      <a href="https://www.youtube.com/@joerodr45" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="YouTube @joerodr45">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/youtube.svg" alt="YouTube" />
+        @joerodr45
+      </a>
+
+      <a href="https://open.spotify.com/playlist/5OYeC1eQC0Zf925B1YXcBm?si=ecb7ab53786b4550" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="Spotify Playlist">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/spotify.svg" alt="Spotify" />
+        My Playlist
+      </a>
+
+      <a href="https://github.com/joerod" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="GitHub @joerod">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/github.svg" alt="GitHub" />
+        @joerod
+      </a>
+
+      <a href="https://www.linkedin.com/in/joerodr/" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/linkedin.svg" alt="LinkedIn" />
+        LinkedIn
+      </a>
+    </div>
+  </footer>
+</body>
+</html>
+=======
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -117,3 +249,4 @@
   </footer>
 </body>
 </html>
+>>>>>>> 641715cdbf7f44609bfd433fdf75cdc648c7265b

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* ===== base.css =====
    Layout, components, responsive rules, and the DEFAULT (blue) animated gradient.
    Color tokens and month-specific themes live in theme.css.
@@ -191,3 +192,239 @@ footer { padding: 2rem; text-align: center; backdrop-filter: blur(20px); backgro
   .social-link:hover { background: rgba(255, 255, 255, 0.1); transform: none; box-shadow: none; }
   .social-link:active { background: rgba(255, 255, 255, 0.3); transform: scale(0.98); }
 }
+
+.crypto-price {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  text-align: center;
+}
+.crypto-price-title {
+  font-size: 0.7rem;
+  opacity: 0.8;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+}
+.crypto-price-title img {
+  width: 12px;
+  height: 12px;
+  filter: brightness(0) invert(1);
+}
+#ethereum-price-value {
+  font-weight: 600;
+  text-align: center;
+}
+#ethereum-price-change {
+  font-size: 0.68rem;
+  opacity: 0.9;
+  text-align: center;
+}
+
+
+#bitcoin-price-value,
+#bitcoin-price-change,
+#ethereum-price-value {
+  font-size: 0.68rem;
+  opacity: 0.9;
+  text-align: center;
+  font-weight: 600;
+}
+=======
+/* ===== base.css =====
+   Layout, components, responsive rules, and the DEFAULT (blue) animated gradient.
+   Color tokens and month-specific themes live in theme.css.
+*/
+
+/* Reset / base */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text-color);
+  min-height: 100vh;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  padding-top: 80px;
+
+  /* Default (non-October) animated gradient */
+  background: linear-gradient(-45deg, #1e3a8a, #3b82f6, #60a5fa, #93c5fd);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Header */
+.fixed-header {
+  position: fixed; top: 0; left: 0; right: 0;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  z-index: 1000; padding: 15px 20px;
+  display: flex; justify-content: center; align-items: center;
+}
+.site-title {
+  font-family: 'Dancing Script', cursive;
+  font-size: 2.5rem; font-weight: 700; color: #ffffff;
+  text-shadow: 0 2px 15px rgba(0, 0, 0, 0.4);
+  letter-spacing: 0.5px;
+  animation: titleColorShift 15s ease infinite;
+}
+/* Title animation (default months) */
+@keyframes titleColorShift {
+  0%   { color: #1e3a8a; text-shadow: 0 2px 15px rgba(255, 255, 255, 0.4); }
+  25%  { color: #ffffff; text-shadow: 0 2px 15px rgba(0, 0, 0, 0.4); }
+  50%  { color: #1e3a8a; text-shadow: 0 2px 15px rgba(255, 255, 255, 0.4); }
+  75%  { color: #ffffff; text-shadow: 0 2px 15px rgba(0, 0, 0, 0.4); }
+  100% { color: #1e3a8a; text-shadow: 0 2px 15px rgba(255, 255, 255, 0.4); }
+}
+
+/* Utilities */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+}
+
+/* Layout */
+main {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  flex: 1; padding: 1rem; min-height: 0;
+}
+
+/* Widget container */
+.weather-widget {
+  position: fixed; top: 95px; right: 15px; padding: 1rem; border-radius: 12px;
+  backdrop-filter: blur(20px); background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2); min-width: 220px; text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); max-height: calc(100vh - 110px); overflow-y: auto;
+}
+.ny-time { font-size: 0.85rem; font-weight: 600; letter-spacing: 0.2px; margin-bottom: 0.4rem; opacity: 0.95; }
+.weather-icon { font-size: 2rem; margin-bottom: 0.3rem; display: block; }
+.weather-temp { font-size: 2rem; font-weight: 600; margin-bottom: 0.5rem; }
+.weather-desc { font-size: 0.85rem; opacity: 0.9; text-transform: capitalize; }
+
+/* Bitcoin */
+.bitcoin-price { margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid rgba(255, 255, 255, 0.2); text-align: center; }
+.bitcoin-price-title {
+  font-size: 0.7rem; opacity: 0.8; margin-bottom: 0.4rem; font-weight: 600;
+  display: flex; align-items: center; justify-content: center; gap: 0.3rem;
+}
+.bitcoin-price-title img { width: 12px; height: 12px; filter: brightness(0) invert(1); }
+.price { font-weight: 600; transition: color .2s ease; }
+
+/* Stocks */
+.stocks { margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid rgba(255, 255, 255, 0.2); }
+.stocks-title {
+  font-size: 0.7rem; opacity: 0.8; margin-bottom: 0.4rem; font-weight: 600;
+  display: flex; align-items: center; justify-content: center; gap: 0.35rem;
+}
+.stocks-title .icon { width: 13px; height: 13px; display: inline-block; filter: brightness(0) invert(1); }
+.stock-row {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem; align-items: center;
+  font-size: 0.72rem; padding: 0.18rem 0;
+}
+.stock-name { opacity: 0.95; text-align: left; }
+.stock-value { font-weight: 600; text-align: center; }
+.stock-change { font-size: 0.68rem; opacity: 0.9; text-align: center; }
+.up   { color: #a7f3d0; }
+.down { color: #fecaca; }
+
+/* Sports */
+.sports-scores { margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid rgba(255, 255, 255, 0.2); text-align: left; }
+.sports-title { font-size: 0.7rem; opacity: 0.8; margin-bottom: 0.4rem; font-weight: 600; text-align: center; width: 100%; }
+.scores-scroll { max-height: 240px; overflow-y: auto; overscroll-behavior: contain; padding-right: 6px; }
+.scores-scroll::-webkit-scrollbar { width: 8px; }
+.scores-scroll::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.08); border-radius: 8px; }
+.scores-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.25); border-radius: 8px; }
+.scores-scroll::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.35); }
+
+.league-block { margin-bottom: 0.5rem; }
+.league-name { font-size: 0.7rem; opacity: 0.85; margin: 0.4rem 0 0.2rem; font-weight: 600; }
+.game-line { display: flex; justify-content: space-between; gap: 0.6rem; padding: 0.2rem 0; }
+.game-left { display: flex; gap: 0.5rem; align-items: flex-start; min-width: 0; }
+.team-col { display: flex; flex-direction: column; min-width: 0; }
+.team-main { font-size: 0.65rem; line-height: 1.15; white-space: nowrap; }
+.team-sub { font-size: 0.6rem; opacity: 0.78; line-height: 1.1; white-space: nowrap; margin-top: -1px; }
+.at { opacity: 0.8; font-size: 0.65rem; padding: 0 2px; align-self: center; }
+.game-status { opacity: 0.85; font-size: 0.6rem; white-space: nowrap; align-self: center; }
+
+/* In-progress numeric scores turn green (var) */
+.game-line.live .score { color: var(--live-score-color); font-weight: 800; }
+.score { transition: opacity 180ms ease; }
+.score-updating { opacity: 0.2; }
+
+/* Video */
+.video-container {
+  width: 100%; max-width: 600px; position: relative; border-radius: 15px; overflow: hidden;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3); transition: transform 0.3s ease, box-shadow 0.3s ease;
+  padding-bottom: 33.75%; height: 0;
+}
+.video-container:hover { transform: translateY(-5px); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4); }
+.video iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.video-controls { width: 100%; max-width: 600px; margin: 0 auto 6px auto; text-align: left; font-size: 0.95rem; }
+.video-controls a { color: #fff; text-decoration: none; font-weight: 600; }
+.video-controls a:hover { text-decoration: underline; }
+.video-title {
+  width: 100%; max-width: 600px; margin: 0 auto 12px auto; text-align: center;
+  font-size: 1.1rem; font-weight: 600; color: #fff; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); opacity: 0.9;
+}
+
+/* Footer + socials */
+footer { padding: 2rem; text-align: center; backdrop-filter: blur(20px); background: rgba(0, 0, 0, 0.1); margin-top: auto; }
+.social-links { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1.2rem; flex-wrap: wrap; }
+.social-link {
+  display: inline-flex; align-items: center; gap: 0.4rem; color: var(--text-color); text-decoration: none;
+  padding: 0.45rem 0.75rem; border-radius: 50px; backdrop-filter: blur(20px); background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2); transition: all 0.3s ease; font-size: 0.85rem;
+}
+.social-link:hover { background: rgba(255, 255, 255, 0.2); transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); }
+.social-link img { width: 16px; height: 16px; filter: brightness(0) invert(1); }
+
+/* States */
+.loading { color: rgba(255, 255, 255, 0.7); font-size: 0.8rem; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  body { padding-top: 70px; overflow-y: auto; height: auto; min-height: 100vh; }
+  .fixed-header { padding: 10px 15px; }
+  .site-title { font-size: 2rem; }
+  .weather-widget { position: static; margin: 1rem auto; width: 100%; max-width: 300px; max-height: none; order: -1; }
+  main { padding: 0.5rem; order: 0; }
+  .video-container { margin: 0.6rem 0; max-width: 100%; padding-bottom: 56.25%; }
+  .video-controls { max-width: 100%; }
+  .social-links { gap: 0.45rem; }
+  .social-link { font-size: 0.85rem; padding: 0.45rem 0.75rem; }
+  .scores-scroll { max-height: 220px; }
+  footer { padding: 1.5rem 1rem; }
+}
+@media (max-width: 480px) {
+  body { padding-top: 65px; }
+  .fixed-header { padding: 8px 12px; }
+  .site-title { font-size: 1.8rem; }
+  .weather-widget { margin: 0.8rem auto; max-width: 95%; padding: 0.8rem; }
+  .social-link { font-size: 0.82rem; padding: 0.4rem 0.7rem; }
+  footer { padding: 1rem 0.5rem; }
+}
+@media (max-width: 768px) and (orientation: landscape) {
+  body { padding-top: 60px; }
+  .fixed-header { padding: 8px 15px; }
+  .site-title { font-size: 1.8rem; }
+  .weather-widget { position: fixed; top: 70px; right: 10px; margin: 0; max-width: 220px; font-size: 0.8rem; }
+  .video-container { max-width: 70%; margin: 0.5rem auto; }
+  .scores-scroll { max-height: 160px; }
+}
+@media (hover: none) and (pointer: coarse) {
+  .social-link:hover { background: rgba(255, 255, 255, 0.1); transform: none; box-shadow: none; }
+  .social-link:active { background: rgba(255, 255, 255, 0.3); transform: scale(0.98); }
+}
+>>>>>>> 641715cdbf7f44609bfd433fdf75cdc648c7265b

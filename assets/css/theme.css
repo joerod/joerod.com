@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* ===== theme.css =====
    Design tokens and month-specific overrides.
 */
@@ -137,3 +138,222 @@ html.theme-october footer {
   border-top: 1px solid var(--oct-border);
   animation: borderShift 18s ease infinite;
 }
+
+/* =========================
+   🎄 CHRISTMAS THEME OVERRIDES
+   ========================= */
+html.theme-christmas body {
+  background: linear-gradient(-45deg,
+              #166534,  /* dark green */
+              #dc2626,  /* red */
+              #ffffff,  /* white */
+              #facc15); /* gold accent */
+  background-size: 400% 400%;
+  animation: christmasShift 18s ease infinite;
+}
+@keyframes christmasShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Header chrome */
+html.theme-christmas .fixed-header {
+  background: rgba(255, 255, 255, 0.7);
+  border-bottom: 2px solid #dc2626;
+}
+
+/* Title: green and red shimmer */
+html.theme-christmas .site-title {
+  color: #166534;
+  animation: titleColorShiftChristmas 12s ease-in-out infinite;
+}
+@keyframes titleColorShiftChristmas {
+  0%   { color: #166534; text-shadow: 0 0 10px rgba(255,255,255,0.8); }
+  50%  { color: #dc2626; text-shadow: 0 0 12px rgba(255,255,255,0.9); }
+  100% { color: #166534; text-shadow: 0 0 10px rgba(255,255,255,0.8); }
+}
+
+/* Widget chrome */
+html.theme-christmas .weather-widget {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid #dc2626;
+  box-shadow: 0 8px 32px rgba(220, 38, 38, 0.15);
+}
+
+/* Borders for sections */
+html.theme-christmas .crypto-price,
+html.theme-christmas .stocks,
+html.theme-christmas .sports-scores {
+  border-top: 1px solid #dc2626;
+}
+
+/* Scrollbars */
+html.theme-christmas .scores-scroll::-webkit-scrollbar-track {
+  background: rgba(22, 101, 52, 0.08);
+}
+html.theme-christmas .scores-scroll::-webkit-scrollbar-thumb {
+  background: rgba(22, 101, 52, 0.35);
+}
+html.theme-christmas .scores-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(22, 101, 52, 0.5);
+}
+
+/* Social links */
+html.theme-christmas .social-link {
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid #dc2626;
+  color: #166534;
+}
+html.theme-christmas .social-link:hover {
+  background: #dc2626;
+  color: #fff;
+  box-shadow: 0 10px 25px rgba(220, 38, 38, 0.3);
+}
+
+/* Footer */
+html.theme-christmas footer {
+  background: rgba(255, 255, 255, 0.9);
+  border-top: 2px solid #166534;
+}
+=======
+/* ===== theme.css =====
+   Design tokens and month-specific overrides.
+*/
+
+/* Global tokens */
+:root {
+  --primary-color: #667eea;
+  --secondary-color: #764ba2;
+  --accent-color: #f093fb;
+  --text-color: #ffffff;
+
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
+
+  --live-score-color: #86efac; /* pale green for live scores */
+
+  /* 🎃 October tokens */
+  --oct-bg: #000000;
+  --oct-grad-1: #0a0a0a;
+  --oct-grad-2: #141414;
+  --oct-accent: #ff7a00;
+  --oct-accent-2: #ff9a3d;
+  --oct-text: #ffffff;
+  --oct-muted: rgba(255, 255, 255, 0.86);
+  --oct-glass: rgba(255, 255, 255, 0.08);
+  --oct-border: rgba(255, 122, 0, 0.35);
+  --oct-scroll: rgba(255, 255, 255, 0.16);
+  --oct-scroll-thumb: rgba(255, 122, 0, 0.45);
+}
+
+/* =========================
+   🎃 OCTOBER THEME OVERRIDES
+   ========================= */
+
+/* Animated black↔orange sweep for October */
+html.theme-october body {
+  background: linear-gradient(-45deg,
+              var(--oct-bg),
+              var(--oct-grad-1),
+              var(--oct-accent),
+              var(--oct-accent-2));
+  background-size: 400% 400%;
+  animation: octoberShift 18s ease infinite;
+}
+@keyframes octoberShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* 🔁 Dynamic border color synced with the gradient phase
+   When the sweep is most orange, borders flip to black. */
+@keyframes borderShift {
+  0%   { border-color: var(--oct-border); }
+  25%  { border-color: #000000; } /* orange-dominant → black borders */
+  50%  { border-color: var(--oct-border); }
+  75%  { border-color: #000000; }
+  100% { border-color: var(--oct-border); }
+}
+
+/* Header chrome */
+html.theme-october .fixed-header {
+  background: rgba(0, 0, 0, 0.55);
+  border-bottom: 1px solid var(--oct-border);
+  /* animate bottom border color via border color animation */
+  animation: borderShift 18s ease infinite;
+}
+
+/* Title: cycle orange ⇄ white in October */
+html.theme-october .site-title {
+  text-shadow: 0 0 22px rgba(255,122,0,0.35);
+  animation: titleColorShiftOctober 12s ease-in-out infinite;
+}
+@keyframes titleColorShiftOctober {
+  0%   { color: var(--oct-accent); text-shadow: 0 0 20px rgba(255,122,0,0.35); }
+  25%  { color: #ffffff;          text-shadow: 0 0 12px rgba(255,255,255,0.30); }
+  50%  { color: var(--oct-accent); text-shadow: 0 0 24px rgba(255,122,0,0.40); }
+  75%  { color: #ffffff;          text-shadow: 0 0 12px rgba(255,255,255,0.30); }
+  100% { color: var(--oct-accent); text-shadow: 0 0 20px rgba(255,122,0,0.35); }
+}
+
+/* Widgets, borders, hovers */
+html.theme-october .weather-widget {
+  background: var(--oct-glass);
+  border: 1px solid var(--oct-border);
+  box-shadow: 0 8px 32px rgba(255, 122, 0, 0.08);
+  animation: borderShift 18s ease infinite;
+}
+
+html.theme-october .bitcoin-price,
+html.theme-october .stocks,
+html.theme-october .sports-scores {
+  border-top: 1px solid var(--oct-border);
+  animation: borderShift 18s ease infinite;
+}
+
+html.theme-october .scores-scroll::-webkit-scrollbar-track { background: var(--oct-scroll); }
+html.theme-october .scores-scroll::-webkit-scrollbar-thumb { background: var(--oct-scroll-thumb); }
+html.theme-october .scores-scroll::-webkit-scrollbar-thumb:hover { background: rgba(255,122,0,0.6); }
+
+/* Give video container a subtle border so the dynamic color is visible */
+html.theme-october .video-container {
+  box-shadow: 0 15px 40px rgba(255, 122, 0, 0.18);
+  border: 1px solid var(--oct-border);
+  animation: borderShift 18s ease infinite;
+}
+html.theme-october .video-container:hover {
+  box-shadow: 0 20px 50px rgba(255, 122, 0, 0.28);
+}
+
+/* 🔒 Force "Next Video" link to always be white during October */
+html.theme-october .video-controls a {
+  color: #ffffff !important;
+  text-shadow: 0 0 5px rgba(0,0,0,0.6);
+}
+html.theme-october .video-controls a:hover {
+  color: #ffffff !important;
+  text-decoration: underline;
+}
+
+html.theme-october .league-name { color: var(--oct-muted); }
+
+/* Social links: dynamic border + hover polish */
+html.theme-october .social-link {
+  background: rgba(255, 122, 0, 0.08);
+  border: 1px solid var(--oct-border);
+  animation: borderShift 18s ease infinite;
+}
+html.theme-october .social-link:hover {
+  background: rgba(255, 122, 0, 0.18);
+  box-shadow: 0 10px 25px rgba(255, 122, 0, 0.18);
+}
+
+/* Footer picks up dynamic border color via outline for definition on dark bg */
+html.theme-october footer {
+  background: rgba(255, 122, 0, 0.06);
+  border-top: 1px solid var(--oct-border);
+  animation: borderShift 18s ease infinite;
+}
+>>>>>>> 641715cdbf7f44609bfd433fdf75cdc648c7265b
