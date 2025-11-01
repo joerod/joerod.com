@@ -895,9 +895,9 @@ function loadRandomVideo() {
   const slot = document.querySelector('.video');
   if (slot) {
     slot.innerHTML =
-      `<iframe src="https://www.youtube.com/embed/${video.id}?autoplay=1"
+      `<iframe src="https://www.youtube.com/embed/${video.id}?rel=0&modestbranding=1"
                 frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen></iframe>`;
   }
 }
