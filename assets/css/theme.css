@@ -544,6 +544,7 @@ html.theme-christmas .video-container {
   border-image: none;
   box-shadow: none;
   overflow: visible;
+  border-radius: 18px;
   transform: none;
 }
 
@@ -555,8 +556,8 @@ html.theme-christmas .video-container:hover {
 html.theme-christmas .video-container::before {
   content: "";
   position: absolute;
-  inset: -16px;
-  border-radius: 22px;
+  inset: -10px;
+  border-radius: 20px;
   border: 2px solid rgba(30, 91, 47, 0.65); /* green wire */
   pointer-events: none;
   z-index: 1;
@@ -608,7 +609,7 @@ html.theme-christmas .video-container::after {
 
 html.theme-christmas .video-container .xmas-lights {
   position: absolute;
-  inset: -22px;
+  inset: -8px; /* pull lights closer overall */
   pointer-events: none;
   z-index: 3;
 }
@@ -655,17 +656,17 @@ html.theme-christmas .video-container .xmas-bulb::after {
    Default bulb points "down". We rotate for other sides.
 */
 html.theme-christmas .video-container .xmas-bulb.side-top {
-  transform: translate(-50%, -12%) rotate(0deg);
+  transform: translate(-50%, -12px) rotate(180deg); /* uniform spacing */
 }
 html.theme-christmas .video-container .xmas-bulb.side-bottom {
-  transform: translate(-50%, 12%) rotate(180deg);
+  transform: translate(-50%, 6px) rotate(0deg); /* bring bottom row closer */
 }
 html.theme-christmas .video-container .xmas-bulb.side-left {
-  transform: translate(-12%, -50%) rotate(-90deg);
+  transform: translate(-12px, -50%) rotate(90deg); /* uniform spacing */
 }
 html.theme-christmas .video-container .xmas-bulb.side-right {
   /* Bulbs face outward on the right */
-  transform: translate(12%, -50%) rotate(90deg);
+  transform: translate(12px, -50%) rotate(270deg); /* uniform spacing */
 }
 
 @keyframes xmasBulbBlink {
