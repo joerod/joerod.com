@@ -12,7 +12,7 @@
   --glass-bg: rgba(255, 255, 255, 0.1);
   --glass-border: rgba(255, 255, 255, 0.2);
 
-  --live-score-color: #86efac; /* pale green for live scores */
+  --live-score-color: #86efac;
 
   /* 🎃 October tokens */
   --oct-bg: #000000;
@@ -26,13 +26,24 @@
   --oct-border: rgba(255, 122, 0, 0.35);
   --oct-scroll: rgba(255, 255, 255, 0.16);
   --oct-scroll-thumb: rgba(255, 122, 0, 0.45);
+
+  /* 🎄 December Plaid tokens */
+  --dec-green-dark: #0f4a2d;
+  --dec-green-med: #166534;
+  --dec-green-light: #22c55e;
+  --dec-red-dark: #991b1b;
+  --dec-red-bright: #dc2626;
+  --dec-red-light: #ef4444;
+  --dec-white: #ffffff;
+  --dec-cream: #fef3c7;
+  --dec-gold: #fbbf24;
+  --dec-text-dark: #1f2937;
 }
 
 /* =========================
    🎃 OCTOBER THEME OVERRIDES
    ========================= */
 
-/* Animated black↔orange sweep for October */
 html.theme-october body {
   background: linear-gradient(-45deg,
               var(--oct-bg),
@@ -48,25 +59,20 @@ html.theme-october body {
   100% { background-position: 0% 50%; }
 }
 
-/* 🔁 Dynamic border color synced with the gradient phase
-   When the sweep is most orange, borders flip to black. */
 @keyframes borderShift {
   0%   { border-color: var(--oct-border); }
-  25%  { border-color: #000000; } /* orange-dominant → black borders */
+  25%  { border-color: #000000; }
   50%  { border-color: var(--oct-border); }
   75%  { border-color: #000000; }
   100% { border-color: var(--oct-border); }
 }
 
-/* Header chrome */
 html.theme-october .fixed-header {
   background: rgba(0, 0, 0, 0.55);
   border-bottom: 1px solid var(--oct-border);
-  /* animate bottom border color via border color animation */
   animation: borderShift 18s ease infinite;
 }
 
-/* Title: cycle orange ⇄ white in October */
 html.theme-october .site-title {
   text-shadow: 0 0 22px rgba(255,122,0,0.35);
   animation: titleColorShiftOctober 12s ease-in-out infinite;
@@ -79,7 +85,6 @@ html.theme-october .site-title {
   100% { color: var(--oct-accent); text-shadow: 0 0 20px rgba(255,122,0,0.35); }
 }
 
-/* Widgets, borders, hovers */
 html.theme-october .weather-widget {
   background: var(--oct-glass);
   border: 1px solid var(--oct-border);
@@ -88,6 +93,7 @@ html.theme-october .weather-widget {
 }
 
 html.theme-october .bitcoin-price,
+html.theme-october .crypto-price,
 html.theme-october .stocks,
 html.theme-october .sports-scores {
   border-top: 1px solid var(--oct-border);
@@ -98,7 +104,6 @@ html.theme-october .scores-scroll::-webkit-scrollbar-track { background: var(--o
 html.theme-october .scores-scroll::-webkit-scrollbar-thumb { background: var(--oct-scroll-thumb); }
 html.theme-october .scores-scroll::-webkit-scrollbar-thumb:hover { background: rgba(255,122,0,0.6); }
 
-/* Give video container a subtle border so the dynamic color is visible */
 html.theme-october .video-container {
   box-shadow: 0 15px 40px rgba(255, 122, 0, 0.18);
   border: 1px solid var(--oct-border);
@@ -108,7 +113,6 @@ html.theme-october .video-container:hover {
   box-shadow: 0 20px 50px rgba(255, 122, 0, 0.28);
 }
 
-/* 🔒 Force "Next Video" link to always be white during October */
 html.theme-october .video-controls a {
   color: #ffffff !important;
   text-shadow: 0 0 5px rgba(0,0,0,0.6);
@@ -120,7 +124,6 @@ html.theme-october .video-controls a:hover {
 
 html.theme-october .league-name { color: var(--oct-muted); }
 
-/* Social links: dynamic border + hover polish */
 html.theme-october .social-link {
   background: rgba(255, 122, 0, 0.08);
   border: 1px solid var(--oct-border);
@@ -131,7 +134,6 @@ html.theme-october .social-link:hover {
   box-shadow: 0 10px 25px rgba(255, 122, 0, 0.18);
 }
 
-/* Footer picks up dynamic border color via outline for definition on dark bg */
 html.theme-october footer {
   background: rgba(255, 122, 0, 0.06);
   border-top: 1px solid var(--oct-border);
@@ -139,79 +141,399 @@ html.theme-october footer {
 }
 
 /* =========================
-   🎄 CHRISTMAS THEME OVERRIDES
+   🎄 DECEMBER PLAID THEME
    ========================= */
+
+/* Smooth plaid pattern background - refined tartan style */
+html.theme-christmas {
+  --live-score-color: var(--dec-green-med);
+}
+
 html.theme-christmas body {
-  background: linear-gradient(-45deg,
-              #166534,  /* dark green */
-              #dc2626,  /* red */
-              #ffffff,  /* white */
-              #facc15); /* gold accent */
-  background-size: 400% 400%;
-  animation: christmasShift 18s ease infinite;
-}
-@keyframes christmasShift {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  background-color: #0f3d2c;
+  background-image:
+    /* Thin vertical red accent lines */
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 80px,
+      rgba(220, 38, 38, 0.3) 80px,
+      rgba(220, 38, 38, 0.5) 82px,
+      rgba(220, 38, 38, 0.3) 84px,
+      transparent 84px,
+      transparent 164px,
+      rgba(153, 27, 27, 0.25) 164px,
+      rgba(153, 27, 27, 0.4) 165px,
+      rgba(153, 27, 27, 0.25) 166px,
+      transparent 166px
+    ),
+    /* Thin horizontal green accent lines */
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 80px,
+      rgba(34, 197, 94, 0.25) 80px,
+      rgba(34, 197, 94, 0.45) 82px,
+      rgba(34, 197, 94, 0.25) 84px,
+      transparent 84px,
+      transparent 164px,
+      rgba(22, 101, 52, 0.3) 164px,
+      rgba(22, 101, 52, 0.5) 165px,
+      rgba(22, 101, 52, 0.3) 166px,
+      transparent 166px
+    ),
+    /* Wide vertical red bands */
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 140px,
+      rgba(220, 38, 38, 0.08) 140px,
+      rgba(220, 38, 38, 0.15) 160px,
+      rgba(220, 38, 38, 0.08) 180px,
+      transparent 180px
+    ),
+    /* Wide horizontal green bands */
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 140px,
+      rgba(22, 101, 52, 0.12) 140px,
+      rgba(22, 101, 52, 0.18) 160px,
+      rgba(22, 101, 52, 0.12) 180px,
+      transparent 180px
+    ),
+    /* Subtle diagonal gold shimmer */
+    repeating-linear-gradient(
+      45deg,
+      transparent 0,
+      transparent 120px,
+      rgba(251, 191, 36, 0.03) 120px,
+      rgba(251, 191, 36, 0.06) 122px,
+      rgba(251, 191, 36, 0.03) 124px,
+      transparent 124px
+    ),
+    /* Base gradient for depth */
+    linear-gradient(
+      135deg,
+      #0a3d2a 0%,
+      #0f4a2d 25%,
+      #0d4229 50%,
+      #0f4a2d 75%,
+      #0a3d2a 100%
+    );
+  background-size:
+    320px 320px,
+    320px 320px,
+    320px 320px,
+    320px 320px,
+    320px 320px,
+    100% 100%;
+  animation: plaidShimmer 20s ease-in-out infinite;
 }
 
-/* Header chrome */
+@keyframes plaidShimmer {
+  0%, 100% {
+    filter: brightness(1) contrast(1.05);
+  }
+  50% {
+    filter: brightness(1.08) contrast(1.1);
+  }
+}
+
 html.theme-christmas .fixed-header {
-  background: rgba(255, 255, 255, 0.7);
-  border-bottom: 2px solid #dc2626;
+  background: linear-gradient(
+    135deg,
+    rgba(15, 74, 45, 0.95) 0%,
+    rgba(153, 27, 27, 0.95) 100%
+  );
+  border-bottom: 3px solid var(--dec-gold);
+  box-shadow: 0 4px 20px rgba(220, 38, 38, 0.3);
+  backdrop-filter: blur(10px);
 }
 
-/* Title: green and red shimmer */
 html.theme-christmas .site-title {
-  color: #166534;
-  animation: titleColorShiftChristmas 12s ease-in-out infinite;
+  color: var(--dec-white);
+  font-weight: 700;
+  text-shadow:
+    2px 2px 0 var(--dec-red-dark),
+    0 0 15px var(--dec-gold);
+  animation: titleColorShiftChristmas 8s ease-in-out infinite;
 }
+
 @keyframes titleColorShiftChristmas {
-  0%   { color: #166534; text-shadow: 0 0 10px rgba(255,255,255,0.8); }
-  50%  { color: #dc2626; text-shadow: 0 0 12px rgba(255,255,255,0.9); }
-  100% { color: #166534; text-shadow: 0 0 10px rgba(255,255,255,0.8); }
+  0% {
+    color: var(--dec-white);
+    text-shadow:
+      2px 2px 0 var(--dec-green-dark),
+      0 0 20px var(--dec-green-light);
+  }
+  25% {
+    color: var(--dec-cream);
+    text-shadow:
+      2px 2px 0 var(--dec-red-dark),
+      0 0 25px var(--dec-gold);
+  }
+  50% {
+    color: var(--dec-white);
+    text-shadow:
+      2px 2px 0 var(--dec-red-dark),
+      0 0 20px var(--dec-red-light);
+  }
+  75% {
+    color: var(--dec-cream);
+    text-shadow:
+      2px 2px 0 var(--dec-green-dark),
+      0 0 25px var(--dec-gold);
+  }
+  100% {
+    color: var(--dec-white);
+    text-shadow:
+      2px 2px 0 var(--dec-green-dark),
+      0 0 20px var(--dec-green-light);
+  }
 }
 
-/* Widget chrome */
 html.theme-christmas .weather-widget {
-  background: rgba(255, 255, 255, 0.85);
-  border: 1px solid #dc2626;
-  box-shadow: 0 8px 32px rgba(220, 38, 38, 0.15);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(254, 243, 199, 0.95) 100%
+  );
+  border: 3px solid;
+  border-image: linear-gradient(
+    45deg,
+    var(--dec-red-bright),
+    var(--dec-green-med),
+    var(--dec-gold),
+    var(--dec-red-bright)
+  ) 1;
+  box-shadow:
+    0 8px 32px rgba(220, 38, 38, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  color: var(--dec-text-dark);
 }
 
-/* Borders for sections */
-html.theme-christmas .crypto-price,
-html.theme-christmas .stocks,
+/* Make all widget text dark and readable */
+html.theme-christmas .weather-widget * {
+  color: var(--dec-text-dark);
+}
+
+html.theme-christmas .ny-time,
+html.theme-christmas .weather-temp,
+html.theme-christmas .weather-desc,
+html.theme-christmas .crypto-price-title,
+html.theme-christmas .price,
+html.theme-christmas .stocks-title,
+html.theme-christmas .stock-name,
+html.theme-christmas .stock-value,
+html.theme-christmas .sports-title,
+html.theme-christmas .league-name,
+html.theme-christmas .team-main,
+html.theme-christmas .team-sub,
+html.theme-christmas .at,
+html.theme-christmas .game-status,
+html.theme-christmas .score {
+  color: var(--dec-text-dark) !important;
+}
+
+/* Keep up/down colors visible but darker */
+html.theme-christmas .up {
+  color: #166534 !important;
+  font-weight: 700;
+}
+
+html.theme-christmas .down {
+  color: #991b1b !important;
+  font-weight: 700;
+}
+
+html.theme-christmas .crypto-price {
+  border-top: 3px solid var(--dec-red-bright);
+  background: linear-gradient(
+    to right,
+    rgba(220, 38, 38, 0.05),
+    transparent 50%,
+    rgba(22, 101, 52, 0.05)
+  );
+  padding-top: 1rem;
+}
+
+html.theme-christmas .stocks {
+  border-top: 3px solid var(--dec-green-med);
+  background: linear-gradient(
+    to right,
+    rgba(22, 101, 52, 0.05),
+    transparent 50%,
+    rgba(220, 38, 38, 0.05)
+  );
+  padding-top: 1rem;
+}
+
 html.theme-christmas .sports-scores {
-  border-top: 1px solid #dc2626;
+  border-top: 3px solid var(--dec-gold);
+  background: linear-gradient(
+    to right,
+    rgba(251, 191, 36, 0.08),
+    transparent 50%,
+    rgba(220, 38, 38, 0.05)
+  );
+  padding-top: 1rem;
 }
 
-/* Scrollbars */
 html.theme-christmas .scores-scroll::-webkit-scrollbar-track {
-  background: rgba(22, 101, 52, 0.08);
+  background: linear-gradient(
+    to bottom,
+    rgba(22, 101, 52, 0.1),
+    rgba(220, 38, 38, 0.1)
+  );
 }
+
 html.theme-christmas .scores-scroll::-webkit-scrollbar-thumb {
-  background: rgba(22, 101, 52, 0.35);
+  background: linear-gradient(
+    to bottom,
+    var(--dec-red-bright),
+    var(--dec-green-med)
+  );
+  border-radius: 4px;
+  border: 2px solid var(--dec-gold);
 }
+
 html.theme-christmas .scores-scroll::-webkit-scrollbar-thumb:hover {
-  background: rgba(22, 101, 52, 0.5);
+  background: linear-gradient(
+    to bottom,
+    var(--dec-red-light),
+    var(--dec-green-light)
+  );
+  box-shadow: 0 0 10px var(--dec-gold);
 }
 
-/* Social links */
+html.theme-christmas .video-container {
+  border: 4px solid;
+  border-image: repeating-linear-gradient(
+    45deg,
+    var(--dec-red-bright) 0,
+    var(--dec-red-bright) 10px,
+    var(--dec-green-med) 10px,
+    var(--dec-green-med) 20px,
+    var(--dec-gold) 20px,
+    var(--dec-gold) 30px
+  ) 1;
+  box-shadow:
+    0 15px 40px rgba(220, 38, 38, 0.3),
+    0 0 0 1px rgba(251, 191, 36, 0.5);
+}
+
+html.theme-christmas .video-container:hover {
+  box-shadow:
+    0 20px 50px rgba(220, 38, 38, 0.4),
+    0 0 0 2px var(--dec-gold),
+    0 0 20px rgba(251, 191, 36, 0.5);
+}
+
+html.theme-christmas .video-controls a {
+  color: var(--dec-white) !important;
+  text-shadow:
+    1px 1px 2px var(--dec-red-dark),
+    0 0 10px var(--dec-gold);
+  font-weight: 600;
+}
+
+html.theme-christmas .video-controls a:hover {
+  color: var(--dec-cream) !important;
+  text-shadow:
+    1px 1px 2px var(--dec-green-dark),
+    0 0 15px var(--dec-gold);
+  text-decoration: underline;
+}
+
+html.theme-christmas .league-name {
+  color: var(--dec-text-dark) !important;
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+html.theme-christmas .game-line {
+  color: var(--dec-text-dark) !important;
+}
+
+html.theme-christmas .team-main,
+html.theme-christmas .team-sub,
+html.theme-christmas .game-status,
+html.theme-christmas .at {
+  color: var(--dec-text-dark) !important;
+}
+
+html.theme-christmas .score {
+  color: var(--dec-text-dark) !important;
+  font-weight: 700;
+}
+
+/* Live scores get green emphasis */
+html.theme-christmas .game-line.live .score {
+  color: #166534 !important;
+  font-weight: 800;
+}
+
+/* Winning team scores in Christmas green */
+html.theme-christmas .winning-score {
+  color: #166534 !important;
+  font-weight: 800;
+}
+
+/* Losing team scores in Christmas red */
+html.theme-christmas .losing-score {
+  color: #991b1b !important;
+  font-weight: 700;
+}
+
 html.theme-christmas .social-link {
-  background: rgba(255, 255, 255, 0.8);
-  border: 1px solid #dc2626;
-  color: #166534;
-}
-html.theme-christmas .social-link:hover {
-  background: #dc2626;
-  color: #fff;
-  box-shadow: 0 10px 25px rgba(220, 38, 38, 0.3);
+  background: linear-gradient(
+    135deg,
+    var(--dec-green-med) 0%,
+    var(--dec-red-bright) 100%
+  );
+  border: 3px solid var(--dec-gold);
+  color: var(--dec-white);
+  font-weight: 600;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  box-shadow:
+    0 4px 15px rgba(220, 38, 38, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
 }
 
-/* Footer */
+html.theme-christmas .social-link:hover {
+  background: linear-gradient(
+    135deg,
+    var(--dec-red-bright) 0%,
+    var(--dec-green-med) 100%
+  );
+  border-color: var(--dec-white);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow:
+    0 8px 25px rgba(220, 38, 38, 0.4),
+    0 0 20px var(--dec-gold),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
 html.theme-christmas footer {
-  background: rgba(255, 255, 255, 0.9);
-  border-top: 2px solid #166534;
+  background: linear-gradient(
+    to right,
+    rgba(15, 74, 45, 0.9) 0%,
+    rgba(153, 27, 27, 0.9) 50%,
+    rgba(15, 74, 45, 0.9) 100%
+  );
+  border-top: 4px solid var(--dec-gold);
+  box-shadow:
+    0 -4px 20px rgba(220, 38, 38, 0.2),
+    inset 0 1px 0 rgba(251, 191, 36, 0.3);
+  color: var(--dec-white);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.league-icon {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  margin-right: 8px;
 }

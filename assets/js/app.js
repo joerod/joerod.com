@@ -32,12 +32,12 @@ document.addEventListener("DOMContentLoaded", () => {
     document.documentElement.classList.remove('theme-october');
   }
 
-  // 🎄 December quick color tweak (red / green / gold)
-  if (now.getMonth() === 11) {
-    document.documentElement.style.setProperty('--primary-color', '#dc2626');
-    document.documentElement.style.setProperty('--secondary-color', '#166534');
-    document.documentElement.style.setProperty('--accent-color', '#fbbf24');
-  }
+// 🎄 December: activate plaid Christmas theme
+if (now.getMonth() === 11) {
+  document.documentElement.classList.add('theme-christmas');
+} else {
+  document.documentElement.classList.remove('theme-christmas');
+}
 });
 
 // ---------- HELPERS ----------
@@ -106,7 +106,6 @@ async function loadWeather() {
     if (descEl) descEl.textContent = 'Unable to load weather';
   }
 }
-
 // ---------- CRYPTO (BTC + ETH) ----------
 
 document.addEventListener("DOMContentLoaded", () => {
