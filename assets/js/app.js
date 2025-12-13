@@ -812,7 +812,8 @@ var xmas_videos = [
   { id: '7-nzlKUQ1QQ' }, { id: '3Hj3U18FHgQ' }, { id: 'bPpcfH_HHH8' },
   { id: 'jDdSQlCbJ90' }, { id: 'V87fsP5B05k' }, { id: 'iaQBQp5tgcw' },
   { id: 'cPbSI4TT3zk' }, { id: 'GP5ss2lYb3Y' }, { id: 'uhfS2k_KCfw' },
-  { id: '-vZdvDjkm8w' }, { id: 'Ao_mMCOehU4' }, { id: 'T_aiaYkcSDo' }
+  { id: '-vZdvDjkm8w' }, { id: 'Ao_mMCOehU4' }, { id: 'T_aiaYkcSDo' },
+  { id: 'yXQViqx6GMY' }
 ];
 
 var american_holiday_videos = [
