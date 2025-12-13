@@ -35,10 +35,81 @@ document.addEventListener("DOMContentLoaded", () => {
 // 🎄 December: activate plaid Christmas theme
 if (now.getMonth() === 11) {
   document.documentElement.classList.add('theme-christmas');
+
+  // Randomized blinking bulbs around the video (not all in sync)
+  try { ensureChristmasVideoLights(); } catch (_) {}
+  try { window.addEventListener('resize', debounce(ensureChristmasVideoLights, 150)); } catch (_) {}
 } else {
   document.documentElement.classList.remove('theme-christmas');
 }
 });
+
+// ---------- CHRISTMAS VIDEO LIGHTS (randomized bulbs) ----------
+function debounce(fn, wait = 150) {
+  let t;
+  return function (...args) {
+    clearTimeout(t);
+    t = setTimeout(() => fn.apply(this, args), wait);
+  };
+}
+
+function ensureChristmasVideoLights() {
+  if (!document.documentElement.classList.contains('theme-christmas')) return;
+
+  const container = document.querySelector('.video-container');
+  if (!container) return;
+
+  // Remove any existing light layer
+  const existing = container.querySelector('.xmas-lights');
+  if (existing) existing.remove();
+
+  const layer = document.createElement('div');
+  layer.className = 'xmas-lights';
+  container.appendChild(layer);
+
+  // Force layout so we can measure the light layer
+  const totalW = layer.clientWidth;
+  const totalH = layer.clientHeight;
+  if (!totalW || !totalH) {
+    // Layout might not be ready yet (rare). Try again on the next frame.
+    requestAnimationFrame(() => {
+      try { ensureChristmasVideoLights(); } catch (_) {}
+    });
+    return;
+  }
+
+  const colors = ['#ff2b2b', '#1aff4a', '#2b7bff', '#ffd82b'];
+  const spacing = 28; // bulb spacing (slightly looser than the old SVG border)
+
+  const makeBulb = (side, x, y) => {
+    const b = document.createElement('span');
+    b.className = `xmas-bulb ${side}`;
+    b.style.left = `${x}px`;
+    b.style.top = `${y}px`;
+
+    const c = colors[Math.floor(Math.random() * colors.length)];
+    b.style.setProperty('--bulbColor', c);
+    b.style.setProperty('--blinkDelay', `${(Math.random() * 1.8).toFixed(2)}s`);
+    b.style.setProperty('--blinkDur', `${(0.9 + Math.random() * 1.6).toFixed(2)}s`);
+    return b;
+  };
+
+  // Top + bottom
+  const countTop = Math.max(8, Math.floor(totalW / spacing));
+  for (let i = 0; i < countTop; i++) {
+    const x = (i + 0.5) * (totalW / countTop);
+    layer.appendChild(makeBulb('side-top', x, 0));
+    layer.appendChild(makeBulb('side-bottom', x, totalH));
+  }
+
+  // Left + right
+  const countSide = Math.max(5, Math.floor(totalH / spacing));
+  for (let i = 0; i < countSide; i++) {
+    const y = (i + 0.5) * (totalH / countSide);
+    layer.appendChild(makeBulb('side-left', 0, y));
+    layer.appendChild(makeBulb('side-right', totalW, y));
+  }
+}
 
 // ---------- HELPERS ----------
 function yyyymmdd(date = new Date()) {
