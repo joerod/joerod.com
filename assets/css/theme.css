@@ -731,17 +731,17 @@ html.theme-christmas .video-container .xmas-bulb::after {
    Default bulb points "down". We rotate for other sides.
 */
 html.theme-christmas .video-container .xmas-bulb.side-top {
-  transform: translate(-50%, -12px) rotate(180deg); /* uniform spacing */
+  transform: translate(-50%, -20px) rotate(180deg); /* raised spacing */
 }
 html.theme-christmas .video-container .xmas-bulb.side-bottom {
-  transform: translate(-50%, 6px) rotate(0deg); /* bring bottom row closer */
+  transform: translate(-50%, -6px) rotate(0deg); /* raise bottom row */
 }
 html.theme-christmas .video-container .xmas-bulb.side-left {
   transform: translate(-12px, -50%) rotate(90deg); /* uniform spacing */
 }
 html.theme-christmas .video-container .xmas-bulb.side-right {
   /* Bulbs face outward on the right */
-  transform: translate(12px, -50%) rotate(270deg); /* uniform spacing */
+  transform: translate(-2px, -50%) rotate(270deg); /* further left */
 }
 
 @keyframes xmasBulbBlink {
