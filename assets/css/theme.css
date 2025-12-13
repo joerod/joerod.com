@@ -294,34 +294,45 @@ html.theme-christmas .site-title {
 }
 
 html.theme-christmas .weather-widget {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.95) 0%,
-    rgba(254, 243, 199, 0.95) 100%
-  );
-  border: 3px solid;
-  border-image: linear-gradient(
-    45deg,
-    var(--dec-red-bright),
-    var(--dec-green-med),
-    var(--dec-gold),
-    var(--dec-red-bright)
-  ) 1;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(254, 243, 199, 0.95) 100%
+    ) padding-box,
+    linear-gradient(
+      45deg,
+      var(--dec-red-bright),
+      var(--dec-green-med),
+      var(--dec-gold),
+      var(--dec-red-bright)
+    ) border-box;
+  border: 3px solid transparent;
   box-shadow:
     0 8px 32px rgba(220, 38, 38, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.5);
   color: var(--dec-text-dark);
+  border-radius: 14px;
+  overflow: hidden;
 }
 
 /* Christmas countdown (upper left) */
 html.theme-christmas .xmas-countdown {
   position: fixed;
-  top: 92px;
+  top: 108px;
   left: 16px;
   z-index: 1200;
-  background: linear-gradient(135deg, rgba(254, 243, 199, 0.96), rgba(255, 255, 255, 0.96));
+  background:
+    linear-gradient(135deg, rgba(254, 243, 199, 0.96), rgba(255, 255, 255, 0.96)) padding-box,
+    linear-gradient(
+      45deg,
+      var(--dec-red-bright),
+      var(--dec-green-med),
+      var(--dec-gold),
+      var(--dec-red-bright)
+    ) border-box;
   color: var(--dec-text-dark);
-  border: 3px solid var(--dec-gold);
+  border: 3px solid transparent;
   border-radius: 14px;
   padding: 12px 16px;
   min-width: 190px;
@@ -335,7 +346,7 @@ html.theme-christmas .xmas-countdown {
 
 @media (max-width: 768px) {
   html.theme-christmas .xmas-countdown {
-    top: 16px;
+    top: 88px;
     left: 50%;
     right: auto;
     transform: translateX(-50%);
@@ -353,7 +364,7 @@ html.theme-christmas .xmas-countdown {
 
   /* Push the weather/menu down so the countdown never overlaps it; add curved corners */
   html.theme-christmas .weather-widget {
-    margin-top: 140px;
+    margin-top: 170px;
     border-radius: 16px;
   }
 }
@@ -394,6 +405,10 @@ html.theme-christmas .at,
 html.theme-christmas .game-status,
 html.theme-christmas .score {
   color: var(--dec-text-dark) !important;
+}
+html.theme-christmas .crypto-price-title img,
+html.theme-christmas .stocks-title .icon {
+  filter: hue-rotate(90deg) saturate(4) brightness(0.9);
 }
 
 /* Keep up/down colors visible but darker */
