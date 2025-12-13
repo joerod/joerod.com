@@ -808,8 +808,12 @@ var xmas_videos = [
   { id: 'rgEP1niScLc' }, { id: 'S7OWoc-j8qQ' }, { id: 'hZ9q3PtiYu8' },
   { id: 'E3RQVcNUcTA' }, { id: 'GPG3zSgm_Qo' }, { id: 'tR_Z1LUDQuQ' },
   { id: 'kSkyv8EUEsU' }, { id: 'uIsgSQvsRj8' }, { id: 'e-r8hvTFVb8' },
-  { id: 'myzC3f0j9kw' }, { id: 'LznVSn7Ud9o' }
+  { id: 'myzC3f0j9kw' }, { id: 'LznVSn7Ud9o' }, { id: 'L0CL__Tvp-o' },
+  { id: '7-nzlKUQ1QQ' }, { id: '3Hj3U18FHgQ' }, { id: 'bPpcfH_HHH8' },
+  { id: 'jDdSQlCbJ90' }, { id: 'V87fsP5B05k' }, { id: 'iaQBQp5tgcw' },
+  { id: 'cPbSI4TT3zk' }, { id: 'GP5ss2lYb3Y' }, { id: 'uhfS2k_KCfw' }
 ];
+
 var american_holiday_videos = [
   { id: '7NiGq6q3Z34' }, { id: 'TmoeZHnOJKA' },
   { id: 'U1mlCPMYtPk' }, { id: 'N_lCmBvYMRs' }
