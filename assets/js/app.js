@@ -39,8 +39,12 @@ if (now.getMonth() === 11) {
   // Randomized blinking bulbs around the video (not all in sync)
   try { ensureChristmasVideoLights(); } catch (_) {}
   try { window.addEventListener('resize', debounce(ensureChristmasVideoLights, 150)); } catch (_) {}
+
+  // Christmas countdown (upper left)
+  try { ensureChristmasCountdown(); } catch (_) {}
 } else {
   document.documentElement.classList.remove('theme-christmas');
+  try { ensureChristmasCountdown(); } catch (_) {} // cleanup if present
 }
 });
 
@@ -109,6 +113,77 @@ function ensureChristmasVideoLights() {
     layer.appendChild(makeBulb('side-left', 0, y));
     layer.appendChild(makeBulb('side-right', totalW, y));
   }
+}
+
+// ---------- CHRISTMAS COUNTDOWN ----------
+let xmasCountdownTimer = null;
+
+function ensureChristmasCountdown() {
+  const isXmas = document.documentElement.classList.contains('theme-christmas');
+
+  if (!isXmas) {
+    if (xmasCountdownTimer) {
+      clearInterval(xmasCountdownTimer);
+      xmasCountdownTimer = null;
+    }
+    const existing = document.getElementById('xmas-countdown');
+    if (existing) existing.remove();
+    return;
+  }
+
+  let panel = document.getElementById('xmas-countdown');
+  if (!panel) {
+    panel = document.createElement('div');
+    panel.id = 'xmas-countdown';
+    panel.className = 'xmas-countdown';
+    const label = document.createElement('div');
+    label.className = 'countdown-label';
+    label.textContent = 'Christmas Countdown';
+    const value = document.createElement('div');
+    value.id = 'xmas-countdown-value';
+    value.className = 'countdown-value';
+    panel.appendChild(label);
+    panel.appendChild(value);
+    document.body.appendChild(panel);
+  }
+
+  const valueEl = document.getElementById('xmas-countdown-value');
+  if (!valueEl) return;
+
+  if (xmasCountdownTimer) {
+    clearInterval(xmasCountdownTimer);
+    xmasCountdownTimer = null;
+  }
+
+  const computeTarget = () => {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const target = new Date(currentYear, 11, 25, 0, 0, 0, 0);
+    if (now > target) {
+      return new Date(currentYear + 1, 11, 25, 0, 0, 0, 0);
+    }
+    return target;
+  };
+
+  const targetDate = computeTarget();
+
+  const update = () => {
+    const now = new Date();
+    let diff = targetDate - now;
+    if (diff < 0) diff = 0;
+
+    const seconds = Math.floor(diff / 1000);
+    const days = Math.floor(seconds / (60 * 60 * 24));
+    const hours = Math.floor((seconds - days * 24 * 3600) / 3600);
+    const mins = Math.floor((seconds - days * 24 * 3600 - hours * 3600) / 60);
+    const secs = seconds % 60;
+
+    const pad = (n) => String(n).padStart(2, '0');
+    valueEl.textContent = `${days}d ${pad(hours)}h ${pad(mins)}m ${pad(secs)}s`;
+  };
+
+  update();
+  xmasCountdownTimer = setInterval(update, 1000);
 }
 
 // ---------- HELPERS ----------
@@ -208,15 +283,42 @@ updateNYTime();
 
 // ---------- WEATHER ----------
 async function loadWeather() {
-  const API_KEY = 'ea033866cb220b2bb944e00b54306c14';
-  const url = `https://api.openweathermap.org/data/2.5/weather?q=New York,NY,US&appid=${API_KEY}&units=imperial`;
-  const res = await fetch(url);
-  const data = await res.json();
-  document.getElementById('weather-temp').textContent = `${Math.round(data.main.temp)}°F`;
-  document.getElementById('weather-desc').textContent = data.weather[0].description;
+  try {
+    const API_KEY = 'ea033866cb220b2bb944e00b54306c14';
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=New York,NY,US&appid=${API_KEY}&units=imperial`;
+    const res = await fetch(url, { cache: 'no-store', mode: 'cors' });
+    const data = await res.json();
+
+    const iconMap = {
+      '01d': '☀️',  '01n': '🌙',
+      '02d': '🌤️', '02n': '☁️🌙',
+      '03d': '☁️',  '03n': '☁️',
+      '04d': '☁️',  '04n': '☁️',
+      '09d': '🌧️', '09n': '🌧️',
+      '10d': '🌦️', '10n': '🌧️',
+      '11d': '⛈️', '11n': '⛈️',
+      '13d': '❄️', '13n': '❄️',
+      '50d': '🌫️', '50n': '🌫️'
+    };
+
+    const iconCode = data.weather?.[0]?.icon;
+    const iconEl = document.getElementById('weather-icon');
+    const tempEl = document.getElementById('weather-temp');
+    const descEl = document.getElementById('weather-desc');
+
+    if (iconEl) iconEl.textContent = iconMap[iconCode] || '🌡️';
+    if (tempEl) tempEl.textContent = `${Math.round(data.main.temp)}°`;
+    if (descEl) descEl.textContent = data.weather?.[0]?.description || '';
+  } catch (e) {
+    const iconEl = document.getElementById('weather-icon');
+    const tempEl = document.getElementById('weather-temp');
+    const descEl = document.getElementById('weather-desc');
+    if (iconEl) iconEl.textContent = '⚠️';
+    if (tempEl) tempEl.textContent = 'N/A';
+    if (descEl) descEl.textContent = 'Weather unavailable';
+  }
 }
 loadWeather();
-
 // ---------- CRYPTO ----------
 async function loadBitcoinPrice() {
   try {
@@ -884,7 +986,7 @@ var xmas_videos = [
   { id: 'jDdSQlCbJ90' }, { id: 'V87fsP5B05k' }, { id: 'iaQBQp5tgcw' },
   { id: 'cPbSI4TT3zk' }, { id: 'GP5ss2lYb3Y' }, { id: 'uhfS2k_KCfw' },
   { id: '-vZdvDjkm8w' }, { id: 'Ao_mMCOehU4' }, { id: 'T_aiaYkcSDo' },
-  { id: 'yXQViqx6GMY' }
+  { id: 'yXQViqx6GMY' }, { id: 'VhvM-cTAinY' }
 ];
 
 var american_holiday_videos = [
