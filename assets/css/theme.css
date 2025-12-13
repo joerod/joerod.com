@@ -332,6 +332,18 @@ html.theme-christmas .xmas-countdown {
   text-align: center;
   overflow: visible;
 }
+
+@media (max-width: 768px) {
+  html.theme-christmas .xmas-countdown {
+    top: 70px;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    width: calc(100% - 32px);
+    max-width: 320px;
+    margin: 0 auto;
+  }
+}
 html.theme-christmas .xmas-countdown .countdown-label {
   font-weight: 700;
   font-size: 0.85rem;
