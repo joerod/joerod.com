@@ -335,13 +335,26 @@ html.theme-christmas .xmas-countdown {
 
 @media (max-width: 768px) {
   html.theme-christmas .xmas-countdown {
-    top: 70px;
+    top: 16px;
     left: 50%;
     right: auto;
     transform: translateX(-50%);
     width: calc(100% - 32px);
     max-width: 320px;
     margin: 0 auto;
+  }
+
+  /* Give Christmas video lights breathing room on mobile */
+  html.theme-christmas .video-container {
+    max-width: calc(100% - 40px);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Push the weather/menu down so the countdown never overlaps it; add curved corners */
+  html.theme-christmas .weather-widget {
+    margin-top: 140px;
+    border-radius: 16px;
   }
 }
 html.theme-christmas .xmas-countdown .countdown-label {
