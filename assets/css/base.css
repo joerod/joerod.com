@@ -167,8 +167,18 @@ footer { padding: 2rem; text-align: center; backdrop-filter: blur(20px); backgro
   main { padding: 0.5rem; order: 0; }
   .video-container { margin: 0.6rem 0; max-width: 100%; padding-bottom: 56.25%; }
   .video-controls { max-width: 100%; }
-  .social-links { gap: 0.45rem; }
-  .social-link { font-size: 0.85rem; padding: 0.45rem 0.75rem; }
+  .social-links {
+    gap: 0.45rem;
+    flex-direction: column;
+    align-items: center;
+  }
+  .social-link {
+    font-size: 0.85rem;
+    padding: 0.45rem 0.75rem;
+    width: 100%;
+    max-width: 340px;
+    justify-content: flex-start;
+  }
   .scores-scroll { max-height: 220px; }
   footer { padding: 1.5rem 1rem; }
 }
