@@ -42,6 +42,28 @@ if (now.getMonth() === 11) {
 
   // Christmas countdown (upper left)
   try { ensureChristmasCountdown(); } catch (_) {}
+
+  // Christmas favicon (red/green, same JR shape)
+  try {
+    const xmasJR =
+      "data:image/svg+xml," +
+      encodeURIComponent(`
+        <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>
+          <rect width='64' height='64' fill='none'/>
+          <g fill='#dc2626'>
+            <path d='M18 10 q8 0 8 8 v13 q0 6 -4 9 t-9 2 q-3 0 -6 -1 l2 -6 q2 1 4 1 q3 0 4.5 -1.5 t1.5 -4.5 v-12 q0 -1.8 -1 -2.9 t-3 -1.1 h-2 v-4 h5z'/>
+          </g>
+          <g fill='#166534'>
+            <path d='M31 28 h8 q8 0 8 8 q0 5 -4 7 l6 9 h-8 l-5 -8 h-3 v8 h-6 v-24 z m6 5 v7 h3 q3 0 3 -3 q0 -4 -3 -4 h-3z'/>
+          </g>
+        </svg>
+      `);
+    const link = document.createElement('link');
+    link.rel = 'icon';
+    link.type = 'image/svg+xml';
+    link.href = xmasJR;
+    document.head.appendChild(link);
+  } catch (_) {}
 } else {
   document.documentElement.classList.remove('theme-christmas');
   try { ensureChristmasCountdown(); } catch (_) {} // cleanup if present

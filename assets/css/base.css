@@ -192,7 +192,6 @@ footer { padding: 2rem; text-align: center; backdrop-filter: blur(20px); backgro
   .social-link:hover { background: rgba(255, 255, 255, 0.1); transform: none; box-shadow: none; }
   .social-link:active { background: rgba(255, 255, 255, 0.3); transform: scale(0.98); }
 }
-
 .crypto-price {
   margin-top: 0.75rem;
   padding-top: 0.75rem;
@@ -223,8 +222,6 @@ footer { padding: 2rem; text-align: center; backdrop-filter: blur(20px); backgro
   opacity: 0.9;
   text-align: center;
 }
-
-
 #bitcoin-price-value,
 #bitcoin-price-change,
 #ethereum-price-value {
@@ -233,6 +230,4 @@ footer { padding: 2rem; text-align: center; backdrop-filter: blur(20px); backgro
   text-align: center;
   font-weight: 600;
 }
-
-
 .weather-widget:hover { opacity: 1; }
