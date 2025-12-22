@@ -1,4 +1,4 @@
-// ===== admin.js =====
+﻿// ===== admin.js =====
 async function fetchJson(url) {
   const res = await fetch(url, {
     // Static Web Apps auth is cookie-based, include cookies so admin APIs work.
@@ -56,9 +56,9 @@ function renderVisitors(rows) {
   }
   for (const r of rows) {
     const tr=document.createElement("tr");
-    tr.appendChild(td(r.sessionId || "—"));
-    tr.appendChild(td(String(r.visits ?? "—")));
-    tr.appendChild(td(r.lastSeenUtc || "—"));
+    tr.appendChild(td(r.sessionId || "â€”"));
+    tr.appendChild(td(String(r.visits ?? "â€”")));
+    tr.appendChild(td(r.lastSeenUtc || "â€”"));
     body.appendChild(tr);
   }
 }
@@ -78,9 +78,9 @@ function renderLocations(rows) {
   }
   for (const r of rows) {
     const tr=document.createElement("tr");
-    tr.appendChild(td(r.ip || "—"));
-    tr.appendChild(td(String(r.visits ?? "—")));
-    tr.appendChild(td(r.geo || "—"));
+    tr.appendChild(td(r.ip || "â€”"));
+    tr.appendChild(td(String(r.visits ?? "â€”")));
+    tr.appendChild(td(r.geo || "â€”"));
     body.appendChild(tr);
   }
 }
@@ -98,9 +98,9 @@ async function refresh() {
       if (el) el.textContent = "API not reachable";
     }
     const summary = await fetchJson("/api/admin-summary");
-    document.getElementById("kpi-total").textContent = summary.totalVisits ?? "—";
-    document.getElementById("kpi-unique").textContent = summary.uniqueSessions ?? "—";
-    document.getElementById("kpi-24h").textContent = summary.visitsLast24h ?? "—";
+    document.getElementById("kpi-total").textContent = summary.totalVisits ?? "â€”";
+    document.getElementById("kpi-unique").textContent = summary.uniqueSessions ?? "â€”";
+    document.getElementById("kpi-24h").textContent = summary.visitsLast24h ?? "â€”";
     renderVisitors(summary.topSessions || []);
     const loc = await fetchJson("/api/admin-locations");
     renderLocations(loc.topIPs || []);
@@ -114,3 +114,5 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("refresh").addEventListener("click", refresh);
   refresh();
 });
+
+
