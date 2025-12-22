@@ -22,11 +22,10 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_PURPLE_MUD_0C2A8650F }}
           repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
-          app_location: "/"          # ✅ root folder (where index.html lives)
-          api_location: ""           # optional, but good to be explicit
-          output_location: ""        # ✅ no build output
+          app_location: "/"          # root folder (where index.html lives)
+          api_location: "api"        # ✅ deploy Azure Functions from /api
+          output_location: ""        # no build output
           skip_app_build: true
-          skip_api_build: true
           action: "upload"
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'

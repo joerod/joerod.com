@@ -1,0 +1,31 @@
+{
+  "routes": [
+    {
+      "route": "/admin",
+      "redirect": "/admin.html",
+      "statusCode": 302
+    },
+    {
+      "route": "/admin.html",
+      "allowedRoles": [
+        "admin"
+      ]
+    },
+    {
+      "route": "/api/admin/*",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
+  ],
+  "responseOverrides": {
+    "401": {
+      "redirect": "/.auth/login/github",
+      "statusCode": 302
+    },
+    "403": {
+      "redirect": "/403.html",
+      "statusCode": 302
+    }
+  }
+}

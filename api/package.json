@@ -1,0 +1,10 @@
+{
+  "name": "joerod-api",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Serverless API for joerod.com (Azure Static Web Apps)",
+  "main": "index.js",
+  "dependencies": {
+    "@azure/cosmos": "^3.17.0"
+  }
+}
