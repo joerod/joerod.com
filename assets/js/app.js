@@ -1115,3 +1115,23 @@ function loadRandomVideo() {
   try { buildSportsScores(); } catch (e) {}
   try { loadRandomVideo(); } catch (e) {}
 })();
+
+
+// ---------- VISIT TRACKING ----------
+(function trackVisit(){
+  try {
+    const key = "joerod_session_id";
+    let sessionId = localStorage.getItem(key);
+    if (!sessionId) {
+      sessionId = (crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + "-" + Math.random().toString(16).slice(2);
+      localStorage.setItem(key, sessionId);
+    }
+    fetch("/api/track", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sessionId, path: location.pathname }),
+      keepalive: true
+    }).catch(() => {});
+  } catch {}
+})();
+
