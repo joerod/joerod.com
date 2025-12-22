@@ -1,5 +1,6 @@
 // ===== admin.js =====
 async function fetchJson(url) {
+<<<<<<< HEAD
   const res = await fetch(url, {
     // Static Web Apps auth is cookie-based, include cookies so admin APIs work.
     credentials: "include"
@@ -30,6 +31,16 @@ async function fetchJson(url) {
   }
 
   // If it's empty but ok, return null
+=======
+  const res = await fetch(url, { credentials: "include" });
+  const text = await res.text();
+  let data = null;
+  try { data = text ? JSON.parse(text) : null; } catch {}
+  if (!res.ok) {
+    const msg = (data && (data.error || data.message)) ? (data.error || data.message) : text || res.statusText;
+    throw new Error(msg);
+  }
+>>>>>>> 3f9cf192a67728a80e837e99f2373d5e37967e0c
   return data;
 }
 
