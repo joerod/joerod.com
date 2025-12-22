@@ -12,7 +12,13 @@
       ]
     },
     {
-      "route": "/api/admin/*",
+      "route": "/api/admin-summary",
+      "allowedRoles": [
+        "admin"
+      ]
+    },
+    {
+      "route": "/api/admin-locations",
       "allowedRoles": [
         "admin"
       ]

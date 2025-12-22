@@ -1,32 +1,32 @@
 name: Azure Static Web Apps CI/CD
+
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   pull_request:
-    types: [opened, synchronize, reopened, closed]
-    branches:
-      - main
+    types: [ opened, synchronize, reopened, closed ]
+    branches: [ main ]
+
 jobs:
   build_and_deploy_job:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     steps:
-      - uses: actions/checkout@v2
-        with:
-          submodules: true
-      - name: Build And Deploy
+      - uses: actions/checkout@v4
+
+      - name: Build and Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_PURPLE_MUD_0C2A8650F }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
-          app_location: "/"          # root folder (where index.html lives)
-          api_location: "api"        # ✅ deploy Azure Functions from /api
-          output_location: ""        # no build output
-          skip_app_build: true
+          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for GitHub integrations (PR comments, etc.)
           action: "upload"
+          app_location: "/"          # repo root (contains index.html)
+          api_location: "api"        # /api folder (Azure Functions)
+          output_location: ""        # no build output because we are not building
+          skip_app_build: true       # don't run a front-end build step
+
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest
@@ -38,4 +38,3 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_PURPLE_MUD_0C2A8650F }}
           action: "close"
-      - uses: Azure/static-web-apps-deploy@v1

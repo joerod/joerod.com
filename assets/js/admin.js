@@ -97,12 +97,12 @@ async function refresh() {
       const el = document.getElementById("ping-status");
       if (el) el.textContent = "API not reachable";
     }
-    const summary = await fetchJson("/api/admin/summary");
+    const summary = await fetchJson("/api/admin-summary");
     document.getElementById("kpi-total").textContent = summary.totalVisits ?? "—";
     document.getElementById("kpi-unique").textContent = summary.uniqueSessions ?? "—";
     document.getElementById("kpi-24h").textContent = summary.visitsLast24h ?? "—";
     renderVisitors(summary.topSessions || []);
-    const loc = await fetchJson("/api/admin/locations");
+    const loc = await fetchJson("/api/admin-locations");
     renderLocations(loc.topIPs || []);
     setStatus("Loaded.", true);
   } catch (e) {
