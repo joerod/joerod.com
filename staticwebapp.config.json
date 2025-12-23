@@ -31,16 +31,10 @@
       ]
     },
     {
-      "route": "/api/admin_summary",
-      "allowedRoles": [
-        "admin"
-      ]
+      "route": "/api/admin_summary"
     },
     {
-      "route": "/api/admin_locations",
-      "allowedRoles": [
-        "admin"
-      ]
+      "route": "/api/admin_locations"
     }
   ],
   "responseOverrides": {
