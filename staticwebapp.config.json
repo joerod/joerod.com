@@ -31,13 +31,13 @@
       ]
     },
     {
-      "route": "/api/admin-summary",
+      "route": "/api/admin_summary",
       "allowedRoles": [
         "admin"
       ]
     },
     {
-      "route": "/api/admin-locations",
+      "route": "/api/admin_locations",
       "allowedRoles": [
         "admin"
       ]
