@@ -26,28 +26,34 @@ function fetchText(url) {
   });
 }
 
+function parseStooqRow(csv) {
+  const lines = csv.trim().split("\n");
+  if (lines.length < 2) return null;
+  const parts = lines[1].split(",");
+  if (parts.length < 7) return null;
+  const open = parts[4] === "N/D" ? null : parseFloat(parts[4]);
+  const close = parts[6] === "N/D" ? null : parseFloat(parts[6]);
+  const price = Number.isFinite(close) ? close : null;
+  const changePercent = Number.isFinite(open) && open
+    ? ((close - open) / open) * 100
+    : null;
+  return {
+    price,
+    changePercent: Number.isFinite(changePercent) ? changePercent : null
+  };
+}
+
 module.exports = async function (context, req) {
   try {
-    const symbols = SYMBOLS.map((s) => `${s}.US`).join(",");
-    const url = `https://stooq.com/q/l/?s=${encodeURIComponent(symbols)}&f=sd2t2ohlc&h&e=csv`;
-    const csv = await fetchText(url);
-    const lines = csv.trim().split("\n");
     const rows = [];
-    for (let i = 1; i < lines.length; i++) {
-      const parts = lines[i].split(",");
-      if (parts.length < 7) continue;
-      const symbol = (parts[0] || "").replace(".US", "").toUpperCase();
-      if (!NAME_MAP[symbol]) continue;
-      const open = parseFloat(parts[4]);
-      const close = parseFloat(parts[6]);
-      const price = Number.isFinite(close) ? close : null;
-      const changePercent = Number.isFinite(open) && open
-        ? ((close - open) / open) * 100
-        : null;
+    for (const symbol of SYMBOLS) {
+      const url = `https://stooq.com/q/l/?s=${encodeURIComponent(symbol)}.US&f=sd2t2ohlc&h&e=csv`;
+      const csv = await fetchText(url);
+      const data = parseStooqRow(csv) || { price: null, changePercent: null };
       rows.push({
         name: NAME_MAP[symbol],
-        price,
-        changePercent: Number.isFinite(changePercent) ? changePercent : null
+        price: data.price,
+        changePercent: data.changePercent
       });
     }
 
