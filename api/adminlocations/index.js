@@ -1,3 +1,4 @@
+const https = require("https");
 const { getCosmos } = require("../_shared");
 
 async function queryAll(container, query, parameters = []) {
@@ -22,6 +23,63 @@ function normalizeIp(value) {
     return ip.slice(0, ip.lastIndexOf(":"));
   }
   return ip;
+}
+
+function isPrivateIp(ip) {
+  if (!ip) return true;
+  if (ip === "127.0.0.1" || ip === "::1") return true;
+  if (ip.startsWith("10.")) return true;
+  if (ip.startsWith("192.168.")) return true;
+  if (ip.startsWith("172.")) {
+    const second = parseInt(ip.split(".")[1], 10);
+    if (second >= 16 && second <= 31) return true;
+  }
+  return false;
+}
+
+function fetchJson(url) {
+  return new Promise((resolve, reject) => {
+    https.get(url, (res) => {
+      let body = "";
+      res.on("data", (chunk) => (body += chunk));
+      res.on("end", () => {
+        if (res.statusCode < 200 || res.statusCode >= 300) {
+          reject(new Error(`HTTP ${res.statusCode}`));
+          return;
+        }
+        try {
+          resolve(JSON.parse(body));
+        } catch (e) {
+          reject(e);
+        }
+      });
+    }).on("error", reject);
+  });
+}
+
+async function fetchGeo(ip) {
+  if (!ip || isPrivateIp(ip)) return null;
+  const data = await fetchJson(`https://ipapi.co/${encodeURIComponent(ip)}/json/`);
+  if (!data || data.error) return null;
+  return {
+    country: data.country_name || null,
+    region: data.region || null,
+    city: data.city || null
+  };
+}
+
+async function mapLimit(items, limit, fn) {
+  const out = new Array(items.length);
+  let i = 0;
+  const workers = new Array(Math.min(limit, items.length)).fill(0).map(async () => {
+    while (true) {
+      const idx = i++;
+      if (idx >= items.length) break;
+      out[idx] = await fn(items[idx], idx);
+    }
+  });
+  await Promise.all(workers);
+  return out;
 }
 
 module.exports = async function (context, req) {
@@ -65,13 +123,37 @@ module.exports = async function (context, req) {
         ip: x.ip,
         visits: x.visits,
         lastSeenUtc: x.lastSeenUtc,
-        geo: [x.city, x.region, x.country].filter(Boolean).join(", ") || "—"
+        city: x.city || null,
+        region: x.region || null,
+        country: x.country || null
       }));
+
+    const missingGeo = locations
+      .map((x, idx) => ({ idx, ip: x.ip, hasGeo: x.city || x.region || x.country }))
+      .filter(x => !x.hasGeo)
+      .slice(0, 10);
+
+    if (missingGeo.length) {
+      await mapLimit(missingGeo, 3, async (item) => {
+        const geo = await fetchGeo(item.ip);
+        if (!geo) return;
+        locations[item.idx].city = locations[item.idx].city || geo.city;
+        locations[item.idx].region = locations[item.idx].region || geo.region;
+        locations[item.idx].country = locations[item.idx].country || geo.country;
+      });
+    }
+
+    const rows = locations.map((x) => ({
+      ip: x.ip,
+      visits: x.visits,
+      lastSeenUtc: x.lastSeenUtc,
+      geo: [x.city, x.region, x.country].filter(Boolean).join(", ") || "—"
+    }));
 
     context.res = {
       status: 200,
       headers: { "content-type": "application/json" },
-      body: { ok: true, locations }
+      body: { ok: true, locations: rows }
     };
   } catch (e) {
     context.log("locations error", e);

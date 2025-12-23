@@ -37,12 +37,10 @@ module.exports = async function (context, req) {
     const { container } = getCosmos();
     const { resource } = await container.item("config", "config").read();
     const fmpKey =
+      process.env.FMP_KEY ||
       (resource && resource.stocks && resource.stocks.fmpKey) ||
-      (resource && resource.fmpKey);
-
-    if (!fmpKey) {
-      throw new Error("Missing FMP key in Cosmos DB");
-    }
+      (resource && resource.fmpKey) ||
+      "demo";
 
     const url = `https://financialmodelingprep.com/api/v3/quote/${SYMBOLS.join(
       ","
