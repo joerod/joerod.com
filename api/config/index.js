@@ -95,7 +95,8 @@ module.exports = async function (context, req) {
           ? String(existing.stocks.fmpKey).slice(-4)
           : null,
         usingDefaults,
-        videos
+        videos,
+        defaultVideos: flattenDefaultVideos()
       }
     };
   } catch (e) {

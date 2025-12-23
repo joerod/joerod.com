@@ -153,6 +153,8 @@ function updateVideoCount() {
   count.textContent = `${body.querySelectorAll("tr").length} videos`;
 }
 
+let defaultVideosCache = [];
+
 async function loadConfig() {
   try {
     const data = await fetchJson("/api/config");
@@ -164,6 +166,7 @@ async function loadConfig() {
     const body = document.getElementById("youtube-rows");
     if (body) body.innerHTML = "";
     const list = Array.isArray(data.videos) ? data.videos : [];
+    defaultVideosCache = Array.isArray(data.defaultVideos) ? data.defaultVideos : [];
     list.forEach((v) => addVideoRow(v));
     updateVideoCount();
     const defaults = document.getElementById("youtube-defaults");
@@ -245,6 +248,16 @@ document.addEventListener("DOMContentLoaded", () => {
   if (add) add.addEventListener("click", () => {
     addVideoRow({ id: "", category: "regular" });
     updateVideoCount();
+  });
+  const loadDefaults = document.getElementById("load-default-videos");
+  if (loadDefaults) loadDefaults.addEventListener("click", () => {
+    const body = document.getElementById("youtube-rows");
+    if (!body) return;
+    body.innerHTML = "";
+    defaultVideosCache.forEach((v) => addVideoRow(v));
+    updateVideoCount();
+    const defaults = document.getElementById("youtube-defaults");
+    if (defaults) defaults.textContent = "Defaults loaded (not saved yet)";
   });
   refresh();
 });
