@@ -7,71 +7,112 @@
   <link rel="stylesheet" href="./assets/css/base.css" />
   <link rel="stylesheet" href="./assets/css/theme.css" />
   <style>
-    main { max-width: 980px; margin: 110px auto 60px; padding: 0 18px; }
-    .card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.10); border-radius: 18px; padding: 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.18); }
-    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 14px; }
+    :root {
+      --admin-bg: #f4f6f9;
+      --admin-panel: #ffffff;
+      --admin-border: #d4d9e1;
+      --admin-header: #1f3b73;
+      --admin-header-light: #2b4c8f;
+      --admin-accent: #2563eb;
+      --admin-text: #1f2937;
+      --admin-muted: #6b7280;
+    }
+    body { background: var(--admin-bg); color: var(--admin-text); font-family: Tahoma, Verdana, Arial, sans-serif; }
+    header.fixed-header {
+      background: linear-gradient(180deg, var(--admin-header) 0%, var(--admin-header-light) 100%);
+      color: #fff;
+      border-bottom: 1px solid #0b1b3a;
+      box-shadow: 0 2px 0 rgba(255,255,255,0.12) inset;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      padding: 0 18px;
+    }
+    .site-title { font-weight: 700; letter-spacing: .02em; }
+    main { max-width: 980px; margin: 90px auto 50px; padding: 0 18px; }
+    h1 { font-size: 24px; margin: 0; }
+    .subtle { color: var(--admin-muted); font-size: 13px; }
+    .panel {
+      background: var(--admin-panel);
+      border: 1px solid var(--admin-border);
+      border-radius: 8px;
+      padding: 14px;
+      box-shadow: 0 1px 0 rgba(255,255,255,0.6) inset;
+    }
+    .toolbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .spacer { height: 12px; }
+    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 12px; }
     .kpi { grid-column: span 4; }
     @media (max-width: 900px){ .kpi { grid-column: span 6; } }
     @media (max-width: 540px){ .kpi { grid-column: span 12; } }
-    h1 { font-family: "Playfair Display", serif; margin: 0 0 14px; }
-    .muted { opacity: 0.75; }
+    .kpi .label { color: var(--admin-muted); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+    .kpi .value { font-size: 28px; font-weight: 700; }
     table { width: 100%; border-collapse: collapse; }
-    th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid rgba(255,255,255,0.10); font-size: 14px; }
-    th { font-size: 12px; letter-spacing: .05em; text-transform: uppercase; opacity: .8; }
-    .row { display:flex; align-items:center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
-    .btn { cursor:pointer; border:1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.08); padding: 10px 12px; border-radius: 12px; color: inherit; }
-    .btn:hover { background: rgba(255,255,255,0.12); }
-    .error { color: #ffb4b4; }
-    .ok { color: #b6ffcc; }
-    .spacer { height: 14px; }
+    th, td { text-align: left; padding: 9px 8px; border-bottom: 1px solid #e5e7eb; font-size: 13px; }
+    th { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--admin-muted); }
+    .btn {
+      cursor: pointer;
+      border: 1px solid #1d4ed8;
+      background: #2563eb;
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+    }
+    .btn.secondary {
+      border-color: #c7ceda;
+      background: #eef2f7;
+      color: #1f2937;
+    }
+    .btn:hover { filter: brightness(0.98); }
+    .badge { font-size: 12px; padding: 4px 8px; border-radius: 999px; border: 1px solid var(--admin-border); background: #eef2ff; color: #1e3a8a; }
+    .error { color: #b91c1c; }
+    .ok { color: #047857; }
   </style>
   <script defer src="./assets/js/admin.js"></script>
 </head>
 <body>
   <header class="fixed-header">
-    <div class="site-title">JoeRod.com Admin</div>
+    <div class="site-title">JoeRod.com Admin Portal</div>
   </header>
 
   <main>
-    <div class="row">
-      <h1>Site Metrics</h1>
-      <div id="ping" style="margin: 12px 0; padding: 10px; border: 1px solid #e5e7eb; border-radius: 10px; font-size: 14px; background: #fafafa;">
-        <strong>API status:</strong> <span id="ping-status">Checking...</span>
-      </div>
-      <div id="adminStatus" class="card" style="margin: 12px 0; padding: 12px;">
-        <div style="font-weight: 600;">API Status</div>
-        <div id="adminStatusText" style="font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 12px; margin-top: 6px; white-space: pre-wrap;"></div>
-      </div>
-
-      <div class="row">
-        <button id="refresh" class="btn">Refresh</button>
-        <a class="btn" href="/.auth/logout?post_logout_redirect_uri=/">Logout</a>
+    <div class="panel">
+      <div class="toolbar" style="justify-content: space-between;">
+        <div>
+          <h1>Site Metrics</h1>
+          <div class="subtle">Classic admin view for site activity and traffic.</div>
+        </div>
+        <div class="toolbar">
+          <span class="badge">API: <span id="ping-status">Checking...</span></span>
+          <button id="refresh" class="btn">Refresh</button>
+          <a class="btn secondary" href="/.auth/logout?post_logout_redirect_uri=/">Logout</a>
+        </div>
       </div>
     </div>
-    <p class="muted">Requires sign-in. Data comes from Cosmos DB via server-side functions.</p>
 
-    <div id="status" class="spacer muted"></div>
+    <div id="status" class="spacer subtle"></div>
 
     <section class="grid">
-      <div class="card kpi">
-        <div class="muted">Total visits</div>
-        <div id="kpi-total" style="font-size:34px; font-weight:700;">—</div>
+      <div class="panel kpi">
+        <div class="label">Total visits</div>
+        <div id="kpi-total" class="value">—</div>
       </div>
-      <div class="card kpi">
-        <div class="muted">Unique sessions</div>
-        <div id="kpi-unique" style="font-size:34px; font-weight:700;">—</div>
+      <div class="panel kpi">
+        <div class="label">Unique sessions</div>
+        <div id="kpi-unique" class="value">—</div>
       </div>
-      <div class="card kpi">
-        <div class="muted">Visits (last 24h)</div>
-        <div id="kpi-24h" style="font-size:34px; font-weight:700;">—</div>
+      <div class="panel kpi">
+        <div class="label">Visits (last 24h)</div>
+        <div id="kpi-24h" class="value">—</div>
       </div>
     </section>
 
     <div class="spacer"></div>
 
-    <section class="card">
-      <h2 style="margin:0 0 10px;">Visitors</h2>
-      <p class="muted" style="margin:0 0 12px;">Top sessions and recent activity.</p>
+    <section class="panel">
+      <h2 style="margin:0 0 6px; font-size:16px;">Visitors</h2>
+      <p class="subtle" style="margin:0 0 10px;">Top sessions and recent activity.</p>
       <div style="overflow:auto;">
         <table>
           <thead>
@@ -82,7 +123,7 @@
             </tr>
           </thead>
           <tbody id="visitors-body">
-            <tr><td colspan="3" class="muted">Loading...</td></tr>
+            <tr><td colspan="3" class="subtle">Loading...</td></tr>
           </tbody>
         </table>
       </div>
@@ -90,9 +131,9 @@
 
     <div class="spacer"></div>
 
-    <section class="card">
-      <h2 style="margin:0 0 10px;">Locations</h2>
-      <p class="muted" style="margin:0 0 12px;">IP-based view. If you later add geo fields (country/region/city), they will show here.</p>
+    <section class="panel">
+      <h2 style="margin:0 0 6px; font-size:16px;">Locations</h2>
+      <p class="subtle" style="margin:0 0 10px;">IP-based view. If you later add geo fields (country/region/city), they will show here.</p>
       <div style="overflow:auto;">
         <table>
           <thead>
@@ -103,7 +144,7 @@
             </tr>
           </thead>
           <tbody id="locations-body">
-            <tr><td colspan="3" class="muted">Loading...</td></tr>
+            <tr><td colspan="3" class="subtle">Loading...</td></tr>
           </tbody>
         </table>
       </div>
