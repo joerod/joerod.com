@@ -116,7 +116,13 @@ main {
 .league-block { margin-bottom: 0.5rem; }
 .league-name { font-size: 0.7rem; opacity: 0.85; margin: 0.4rem 0 0.2rem; font-weight: 600; }
 .game-line { display: flex; justify-content: space-between; gap: 0.6rem; padding: 0.2rem 0; }
-.game-line.no-games { font-size: 0.85rem; font-weight: 600; letter-spacing: 0.2px; opacity: 0.95; }
+.game-line.no-games {
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  opacity: 0.95;
+}
 .game-left { display: flex; gap: 0.5rem; align-items: flex-start; min-width: 0; }
 .team-col { display: flex; flex-direction: column; min-width: 0; }
 .team-main { font-size: 0.65rem; line-height: 1.15; white-space: nowrap; }
