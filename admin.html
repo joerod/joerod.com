@@ -4,8 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>JoeRod.com Admin</title>
-  <link rel="stylesheet" href="./assets/css/base.css" />
-  <link rel="stylesheet" href="./assets/css/theme.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet" />
   <style>
     :root {
       --admin-bg: #f4f6f9;
@@ -17,8 +18,12 @@
       --admin-text: #1f2937;
       --admin-muted: #6b7280;
     }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: var(--admin-bg); color: var(--admin-text); font-family: Tahoma, Verdana, Arial, sans-serif; }
     header.fixed-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
       background: linear-gradient(180deg, var(--admin-header) 0%, var(--admin-header-light) 100%);
       color: #fff;
       border-bottom: 1px solid #0b1b3a;
@@ -28,10 +33,11 @@
       align-items: center;
       padding: 0 18px;
     }
-    .site-title { font-weight: 700; letter-spacing: .02em; }
-    main { max-width: 980px; margin: 90px auto 50px; padding: 0 18px; }
+    .site-title { font-weight: 700; letter-spacing: .02em; font-family: "Dancing Script", cursive; font-size: 22px; }
+    main { max-width: 980px; margin: 18px auto 50px; padding: 0 18px; }
     h1 { font-size: 24px; margin: 0; }
     .subtle { color: var(--admin-muted); font-size: 13px; }
+    .muted { color: var(--admin-muted); font-size: 13px; }
     .panel {
       background: var(--admin-panel);
       border: 1px solid var(--admin-border);

@@ -88,16 +88,9 @@ function renderLocations(rows) {
 async function refresh() {
   setStatus("Loading...", true);
   try {
-    // Basic health check for API + presence of db_connect (does not reveal secret)
-    try {
-      const ping = await fetchJson("/api/ping");
-      const el = document.getElementById("ping-status");
-      if (el) el.textContent = (ping && ping.hasDbConnect) ? "OK, db_connect is set" : "API reachable, but db_connect is missing";
-    } catch (e) {
-      const el = document.getElementById("ping-status");
-      if (el) el.textContent = "API not reachable";
-    }
     const summary = await fetchJson("/api/summary");
+    const el = document.getElementById("ping-status");
+    if (el) el.textContent = "OK";
     document.getElementById("kpi-total").textContent = summary.totalVisits ?? "â€”";
     document.getElementById("kpi-unique").textContent = summary.uniqueSessions ?? "â€”";
     document.getElementById("kpi-24h").textContent = summary.visitsLast24h ?? "â€”";
@@ -106,6 +99,8 @@ async function refresh() {
     renderLocations(loc.locations || loc.topIPs || []);
     setStatus("Loaded.", true);
   } catch (e) {
+    const el = document.getElementById("ping-status");
+    if (el) el.textContent = "Error";
     setStatus("Error: " + e.message, false);
   }
 }
@@ -114,6 +109,5 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("refresh").addEventListener("click", refresh);
   refresh();
 });
-
 
 

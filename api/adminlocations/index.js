@@ -11,6 +11,19 @@ async function queryAll(container, query, parameters = []) {
   return out;
 }
 
+function normalizeIp(value) {
+  if (!value) return value;
+  const ip = String(value).trim();
+  if (!ip) return ip;
+  if (ip.startsWith("[") && ip.includes("]")) {
+    return ip.slice(1, ip.indexOf("]"));
+  }
+  if (/^\\d{1,3}(?:\\.\\d{1,3}){3}:\\d+$/.test(ip)) {
+    return ip.slice(0, ip.lastIndexOf(":"));
+  }
+  return ip;
+}
+
 module.exports = async function (context, req) {
   try {
     const { container } = getCosmos();
@@ -23,7 +36,7 @@ module.exports = async function (context, req) {
 
     const byIp = new Map();
     for (const r of rows) {
-      const ip = r.ip;
+      const ip = normalizeIp(r.ip);
       if (!ip) continue;
 
       const cur = byIp.get(ip) || {
