@@ -29,8 +29,7 @@
       "allowedRoles": [
         "admin"
       ]
-    },
-    
+    }
   ],
   "responseOverrides": {
     "401": {
