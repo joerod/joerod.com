@@ -1,5 +1,4 @@
 const https = require("https");
-const { getCosmos } = require("../_shared");
 
 const SYMBOLS = ["AAPL", "AMZN", "TSLA", "MSFT"];
 const NAME_MAP = {
@@ -12,8 +11,10 @@ const ORDER = ["Apple", "Amazon", "Tesla", "Microsoft"];
 
 function fetchJson(url) {
   return new Promise((resolve, reject) => {
-    https
-      .get(url, (res) => {
+    const req = https.get(
+      url,
+      { headers: { "user-agent": "Mozilla/5.0" } },
+      (res) => {
         let body = "";
         res.on("data", (chunk) => (body += chunk));
         res.on("end", () => {
@@ -27,33 +28,32 @@ function fetchJson(url) {
             reject(e);
           }
         });
-      })
-      .on("error", reject);
+      }
+    );
+    req.on("error", reject);
   });
 }
 
 module.exports = async function (context, req) {
   try {
-    const { container } = getCosmos();
-    const { resource } = await container.item("config", "config").read();
-    const fmpKey =
-      process.env.FMP_KEY ||
-      (resource && resource.stocks && resource.stocks.fmpKey) ||
-      (resource && resource.fmpKey) ||
-      "demo";
-
-    const url = `https://financialmodelingprep.com/api/v3/quote/${SYMBOLS.join(
-      ","
-    )}?apikey=${encodeURIComponent(fmpKey)}`;
+    const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${encodeURIComponent(
+      SYMBOLS.join(",")
+    )}`;
     const data = await fetchJson(url);
+    const results =
+      data && data.quoteResponse && Array.isArray(data.quoteResponse.result)
+        ? data.quoteResponse.result
+        : [];
 
-    const rows = (Array.isArray(data) ? data : [])
+    const rows = results
       .filter((x) => NAME_MAP[x.symbol])
       .map((x) => ({
         name: NAME_MAP[x.symbol],
-        price: x.price ?? x.previousClose ?? x.prevClose ?? null,
+        price: x.regularMarketPrice ?? x.postMarketPrice ?? x.preMarketPrice ?? null,
         changePercent:
-          x.changesPercentage != null ? parseFloat(x.changesPercentage) : null
+          x.regularMarketChangePercent != null
+            ? parseFloat(x.regularMarketChangePercent)
+            : null
       }))
       .sort((a, b) => ORDER.indexOf(a.name) - ORDER.indexOf(b.name));
 
