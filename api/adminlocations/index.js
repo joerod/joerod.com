@@ -39,10 +39,13 @@ function isPrivateIp(ip) {
 
 function fetchJson(url) {
   return new Promise((resolve, reject) => {
-    const req = https.get(url, (res) => {
-      let body = "";
-      res.on("data", (chunk) => (body += chunk));
-      res.on("end", () => {
+    const req = https.get(
+      url,
+      { headers: { "user-agent": "Mozilla/5.0" } },
+      (res) => {
+        let body = "";
+        res.on("data", (chunk) => (body += chunk));
+        res.on("end", () => {
         if (res.statusCode < 200 || res.statusCode >= 300) {
           resolve(null);
           return;
@@ -63,13 +66,23 @@ function fetchJson(url) {
 
 async function fetchGeo(ip) {
   if (!ip || isPrivateIp(ip)) return null;
-  const data = await fetchJson(`https://ipapi.co/${encodeURIComponent(ip)}/json/`);
-  if (!data || data.error) return null;
-  return {
-    country: data.country_name || null,
-    region: data.region || null,
-    city: data.city || null
-  };
+  const primary = await fetchJson(`https://ipapi.co/${encodeURIComponent(ip)}/json/`);
+  if (primary && !primary.error) {
+    return {
+      country: primary.country_name || null,
+      region: primary.region || null,
+      city: primary.city || null
+    };
+  }
+  const fallback = await fetchJson(`https://ip-api.com/json/${encodeURIComponent(ip)}`);
+  if (fallback && fallback.status === "success") {
+    return {
+      country: fallback.country || null,
+      region: fallback.regionName || null,
+      city: fallback.city || null
+    };
+  }
+  return null;
 }
 
 async function mapLimit(items, limit, fn) {
