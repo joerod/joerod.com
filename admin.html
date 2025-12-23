@@ -169,6 +169,29 @@
         </table>
       </div>
     </section>
+
+    <div class="spacer"></div>
+
+    <section class="panel">
+      <h2 style="margin:0 0 6px; font-size:16px;">Content Settings</h2>
+      <p class="subtle" style="margin:0 0 10px;">Update stocks API key and YouTube video list for the home page.</p>
+      <div class="grid">
+        <div class="panel" style="grid-column: span 6;">
+          <div class="label">Stocks API key (FMP)</div>
+          <input id="stocks-key" type="password" placeholder="Enter FMP key" style="width:100%; margin-top:6px; padding:8px; border:1px solid var(--admin-border); border-radius:6px;">
+          <div class="subtle" id="stocks-key-status" style="margin-top:6px;">Not set</div>
+        </div>
+        <div class="panel" style="grid-column: span 6;">
+          <div class="label">YouTube video IDs or URLs</div>
+          <textarea id="youtube-list" rows="6" placeholder="One per line" style="width:100%; margin-top:6px; padding:8px; border:1px solid var(--admin-border); border-radius:6px;"></textarea>
+          <div class="subtle" id="youtube-count" style="margin-top:6px;">0 videos</div>
+        </div>
+      </div>
+      <div class="spacer"></div>
+      <div class="toolbar">
+        <button id="save-config" class="btn">Save Settings</button>
+      </div>
+    </section>
   </main>
 </body>
 </html>

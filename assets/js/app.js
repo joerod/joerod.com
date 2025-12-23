@@ -861,6 +861,7 @@ async function refreshScoresOnly() {
 }
 
 // ---------- VIDEO PICKER ----------
+var custom_videos = [];
 var xmas_videos = [
   { id: 'rgEP1niScLc' }, { id: 'S7OWoc-j8qQ' }, { id: 'hZ9q3PtiYu8' },
   { id: 'E3RQVcNUcTA' }, { id: 'GPG3zSgm_Qo' }, { id: 'tR_Z1LUDQuQ' },
@@ -915,6 +916,7 @@ var halloween_videos = [
 ];
 
 function pickVideoList() {
+  if (custom_videos.length) return custom_videos;
   const now = new Date();
   const m = now.getMonth(); // 0=Jan, 9=Oct, 10=Nov, 11=Dec
   const d = now.getDate();
@@ -975,7 +977,17 @@ function loadRandomVideo() {
   try { loadBitcoinPrice(); } catch (e) {}
   try { loadStocks(); } catch (e) {}
   try { buildSportsScores(); } catch (e) {}
-  try { loadRandomVideo(); } catch (e) {}
+  (async () => {
+    try {
+      const res = await fetch('/api/site-config', { cache: 'no-store' });
+      const data = await res.json();
+      const list = data && data.youtube && Array.isArray(data.youtube.videos) ? data.youtube.videos : [];
+      if (list.length) {
+        custom_videos = list;
+      }
+    } catch (e) {}
+    try { loadRandomVideo(); } catch (e) {}
+  })();
 })();
 
 

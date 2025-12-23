@@ -41,6 +41,12 @@
       "allowedRoles": [
         "admin"
       ]
+    },
+    {
+      "route": "/api/config",
+      "allowedRoles": [
+        "admin"
+      ]
     }
   ],
   "responseOverrides": {
