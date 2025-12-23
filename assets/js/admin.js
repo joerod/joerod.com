@@ -85,13 +85,6 @@ function renderLocations(rows) {
   }
 }
 
-function setConfigStatus(msg, ok = true) {
-  const el = document.getElementById("stocks-key-status");
-  if (!el) return;
-  el.textContent = msg;
-  el.className = ok ? "ok" : "error";
-}
-
 const VIDEO_CATEGORIES = [
   { value: "regular", label: "Regular" },
   { value: "halloween", label: "Halloween" },
@@ -158,11 +151,6 @@ let defaultVideosCache = [];
 async function loadConfig() {
   try {
     const data = await fetchJson("/api/config");
-    const hasKey = !!data.hasStocksKey;
-    const keySuffix = data.stocksKeyLast4 ? ` (•••• ${data.stocksKeyLast4})` : "";
-    const keyStatus = hasKey ? `Key is set${keySuffix}` : "Not set";
-    setConfigStatus(keyStatus, hasKey);
-
     const body = document.getElementById("youtube-rows");
     if (body) body.innerHTML = "";
     const list = Array.isArray(data.videos) ? data.videos : [];
@@ -172,14 +160,12 @@ async function loadConfig() {
     const defaults = document.getElementById("youtube-defaults");
     if (defaults) defaults.textContent = data.usingDefaults ? "Using default video list" : "";
   } catch (e) {
-    setConfigStatus("Unable to load config", false);
+    setStatus("Error: " + e.message, false);
   }
 }
 
 async function saveConfig() {
-  const keyInput = document.getElementById("stocks-key");
   const body = document.getElementById("youtube-rows");
-  const stocksKey = keyInput ? keyInput.value.trim() : "";
   const videos = [];
   if (body) {
     body.querySelectorAll("tr").forEach((tr) => {
@@ -197,7 +183,7 @@ async function saveConfig() {
       method: "POST",
       headers: { "content-type": "application/json" },
       credentials: "include",
-      body: JSON.stringify({ stocksKey, videos })
+      body: JSON.stringify({ videos })
     });
     const text = await res.text();
     let data = null;
@@ -207,9 +193,6 @@ async function saveConfig() {
       throw new Error(msg);
     }
     updateVideoCount();
-    const keySuffix = (data && data.stocksKeyLast4) ? ` (•••• ${data.stocksKeyLast4})` : "";
-    setConfigStatus((data && data.hasStocksKey) ? `Key is set${keySuffix}` : "Not set", !!(data && data.hasStocksKey));
-    if (keyInput) keyInput.value = "";
     setStatus("Settings saved.", true);
   } catch (e) {
     setStatus("Error: " + e.message, false);
