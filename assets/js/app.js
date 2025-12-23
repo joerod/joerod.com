@@ -861,7 +861,7 @@ async function refreshScoresOnly() {
 }
 
 // ---------- VIDEO PICKER ----------
-var custom_videos = [];
+var custom_by_category = null;
 var xmas_videos = [
   { id: 'rgEP1niScLc' }, { id: 'S7OWoc-j8qQ' }, { id: 'hZ9q3PtiYu8' },
   { id: 'E3RQVcNUcTA' }, { id: 'GPG3zSgm_Qo' }, { id: 'tR_Z1LUDQuQ' },
@@ -916,7 +916,27 @@ var halloween_videos = [
 ];
 
 function pickVideoList() {
-  if (custom_videos.length) return custom_videos;
+  if (custom_by_category) {
+    const now = new Date();
+    const m = now.getMonth();
+    const d = now.getDate();
+    if (m === 9 && custom_by_category.halloween && custom_by_category.halloween.length) return custom_by_category.halloween;
+    if (m === 11 && custom_by_category.xmas && custom_by_category.xmas.length) {
+      if (d === 25) return [{ id: 'DtrIWQ8J9jw' }];
+      return custom_by_category.xmas;
+    }
+    if (
+      (m === 6 && d === 4)  ||
+      (m === 4 && d === 25) ||
+      (m === 1 && d === 12) ||
+      (m === 10 && d === 11)
+    ) {
+      if (custom_by_category.holiday && custom_by_category.holiday.length) {
+        return custom_by_category.holiday;
+      }
+    }
+    if (custom_by_category.regular && custom_by_category.regular.length) return custom_by_category.regular;
+  }
   const now = new Date();
   const m = now.getMonth(); // 0=Jan, 9=Oct, 10=Nov, 11=Dec
   const d = now.getDate();
@@ -981,9 +1001,9 @@ function loadRandomVideo() {
     try {
       const res = await fetch('/api/site-config', { cache: 'no-store' });
       const data = await res.json();
-      const list = data && data.youtube && Array.isArray(data.youtube.videos) ? data.youtube.videos : [];
-      if (list.length) {
-        custom_videos = list;
+      const byCat = data && data.youtube && data.youtube.byCategory;
+      if (byCat && typeof byCat === "object") {
+        custom_by_category = byCat;
       }
     } catch (e) {}
     try { loadRandomVideo(); } catch (e) {}

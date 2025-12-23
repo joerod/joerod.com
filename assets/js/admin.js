@@ -92,17 +92,82 @@ function setConfigStatus(msg, ok = true) {
   el.className = ok ? "ok" : "error";
 }
 
+const VIDEO_CATEGORIES = [
+  { value: "regular", label: "Regular" },
+  { value: "halloween", label: "Halloween" },
+  { value: "xmas", label: "Christmas" },
+  { value: "holiday", label: "Holiday" }
+];
+
+function addVideoRow(video = {}) {
+  const body = document.getElementById("youtube-rows");
+  if (!body) return;
+  const tr = document.createElement("tr");
+  const tdId = document.createElement("td");
+  const tdCat = document.createElement("td");
+  const tdActions = document.createElement("td");
+
+  const input = document.createElement("input");
+  input.type = "text";
+  input.value = video.id || "";
+  input.placeholder = "YouTube ID or URL";
+  input.style.width = "100%";
+  input.style.padding = "6px";
+  input.style.border = "1px solid var(--admin-border)";
+  input.style.borderRadius = "6px";
+
+  const select = document.createElement("select");
+  select.style.padding = "6px";
+  select.style.border = "1px solid var(--admin-border)";
+  select.style.borderRadius = "6px";
+  VIDEO_CATEGORIES.forEach((c) => {
+    const opt = document.createElement("option");
+    opt.value = c.value;
+    opt.textContent = c.label;
+    select.appendChild(opt);
+  });
+  select.value = video.category || "regular";
+
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "btn secondary";
+  btn.textContent = "Remove";
+  btn.addEventListener("click", () => {
+    tr.remove();
+    updateVideoCount();
+  });
+
+  tdId.appendChild(input);
+  tdCat.appendChild(select);
+  tdActions.appendChild(btn);
+  tr.appendChild(tdId);
+  tr.appendChild(tdCat);
+  tr.appendChild(tdActions);
+  body.appendChild(tr);
+}
+
+function updateVideoCount() {
+  const body = document.getElementById("youtube-rows");
+  const count = document.getElementById("youtube-count");
+  if (!body || !count) return;
+  count.textContent = `${body.querySelectorAll("tr").length} videos`;
+}
+
 async function loadConfig() {
   try {
     const data = await fetchJson("/api/config");
     const hasKey = !!data.hasStocksKey;
-    const keyStatus = hasKey ? "Key is set" : "Not set";
+    const keySuffix = data.stocksKeyLast4 ? ` (•••• ${data.stocksKeyLast4})` : "";
+    const keyStatus = hasKey ? `Key is set${keySuffix}` : "Not set";
     setConfigStatus(keyStatus, hasKey);
+
+    const body = document.getElementById("youtube-rows");
+    if (body) body.innerHTML = "";
     const list = Array.isArray(data.videos) ? data.videos : [];
-    const textarea = document.getElementById("youtube-list");
-    if (textarea) textarea.value = list.join("\n");
-    const count = document.getElementById("youtube-count");
-    if (count) count.textContent = `${list.length} videos`;
+    list.forEach((v) => addVideoRow(v));
+    updateVideoCount();
+    const defaults = document.getElementById("youtube-defaults");
+    if (defaults) defaults.textContent = data.usingDefaults ? "Using default video list" : "";
   } catch (e) {
     setConfigStatus("Unable to load config", false);
   }
@@ -110,11 +175,19 @@ async function loadConfig() {
 
 async function saveConfig() {
   const keyInput = document.getElementById("stocks-key");
-  const listInput = document.getElementById("youtube-list");
+  const body = document.getElementById("youtube-rows");
   const stocksKey = keyInput ? keyInput.value.trim() : "";
-  const videos = (listInput ? listInput.value.split("\n") : [])
-    .map((v) => v.trim())
-    .filter(Boolean);
+  const videos = [];
+  if (body) {
+    body.querySelectorAll("tr").forEach((tr) => {
+      const input = tr.querySelector("input");
+      const select = tr.querySelector("select");
+      if (!input || !select) return;
+      const id = input.value.trim();
+      if (!id) return;
+      videos.push({ id, category: select.value });
+    });
+  }
 
   try {
     const res = await fetch("/api/config", {
@@ -130,9 +203,9 @@ async function saveConfig() {
       const msg = (data && (data.error || data.message)) ? (data.error || data.message) : (text || res.statusText);
       throw new Error(msg);
     }
-    const count = document.getElementById("youtube-count");
-    if (count) count.textContent = `${(data && data.videoCount) || 0} videos`;
-    setConfigStatus((data && data.hasStocksKey) ? "Key is set" : "Not set", !!(data && data.hasStocksKey));
+    updateVideoCount();
+    const keySuffix = (data && data.stocksKeyLast4) ? ` (•••• ${data.stocksKeyLast4})` : "";
+    setConfigStatus((data && data.hasStocksKey) ? `Key is set${keySuffix}` : "Not set", !!(data && data.hasStocksKey));
     if (keyInput) keyInput.value = "";
     setStatus("Settings saved.", true);
   } catch (e) {
@@ -168,5 +241,10 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("refresh").addEventListener("click", refresh);
   const save = document.getElementById("save-config");
   if (save) save.addEventListener("click", saveConfig);
+  const add = document.getElementById("add-video");
+  if (add) add.addEventListener("click", () => {
+    addVideoRow({ id: "", category: "regular" });
+    updateVideoCount();
+  });
   refresh();
 });
