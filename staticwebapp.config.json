@@ -1,4 +1,4 @@
-﻿{
+{
   "navigationFallback": {
     "rewrite": "/index.html",
     "exclude": [
@@ -17,14 +17,40 @@
     ]
   },
   "routes": [
-    { "route": "/admin", "rewrite": "/admin.html", "allowedRoles": ["admin"] },
-    { "route": "/admin.html", "allowedRoles": ["admin"] },
-
-    { "route": "/api/admin-summary", "allowedRoles": ["admin"] },
-    { "route": "/api/admin-locations", "allowedRoles": ["admin"] }
+    {
+      "route": "/admin",
+      "rewrite": "/admin.html",
+      "allowedRoles": [
+        "admin"
+      ]
+    },
+    {
+      "route": "/admin.html",
+      "allowedRoles": [
+        "admin"
+      ]
+    },
+    {
+      "route": "/api/admin-summary",
+      "allowedRoles": [
+        "admin"
+      ]
+    },
+    {
+      "route": "/api/admin-locations",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
   ],
   "responseOverrides": {
-    "401": { "redirect": "/.auth/login/github", "statusCode": 302 },
-    "403": { "rewrite": "/403.html", "statusCode": 403 }
+    "401": {
+      "redirect": "/.auth/login/github",
+      "statusCode": 302
+    },
+    "403": {
+      "rewrite": "/403.html",
+      "statusCode": 403
+    }
   }
 }

@@ -1,4 +1,4 @@
-﻿{
+{
   "scriptFile": "index.js",
   "bindings": [
     {
@@ -6,9 +6,15 @@
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
-      "methods": ["get"],
+      "methods": [
+        "get"
+      ],
       "route": "admin-summary"
     },
-    { "type": "http", "direction": "out", "name": "res" }
+    {
+      "type": "http",
+      "direction": "out",
+      "name": "res"
+    }
   ]
 }
