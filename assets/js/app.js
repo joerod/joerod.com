@@ -737,7 +737,7 @@ async function buildSportsScores() {
         <div class="league-block">
           <div class="game-line no-games">
             <span class="no-games-text">All NY teams are off tonight</span>
-            <span class="no-games-emoji">🗽⚾🏀🏈🏒</span>
+            <span class="no-games-emoji">🗽⚾🏀🏈🏒⚽</span>
           </div>
         </div>`;
     }
