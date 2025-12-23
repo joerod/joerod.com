@@ -7,7 +7,7 @@
       "direction": "in",
       "name": "req",
       "methods": ["get"],
-      "route": "admin-locations"
+      "route": "admin-summary"
     },
     { "type": "http", "direction": "out", "name": "res" }
   ]
