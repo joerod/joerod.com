@@ -11,6 +11,15 @@ async function queryAll(container, query, parameters = []) {
   return out;
 }
 
+async function distinctSessionsSince(container, sinceIso) {
+  const rows = await queryAll(
+    container,
+    "SELECT DISTINCT VALUE c.sessionId FROM c WHERE c.type = @t AND IS_DEFINED(c.sessionId) AND c.ts >= @since",
+    [{ name: "@t", value: "visit" }, { name: "@since", value: sinceIso }]
+  );
+  return rows.length;
+}
+
 module.exports = async function (context, req) {
   try {
     const { container } = getCosmos();
@@ -35,6 +44,13 @@ module.exports = async function (context, req) {
     );
     const uniqueSessions = sessions.length;
 
+    const since24h = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+    const since7d = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+    const since30d = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+    const uniqueSessions24h = await distinctSessionsSince(container, since24h);
+    const uniqueSessions7d = await distinctSessionsSince(container, since7d);
+    const uniqueSessions30d = await distinctSessionsSince(container, since30d);
+
     const rows = await queryAll(
       container,
       "SELECT c.sessionId, c.ts FROM c WHERE c.type = @t AND IS_DEFINED(c.sessionId)",
@@ -58,7 +74,16 @@ module.exports = async function (context, req) {
     context.res = {
       status: 200,
       headers: { "content-type": "application/json" },
-      body: { ok: true, totalVisits, visitsLast24h, uniqueSessions, topSessions }
+      body: {
+        ok: true,
+        totalVisits,
+        visitsLast24h,
+        uniqueSessions,
+        uniqueSessions24h,
+        uniqueSessions7d,
+        uniqueSessions30d,
+        topSessions
+      }
     };
   } catch (e) {
     context.log("summary error", e);

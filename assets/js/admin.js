@@ -94,6 +94,9 @@ async function refresh() {
     document.getElementById("kpi-total").textContent = summary.totalVisits ?? "â€”";
     document.getElementById("kpi-unique").textContent = summary.uniqueSessions ?? "â€”";
     document.getElementById("kpi-24h").textContent = summary.visitsLast24h ?? "â€”";
+    document.getElementById("kpi-unique-24h").textContent = summary.uniqueSessions24h ?? "â€”";
+    document.getElementById("kpi-unique-7d").textContent = summary.uniqueSessions7d ?? "â€”";
+    document.getElementById("kpi-unique-30d").textContent = summary.uniqueSessions30d ?? "â€”";
     renderVisitors(summary.topSessions || summary.sessions || []);
     const loc = await fetchJson("/api/locations");
     renderLocations(loc.locations || loc.topIPs || []);
@@ -109,5 +112,4 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("refresh").addEventListener("click", refresh);
   refresh();
 });
-
 
