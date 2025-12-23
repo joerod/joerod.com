@@ -29,6 +29,18 @@
       "allowedRoles": [
         "admin"
       ]
+    },
+    {
+      "route": "/api/summary",
+      "allowedRoles": [
+        "admin"
+      ]
+    },
+    {
+      "route": "/api/locations",
+      "allowedRoles": [
+        "admin"
+      ]
     }
   ],
   "responseOverrides": {
