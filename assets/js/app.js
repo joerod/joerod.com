@@ -875,7 +875,8 @@ async function buildSportsScores() {
       scrollHost.innerHTML = `
         <div class="league-block">
           <div class="game-line no-games">
-            All NY teams are off tonight 🗽⚾🏀🏈🏒
+            <span class="no-games-text">All NY teams are off tonight</span>
+            <span class="no-games-emoji">🗽⚾🏀🏈🏒</span>
           </div>
         </div>`;
     }
@@ -1134,4 +1135,3 @@ function loadRandomVideo() {
     }).catch(() => {});
   } catch {}
 })();
-
