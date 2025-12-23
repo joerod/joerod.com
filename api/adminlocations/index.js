@@ -19,7 +19,7 @@ function normalizeIp(value) {
   if (ip.startsWith("[") && ip.includes("]")) {
     return ip.slice(1, ip.indexOf("]"));
   }
-  if (/^\\d{1,3}(?:\\.\\d{1,3}){3}:\\d+$/.test(ip)) {
+  if (/^\d{1,3}(?:\.\d{1,3}){3}:\d+$/.test(ip)) {
     return ip.slice(0, ip.lastIndexOf(":"));
   }
   return ip;
@@ -151,7 +151,7 @@ module.exports = async function (context, req) {
       });
     }
 
-    const rows = locations.map((x) => ({
+    const outRows = locations.map((x) => ({
       ip: x.ip,
       visits: x.visits,
       lastSeenUtc: x.lastSeenUtc,
@@ -161,7 +161,7 @@ module.exports = async function (context, req) {
     context.res = {
       status: 200,
       headers: { "content-type": "application/json" },
-      body: { ok: true, locations: rows }
+      body: { ok: true, locations: outRows }
     };
   } catch (e) {
     context.log("locations error", e);
