@@ -42,7 +42,13 @@ function readBody(req) {
 module.exports = async function (context, req) {
   try {
     const { container } = getCosmos();
-    const { resource } = await container.item("config", "config").read();
+    let resource = null;
+    try {
+      const res = await container.item("config", "config").read();
+      resource = res && res.resource;
+    } catch (e) {
+      resource = null;
+    }
     const existing = resource || { id: "config", pk: "config" };
 
     if (req.method && req.method.toLowerCase() === "post") {

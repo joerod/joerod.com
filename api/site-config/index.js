@@ -4,7 +4,13 @@ const { DEFAULT_BY_CATEGORY } = require("../_video-defaults");
 module.exports = async function (context, req) {
   try {
     const { container } = getCosmos();
-    const { resource } = await container.item("config", "config").read();
+    let resource = null;
+    try {
+      const res = await container.item("config", "config").read();
+      resource = res && res.resource;
+    } catch (e) {
+      resource = null;
+    }
     const videos = (resource && resource.youtube && resource.youtube.videos) || [];
     const byCategory = { halloween: [], xmas: [], holiday: [], regular: [] };
 
