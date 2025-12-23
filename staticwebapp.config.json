@@ -30,12 +30,7 @@
         "admin"
       ]
     },
-    {
-      "route": "/api/adminsummary"
-    },
-    {
-      "route": "/api/adminlocations"
-    }
+    
   ],
   "responseOverrides": {
     "401": {
