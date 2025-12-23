@@ -31,10 +31,10 @@
       ]
     },
     {
-      "route": "/api/admin_summary"
+      "route": "/api/adminsummary"
     },
     {
-      "route": "/api/admin_locations"
+      "route": "/api/adminlocations"
     }
   ],
   "responseOverrides": {

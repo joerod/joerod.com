@@ -372,8 +372,6 @@ loadBitcoinPrice();
 
 // ---------- STOCKS ----------
 let stocksTimer = null;
-const FMP_KEY = '7GnhMIdkPTdqlFXV4cUaKgUK8cPFNXXg';
-
 function isMarketOpenNY() {
   // rough check: Mon–Fri, 9:30–16:05 ET
   const now = new Date();
@@ -415,151 +413,14 @@ async function loadStocks() {
     });
   };
 
-  const sources = [
-    async () => {
-      const symbols = 'AAPL,AMZN,TSLA,MSFT';
-      const url = `https://financialmodelingprep.com/api/v3/quote/${symbols}?apikey=${encodeURIComponent(FMP_KEY)}`;
-      const res = await fetch(url, { cache: 'no-store', mode: 'cors' });
-      if (!res.ok) throw new Error('FMP failed');
-      const data = await res.json();
-      const nameMap = {
-        'AAPL': 'Apple',
-        'AMZN': 'Amazon',
-        'TSLA': 'Tesla',
-        'MSFT': 'Microsoft'
-      };
-      return data
-        .filter(x => nameMap[x.symbol])
-        .map(x => ({
-          name: nameMap[x.symbol],
-          price: x.price ?? x.previousClose ?? x.prevClose ?? null,
-          changePercent: x.changesPercentage != null
-            ? parseFloat(x.changesPercentage)
-            : null
-        }))
-        .sort((a, b) => {
-          const order = ['Apple', 'Amazon', 'Tesla', 'Microsoft'];
-          return order.indexOf(a.name) - order.indexOf(b.name);
-        });
-    },
-    async () => {
-      const symbols = ['AAPL', 'AMZN', 'TSLA', 'MSFT'];
-      const results = [];
-      for (const symbol of symbols) {
-        try {
-          const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}`;
-          const res = await fetch(url, { cache: 'no-store', mode: 'cors' });
-          if (!res.ok) continue;
-          const data = await res.json();
-          if (data.chart && data.chart.result && data.chart.result[0]) {
-            const result = data.chart.result[0];
-            const meta = result.meta;
-            const current = meta.regularMarketPrice || meta.previousClose;
-            const prev = meta.previousClose;
-            const change = current && prev
-              ? ((current - prev) / prev) * 100
-              : null;
-            const nameMap = {
-              'AAPL': 'Apple',
-              'AMZN': 'Amazon',
-              'TSLA': 'Tesla',
-              'MSFT': 'Microsoft'
-            };
-            results.push({
-              name: nameMap[symbol] || symbol,
-              price: current,
-              changePercent: change
-            });
-          }
-        } catch (e) { continue; }
-      }
-      if (results.length === 0) throw new Error('Yahoo Finance failed');
-      const order = ['Apple', 'Amazon', 'Tesla', 'Microsoft'];
-      results.sort((a, b) => order.indexOf(a.name) - order.indexOf(b.name));
-      return results;
-    },
-    async () => {
-      const symbols = ['AAPL', 'AMZN', 'TSLA', 'MSFT'];
-      const results = [];
-      for (const symbol of symbols) {
-        try {
-          const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=demo`;
-          const res = await fetch(url, { cache: 'no-store', mode: 'cors' });
-          if (!res.ok) continue;
-          const data = await res.json();
-          if (data['Global Quote']) {
-            const quote = data['Global Quote'];
-            const current = parseFloat(quote['05. price']);
-            const changePercent = parseFloat(
-              quote['10. change percent'].replace('%', '')
-            );
-            const nameMap = {
-              'AAPL': 'Apple',
-              'AMZN': 'Amazon',
-              'TSLA': 'Tesla',
-              'MSFT': 'Microsoft'
-            };
-            results.push({
-              name: nameMap[symbol] || symbol,
-              price: current,
-              changePercent
-            });
-          }
-        } catch (e) { continue; }
-      }
-      if (results.length === 0) throw new Error('Alpha Vantage failed');
-      const order = ['Apple', 'Amazon', 'Tesla', 'Microsoft'];
-      results.sort((a, b) => order.indexOf(a.name) - order.indexOf(b.name));
-      return results;
-    },
-    async () => {
-      const symbols = ['AAPL', 'AMZN', 'TSLA', 'MSFT'];
-      const results = [];
-      for (const symbol of symbols) {
-        try {
-          const url = `https://cloud.iexapis.com/stable/stock/${symbol}/quote?token=demo`;
-          const res = await fetch(url, { cache: 'no-store', mode: 'cors' });
-          if (!res.ok) continue;
-          const data = await res.json();
-          if (data.latestPrice) {
-            const current = data.latestPrice;
-            const change = data.changePercent
-              ? data.changePercent * 100
-              : null;
-            const nameMap = {
-              'AAPL': 'Apple',
-              'AMZN': 'Amazon',
-              'TSLA': 'Tesla',
-              'MSFT': 'Microsoft'
-            };
-            results.push({
-              name: nameMap[symbol] || symbol,
-              price: current,
-              changePercent: change
-            });
-          }
-        } catch (e) { continue; }
-      }
-      if (results.length === 0) throw new Error('IEX Cloud failed');
-      const order = ['Apple', 'Amazon', 'Tesla', 'Microsoft'];
-      results.sort((a, b) => order.indexOf(a.name) - order.indexOf(b.name));
-      return results;
+  try {
+    const res = await fetch('/api/stocks', { cache: 'no-store' });
+    const data = await res.json();
+    if (!res.ok || !data || !data.ok || !Array.isArray(data.rows)) {
+      throw new Error('API failed');
     }
-  ];
-
-  let success = false;
-  for (const source of sources) {
-    try {
-      const rows = await source();
-      if (rows && rows.length > 0) {
-        render(rows);
-        success = true;
-        break;
-      }
-    } catch (err) { continue; }
-  }
-
-  if (!success) {
+    render(data.rows);
+  } catch (e) {
     el.innerHTML = `
       <div class="stock-row">
         <span class="stock-name">Stock data unavailable</span>
