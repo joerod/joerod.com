@@ -1,4 +1,10 @@
 const { CosmosClient } = require("@azure/cosmos");
+const crypto = require("crypto");
+
+if (!global.crypto && crypto.webcrypto) {
+  // Provide Web Crypto for SDKs that rely on globalThis.crypto in Node 18.
+  global.crypto = crypto.webcrypto;
+}
 
 function requireEnv(name) {
   const v = process.env[name];
