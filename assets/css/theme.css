@@ -370,7 +370,14 @@ html.theme-christmas .xmas-countdown {
 }
 @media (max-width: 768px) and (orientation: landscape) {
   html.theme-christmas .xmas-countdown {
-    top: 120px;
+    top: 86px;
+  }
+  html.theme-christmas .weather-widget {
+    width: 220px;
+    max-width: 220px;
+  }
+  html.theme-christmas main {
+    padding-top: 140px;
   }
 }
 html.theme-christmas .xmas-countdown .countdown-label {
