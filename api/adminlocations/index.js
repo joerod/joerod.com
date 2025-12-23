@@ -39,21 +39,25 @@ function isPrivateIp(ip) {
 
 function fetchJson(url) {
   return new Promise((resolve, reject) => {
-    https.get(url, (res) => {
+    const req = https.get(url, (res) => {
       let body = "";
       res.on("data", (chunk) => (body += chunk));
       res.on("end", () => {
         if (res.statusCode < 200 || res.statusCode >= 300) {
-          reject(new Error(`HTTP ${res.statusCode}`));
+          resolve(null);
           return;
         }
         try {
           resolve(JSON.parse(body));
         } catch (e) {
-          reject(e);
+          resolve(null);
         }
       });
-    }).on("error", reject);
+    });
+    req.setTimeout(2500, () => {
+      req.destroy(new Error("timeout"));
+    });
+    req.on("error", () => resolve(null));
   });
 }
 
@@ -135,11 +139,15 @@ module.exports = async function (context, req) {
 
     if (missingGeo.length) {
       await mapLimit(missingGeo, 3, async (item) => {
-        const geo = await fetchGeo(item.ip);
-        if (!geo) return;
-        locations[item.idx].city = locations[item.idx].city || geo.city;
-        locations[item.idx].region = locations[item.idx].region || geo.region;
-        locations[item.idx].country = locations[item.idx].country || geo.country;
+        try {
+          const geo = await fetchGeo(item.ip);
+          if (!geo) return;
+          locations[item.idx].city = locations[item.idx].city || geo.city;
+          locations[item.idx].region = locations[item.idx].region || geo.region;
+          locations[item.idx].country = locations[item.idx].country || geo.country;
+        } catch (_) {
+          return;
+        }
       });
     }
 
