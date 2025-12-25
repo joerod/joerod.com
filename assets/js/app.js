@@ -192,7 +192,7 @@ function ensureChristmasCountdown() {
   const update = () => {
     const now = new Date();
     if (now.getMonth() === 11 && now.getDate() === 25) {
-      valueEl.textContent = `Christmas ${now.getFullYear()} is here`;
+      valueEl.textContent = `🎄 Christmas ${now.getFullYear()} is here!`;
       return;
     }
     let diff = targetDate - now;
@@ -926,7 +926,7 @@ function pickVideoList() {
     const d = now.getDate();
     if (m === 9 && custom_by_category.halloween && custom_by_category.halloween.length) return custom_by_category.halloween;
     if (m === 11 && custom_by_category.xmas && custom_by_category.xmas.length) {
-      if (d === 25) return [{ id: 'DtrIWQ8J9jw' }];
+      if (d === 25) return [{ id: 'iaQBQp5tgcw' }];
       return custom_by_category.xmas;
     }
     if (
@@ -950,7 +950,7 @@ function pickVideoList() {
 
   // December (and xmas day override)
   if (m === 11) {
-    if (d === 25) return [{ id: 'DtrIWQ8J9jw' }];
+    if (d === 25) return [{ id: 'iaQBQp5tgcw' }];
     return xmas_videos;
   }
 
