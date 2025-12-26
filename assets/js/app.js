@@ -191,7 +191,7 @@ function ensureChristmasCountdown() {
 
   const update = () => {
     const now = new Date();
-    if (now.getMonth() === 11 && now.getDate() === 25) {
+    if (now.getMonth() === 11 && now.getDate() >= 25) {
       valueEl.textContent = `🎄 Christmas ${now.getFullYear()} is here!`;
       return;
     }
