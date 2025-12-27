@@ -32,8 +32,8 @@ document.addEventListener("DOMContentLoaded", () => {
     document.documentElement.classList.remove('theme-october');
   }
 
-// 🎄 December: activate plaid Christmas theme
-if (now.getMonth() === 11) {
+// 🎄 December: activate plaid Christmas theme (through Dec 25)
+if (now.getMonth() === 11 && now.getDate() <= 25) {
   document.documentElement.classList.add('theme-christmas');
 
   // Randomized blinking bulbs around the video (not all in sync)
@@ -925,7 +925,7 @@ function pickVideoList() {
     const m = now.getMonth();
     const d = now.getDate();
     if (m === 9 && custom_by_category.halloween && custom_by_category.halloween.length) return custom_by_category.halloween;
-    if (m === 11 && custom_by_category.xmas && custom_by_category.xmas.length) {
+    if (m === 11 && d <= 25 && custom_by_category.xmas && custom_by_category.xmas.length) {
       if (d === 25) return [{ id: 'iaQBQp5tgcw' }];
       return custom_by_category.xmas;
     }
@@ -948,8 +948,8 @@ function pickVideoList() {
   // October default list
   if (m === 9) return halloween_videos;
 
-  // December (and xmas day override)
-  if (m === 11) {
+  // December (and xmas day override) through Dec 25
+  if (m === 11 && d <= 25) {
     if (d === 25) return [{ id: 'iaQBQp5tgcw' }];
     return xmas_videos;
   }
@@ -972,7 +972,7 @@ function pickVideoList() {
 
   // Jan 1 reset vibes
   if (m === 0 && d === 1) {
-    return [{ id: 'vdLuk2Agamk' }];
+    return [{ id: 'vdLuk2Agamk' }, { id: 'Aop6YF1Xqqg' }];
   }
 
   return regular_videos;
