@@ -6,7 +6,6 @@
 // ---------- THEME & FAVICON ----------
 document.addEventListener("DOMContentLoaded", () => {
   const now = new Date();
-  const FORCE_NEWYEAR_FIREWORKS = true; // Set to false once testing is done.
 
   // 🎃 October: swap to orange/black theme JR
   if (now.getMonth() === 9) {
@@ -33,17 +32,17 @@ document.addEventListener("DOMContentLoaded", () => {
     document.documentElement.classList.remove('theme-october');
   }
 
-  // 🎆 New Year fireworks (test override allowed)
+  // 🎆 New Year fireworks
   const isNewYearWindow =
     (now.getMonth() === 11 && now.getDate() >= 30) ||
     (now.getMonth() === 0 && now.getDate() <= 3);
-  if (FORCE_NEWYEAR_FIREWORKS || isNewYearWindow) {
+  if (isNewYearWindow) {
     document.documentElement.classList.add('theme-newyear');
   } else {
     document.documentElement.classList.remove('theme-newyear');
   }
   try { ensureNewYearFireworks(); } catch (_) {}
-  try { ensureNewYearBanner(now, FORCE_NEWYEAR_FIREWORKS || isNewYearWindow); } catch (_) {}
+  try { ensureNewYearBanner(now, isNewYearWindow); } catch (_) {}
 
   // 🎄 December: activate plaid Christmas theme (through Dec 25)
   if (now.getMonth() === 11 && now.getDate() <= 25) {
