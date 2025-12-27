@@ -35,8 +35,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 🎆 New Year fireworks (test override allowed)
   const isNewYearWindow =
-    (now.getMonth() === 11 && now.getDate() === 31) ||
-    (now.getMonth() === 0 && now.getDate() <= 5);
+    (now.getMonth() === 11 && now.getDate() >= 30) ||
+    (now.getMonth() === 0 && now.getDate() <= 3);
   if (FORCE_NEWYEAR_FIREWORKS || isNewYearWindow) {
     document.documentElement.classList.add('theme-newyear');
   } else {
