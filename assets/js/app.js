@@ -6,6 +6,7 @@
 // ---------- THEME & FAVICON ----------
 document.addEventListener("DOMContentLoaded", () => {
   const now = new Date();
+  const FORCE_NEWYEAR_FIREWORKS = true; // Set to false once testing is done.
 
   // 🎃 October: swap to orange/black theme JR
   if (now.getMonth() === 9) {
@@ -32,9 +33,16 @@ document.addEventListener("DOMContentLoaded", () => {
     document.documentElement.classList.remove('theme-october');
   }
 
-// 🎄 December: activate plaid Christmas theme (through Dec 25)
-if (now.getMonth() === 11 && now.getDate() <= 25) {
-  document.documentElement.classList.add('theme-christmas');
+  // 🎆 New Year's Day fireworks (test override allowed)
+  if (FORCE_NEWYEAR_FIREWORKS || (now.getMonth() === 0 && now.getDate() === 1)) {
+    document.documentElement.classList.add('theme-newyear');
+  } else {
+    document.documentElement.classList.remove('theme-newyear');
+  }
+
+  // 🎄 December: activate plaid Christmas theme (through Dec 25)
+  if (now.getMonth() === 11 && now.getDate() <= 25) {
+    document.documentElement.classList.add('theme-christmas');
 
   // Randomized blinking bulbs around the video (not all in sync)
   try { ensureChristmasVideoLights(); } catch (_) {}
@@ -64,10 +72,10 @@ if (now.getMonth() === 11 && now.getDate() <= 25) {
     link.href = xmasJR;
     document.head.appendChild(link);
   } catch (_) {}
-} else {
-  document.documentElement.classList.remove('theme-christmas');
-  try { ensureChristmasCountdown(); } catch (_) {} // cleanup if present
-}
+  } else {
+    document.documentElement.classList.remove('theme-christmas');
+    try { ensureChristmasCountdown(); } catch (_) {} // cleanup if present
+  }
 });
 
 // ---------- CHRISTMAS VIDEO LIGHTS (randomized bulbs) ----------

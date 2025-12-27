@@ -768,3 +768,66 @@ html.theme-christmas .video-controls {
   top: -6px;
   margin-bottom: 28px;
 }
+
+/* =========================
+   🎆 NEW YEAR FIREWORKS
+   ========================= */
+
+html.theme-newyear body {
+  position: relative;
+  isolation: isolate;
+}
+
+html.theme-newyear body::before,
+html.theme-newyear body::after {
+  content: "";
+  position: fixed;
+  inset: -10%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  mix-blend-mode: screen;
+  animation: fireworksBurst 3.4s ease-in-out infinite;
+}
+
+html.theme-newyear body::before {
+  background:
+    radial-gradient(circle at 18% 22%, rgba(255, 69, 0, 0.9) 0 0.6%, transparent 0.8%),
+    radial-gradient(circle at 72% 18%, rgba(0, 196, 255, 0.85) 0 0.55%, transparent 0.8%),
+    radial-gradient(circle at 82% 62%, rgba(255, 215, 0, 0.85) 0 0.6%, transparent 0.9%),
+    radial-gradient(circle at 28% 70%, rgba(177, 97, 255, 0.85) 0 0.55%, transparent 0.85%),
+    radial-gradient(circle at 45% 38%, rgba(255, 255, 255, 0.7) 0 0.45%, transparent 0.7%);
+  animation-delay: 0s;
+}
+
+html.theme-newyear body::after {
+  background:
+    radial-gradient(circle at 12% 55%, rgba(255, 120, 0, 0.85) 0 0.5%, transparent 0.75%),
+    radial-gradient(circle at 60% 30%, rgba(0, 255, 164, 0.8) 0 0.55%, transparent 0.85%),
+    radial-gradient(circle at 78% 78%, rgba(255, 0, 92, 0.85) 0 0.6%, transparent 0.9%),
+    radial-gradient(circle at 38% 18%, rgba(140, 255, 0, 0.8) 0 0.5%, transparent 0.8%),
+    radial-gradient(circle at 52% 72%, rgba(255, 255, 255, 0.65) 0 0.4%, transparent 0.65%);
+  animation-delay: 1.2s;
+}
+
+html.theme-newyear body > * {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes fireworksBurst {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  12% {
+    opacity: 0.9;
+  }
+  45% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
