@@ -4,6 +4,8 @@
 // YouTube video picker.
 
 // ---------- THEME & FAVICON ----------
+let featureOverrides = { fireworks: "auto", snow: "auto" };
+
 document.addEventListener("DOMContentLoaded", () => {
   const now = new Date();
 
@@ -36,13 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const isNewYearWindow =
     (now.getMonth() === 11 && now.getDate() >= 30) ||
     (now.getMonth() === 0 && now.getDate() <= 3);
-  if (isNewYearWindow) {
-    document.documentElement.classList.add('theme-newyear');
-  } else {
-    document.documentElement.classList.remove('theme-newyear');
-  }
-  try { ensureNewYearFireworks(); } catch (_) {}
-  try { ensureNewYearBanner(now, isNewYearWindow); } catch (_) {}
+  applyNewYearTheme(now, isNewYearWindow);
 
   // 🎄 December: activate plaid Christmas theme (through Dec 25)
   if (now.getMonth() === 11 && now.getDate() <= 25) {
@@ -85,6 +81,15 @@ document.addEventListener("DOMContentLoaded", () => {
 // ---------- NEW YEAR FIREWORKS (canvas) ----------
 let newYearFireworks = null;
 let newYearBanner = null;
+let snowLayer = null;
+
+function applyNewYearTheme(now, isNewYearWindow) {
+  const mode = featureOverrides.fireworks || "auto";
+  const enabled = mode === "on" ? true : mode === "off" ? false : !!isNewYearWindow;
+  document.documentElement.classList.toggle('theme-newyear', enabled);
+  try { ensureNewYearFireworks(); } catch (_) {}
+  try { ensureNewYearBanner(now, enabled); } catch (_) {}
+}
 
 function ensureNewYearBanner(now, active) {
   if (!active) {
@@ -270,6 +275,49 @@ function stopNewYearFireworks() {
   if (onResize) window.removeEventListener('resize', onResize);
   if (canvas && canvas.parentNode) canvas.parentNode.removeChild(canvas);
   newYearFireworks = null;
+}
+
+// ---------- SNOWFALL (weather-triggered) ----------
+function applySnowTheme(isSnowing) {
+  const mode = featureOverrides.snow || "auto";
+  const enabled = mode === "on" ? true : mode === "off" ? false : !!isSnowing;
+  document.documentElement.classList.toggle('theme-snow', enabled);
+  try { ensureSnowfall(enabled); } catch (_) {}
+}
+
+function ensureSnowfall(active) {
+  if (!active) {
+    if (snowLayer && snowLayer.parentNode) snowLayer.parentNode.removeChild(snowLayer);
+    snowLayer = null;
+    return;
+  }
+  if (snowLayer) return;
+
+  const layer = document.createElement('div');
+  layer.className = 'snowfall';
+  layer.setAttribute('aria-hidden', 'true');
+
+  const flakeCount = 50;
+  for (let i = 0; i < flakeCount; i++) {
+    const flake = document.createElement('span');
+    flake.className = 'snowflake';
+    const size = (Math.random() * 6 + 2).toFixed(1);
+    const left = (Math.random() * 100).toFixed(2);
+    const fall = (Math.random() * 8 + 6).toFixed(2);
+    const sway = (Math.random() * 4 + 3).toFixed(2);
+    const delay = (Math.random() * -10).toFixed(2);
+    const opacity = (Math.random() * 0.6 + 0.3).toFixed(2);
+    flake.style.setProperty('--size', `${size}px`);
+    flake.style.setProperty('--left', `${left}%`);
+    flake.style.setProperty('--fall', `${fall}s`);
+    flake.style.setProperty('--sway', `${sway}s`);
+    flake.style.setProperty('--delay', `${delay}s`);
+    flake.style.setProperty('--opacity', opacity);
+    layer.appendChild(flake);
+  }
+
+  document.body.appendChild(layer);
+  snowLayer = layer;
 }
 
 // ---------- CHRISTMAS VIDEO LIGHTS (randomized bulbs) ----------
@@ -529,14 +577,21 @@ async function loadWeather() {
       '50d': '🌫️', '50n': '🌫️'
     };
 
-    const iconCode = data.weather?.[0]?.icon;
+    const wx = data.weather?.[0] || {};
+    const iconCode = wx.icon;
     const iconEl = document.getElementById('weather-icon');
     const tempEl = document.getElementById('weather-temp');
     const descEl = document.getElementById('weather-desc');
 
     if (iconEl) iconEl.textContent = iconMap[iconCode] || '🌡️';
     if (tempEl) tempEl.textContent = `${Math.round(data.main.temp)}°`;
-    if (descEl) descEl.textContent = data.weather?.[0]?.description || '';
+    if (descEl) descEl.textContent = wx.description || '';
+
+    const isSnow =
+      wx.main === 'Snow' ||
+      (typeof wx.id === 'number' && wx.id >= 600 && wx.id < 700) ||
+      /snow/i.test(wx.description || '');
+    applySnowTheme(isSnow);
   } catch (e) {
     const iconEl = document.getElementById('weather-icon');
     const tempEl = document.getElementById('weather-temp');
@@ -544,6 +599,7 @@ async function loadWeather() {
     if (iconEl) iconEl.textContent = '⚠️';
     if (tempEl) tempEl.textContent = 'N/A';
     if (descEl) descEl.textContent = 'Weather unavailable';
+    applySnowTheme(false);
   }
 }
 loadWeather();
@@ -1211,8 +1267,26 @@ function loadRandomVideo() {
       if (byCat && typeof byCat === "object") {
         custom_by_category = byCat;
       }
+      if (data && data.overrides) {
+        featureOverrides = {
+          fireworks: data.overrides.fireworks || "auto",
+          snow: data.overrides.snow || "auto"
+        };
+      }
     } catch (e) {}
     try { loadRandomVideo(); } catch (e) {}
+    try {
+      const now = new Date();
+      const isNewYearWindow =
+        (now.getMonth() === 11 && now.getDate() >= 30) ||
+        (now.getMonth() === 0 && now.getDate() <= 3);
+      applyNewYearTheme(now, isNewYearWindow);
+      if ((featureOverrides.snow || "auto") === "on") {
+        applySnowTheme(true);
+      } else if ((featureOverrides.snow || "auto") === "off") {
+        applySnowTheme(false);
+      }
+    } catch (e) {}
   })();
 })();
 

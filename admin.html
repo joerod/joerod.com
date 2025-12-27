@@ -177,6 +177,27 @@
       <p class="subtle" style="margin:0 0 10px;">Update the YouTube video list for the home page.</p>
       <div class="grid">
         <div class="panel" style="grid-column: span 12;">
+          <div class="label">Theme overrides</div>
+          <div class="subtle" style="margin:4px 0 10px;">Set to Auto to follow date/weather. On forces the effect, Off disables it.</div>
+          <div class="toolbar" style="gap:12px; flex-wrap:wrap;">
+            <label style="display:flex; align-items:center; gap:8px;">
+              Fireworks
+              <select id="override-fireworks" style="padding:6px; border:1px solid var(--admin-border); border-radius:6px;">
+                <option value="auto">Auto</option>
+                <option value="on">On</option>
+                <option value="off">Off</option>
+              </select>
+            </label>
+            <label style="display:flex; align-items:center; gap:8px;">
+              Snow
+              <select id="override-snow" style="padding:6px; border:1px solid var(--admin-border); border-radius:6px;">
+                <option value="auto">Auto</option>
+                <option value="on">On</option>
+                <option value="off">Off</option>
+              </select>
+            </label>
+          </div>
+          <div class="spacer"></div>
           <div class="label">YouTube videos by category</div>
           <table style="width:100%; border-collapse: collapse; margin-top:6px;">
             <thead>

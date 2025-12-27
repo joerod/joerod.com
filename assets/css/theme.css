@@ -813,6 +813,44 @@ html.theme-newyear .newyear-banner {
   100% { transform: translateX(-50%) scale(1); }
 }
 
+/* =========================
+   ❄️ SNOW THEME (weather)
+   ========================= */
+
+html.theme-snow .snowfall {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+html.theme-snow .snowflake {
+  position: absolute;
+  top: -10vh;
+  left: var(--left, 50%);
+  width: var(--size, 6px);
+  height: var(--size, 6px);
+  opacity: var(--opacity, 0.8);
+  background: radial-gradient(circle, rgba(255,255,255,0.95) 0 45%, rgba(255,255,255,0.4) 55%, transparent 70%);
+  border-radius: 50%;
+  filter: drop-shadow(0 0 6px rgba(255,255,255,0.45));
+  animation:
+    snowFall var(--fall, 10s) linear infinite,
+    snowSway var(--sway, 6s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+@keyframes snowFall {
+  0% { transform: translateY(-10vh); }
+  100% { transform: translateY(110vh); }
+}
+
+@keyframes snowSway {
+  0% { margin-left: -10px; }
+  50% { margin-left: 10px; }
+  100% { margin-left: -10px; }
+}
+
 html.theme-newyear main,
 html.theme-newyear footer {
   position: relative;

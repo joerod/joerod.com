@@ -31,6 +31,12 @@ function normalizeVideos(list) {
   return out;
 }
 
+function normalizeOverride(raw) {
+  const val = String(raw || "").toLowerCase().trim();
+  if (val === "on" || val === "off" || val === "auto") return val;
+  return "auto";
+}
+
 function readBody(req) {
   if (req.body && typeof req.body === "object") return req.body;
   if (typeof req.body === "string") {
@@ -56,6 +62,11 @@ module.exports = async function (context, req) {
       const stocksKey = body.stocksKey ? String(body.stocksKey).trim() : "";
       const hasVideos = Object.prototype.hasOwnProperty.call(body, "videos");
       const videos = normalizeVideos(body.videos);
+      const overrides = body.overrides || {};
+      const normalizedOverrides = {
+        fireworks: normalizeOverride(overrides.fireworks),
+        snow: normalizeOverride(overrides.snow)
+      };
 
       if (stocksKey) {
         existing.stocks = Object.assign({}, existing.stocks, { fmpKey: stocksKey });
@@ -63,20 +74,22 @@ module.exports = async function (context, req) {
       if (hasVideos) {
         existing.youtube = Object.assign({}, existing.youtube, { videos });
       }
+      existing.overrides = Object.assign({}, existing.overrides, normalizedOverrides);
 
       await container.items.upsert(existing);
 
       context.res = {
         status: 200,
         headers: { "content-type": "application/json" },
-        body: {
-          ok: true,
-          hasStocksKey: !!(existing.stocks && existing.stocks.fmpKey),
-          stocksKeyLast4: (existing.stocks && existing.stocks.fmpKey)
-            ? String(existing.stocks.fmpKey).slice(-4)
-            : null,
-          videoCount: (existing.youtube && existing.youtube.videos || []).length
-        }
+      body: {
+        ok: true,
+        hasStocksKey: !!(existing.stocks && existing.stocks.fmpKey),
+        stocksKeyLast4: (existing.stocks && existing.stocks.fmpKey)
+          ? String(existing.stocks.fmpKey).slice(-4)
+          : null,
+        videoCount: (existing.youtube && existing.youtube.videos || []).length,
+        overrides: existing.overrides || { fireworks: "auto", snow: "auto" }
+      }
       };
       return;
     }
@@ -96,7 +109,8 @@ module.exports = async function (context, req) {
           : null,
         usingDefaults,
         videos,
-        defaultVideos: flattenDefaultVideos()
+        defaultVideos: flattenDefaultVideos(),
+        overrides: existing.overrides || { fireworks: "auto", snow: "auto" }
       }
     };
   } catch (e) {

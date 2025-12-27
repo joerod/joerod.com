@@ -28,7 +28,11 @@ module.exports = async function (context, req) {
     context.res = {
       status: 200,
       headers: { "content-type": "application/json" },
-      body: { ok: true, youtube: { byCategory: finalByCategory } }
+      body: {
+        ok: true,
+        youtube: { byCategory: finalByCategory },
+        overrides: (resource && resource.overrides) || { fireworks: "auto", snow: "auto" }
+      }
     };
   } catch (e) {
     context.log("site-config error", e);

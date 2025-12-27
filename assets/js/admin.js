@@ -159,6 +159,12 @@ async function loadConfig() {
     updateVideoCount();
     const defaults = document.getElementById("youtube-defaults");
     if (defaults) defaults.textContent = data.usingDefaults ? "Using default video list" : "";
+
+    const fireSel = document.getElementById("override-fireworks");
+    const snowSel = document.getElementById("override-snow");
+    const overrides = (data && data.overrides) || {};
+    if (fireSel) fireSel.value = overrides.fireworks || "auto";
+    if (snowSel) snowSel.value = overrides.snow || "auto";
   } catch (e) {
     setStatus("Error: " + e.message, false);
   }
@@ -178,12 +184,19 @@ async function saveConfig() {
     });
   }
 
+  const fireSel = document.getElementById("override-fireworks");
+  const snowSel = document.getElementById("override-snow");
+  const overrides = {
+    fireworks: fireSel ? fireSel.value : "auto",
+    snow: snowSel ? snowSel.value : "auto"
+  };
+
   try {
     const res = await fetch("/api/config", {
       method: "POST",
       headers: { "content-type": "application/json" },
       credentials: "include",
-      body: JSON.stringify({ videos })
+      body: JSON.stringify({ videos, overrides })
     });
     const text = await res.text();
     let data = null;
