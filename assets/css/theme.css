@@ -778,68 +778,39 @@ html.theme-newyear body {
   isolation: isolate;
 }
 
-html.theme-newyear body::before,
-html.theme-newyear body::after {
-  content: "";
+html.theme-newyear .newyear-fireworks {
   position: fixed;
-  inset: -10%;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
   z-index: 0;
-  opacity: 0;
   mix-blend-mode: screen;
-  animation: fireworksBurst 3.4s ease-in-out infinite;
 }
 
-html.theme-newyear body::before {
-  background:
-    repeating-conic-gradient(from 0deg, rgba(255, 69, 0, 0.85) 0 8deg, transparent 8deg 16deg),
-    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.9) 0 6px, transparent 8px),
-    repeating-conic-gradient(from 20deg, rgba(0, 196, 255, 0.8) 0 7deg, transparent 7deg 15deg),
-    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.75) 0 5px, transparent 7px),
-    repeating-conic-gradient(from 10deg, rgba(255, 215, 0, 0.85) 0 9deg, transparent 9deg 18deg),
-    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.8) 0 6px, transparent 8px);
-  background-size:
-    240px 240px,
-    240px 240px,
-    220px 220px,
-    220px 220px,
-    260px 260px,
-    260px 260px;
-  background-position:
-    18% 22%,
-    18% 22%,
-    72% 18%,
-    72% 18%,
-    78% 62%,
-    78% 62%;
-  background-repeat: no-repeat;
-  animation-delay: 0s;
+html.theme-newyear .newyear-banner {
+  position: fixed;
+  top: 92px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-family: "Dancing Script", cursive;
+  font-size: 1.6rem;
+  letter-spacing: 0.5px;
+  color: #ffffff;
+  background: linear-gradient(90deg, rgba(255, 59, 59, 0.85), rgba(255, 217, 61, 0.85), rgba(74, 222, 255, 0.85));
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(8px);
+  animation: newyearPulse 2.8s ease-in-out infinite;
 }
 
-html.theme-newyear body::after {
-  background:
-    repeating-conic-gradient(from 5deg, rgba(255, 120, 0, 0.8) 0 7deg, transparent 7deg 14deg),
-    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.8) 0 5px, transparent 7px),
-    repeating-conic-gradient(from 0deg, rgba(0, 255, 164, 0.8) 0 8deg, transparent 8deg 16deg),
-    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.7) 0 5px, transparent 7px),
-    repeating-conic-gradient(from 15deg, rgba(255, 0, 92, 0.85) 0 9deg, transparent 9deg 18deg),
-    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.85) 0 6px, transparent 8px);
-  background-size:
-    210px 210px,
-    210px 210px,
-    250px 250px,
-    250px 250px,
-    230px 230px,
-    230px 230px;
-  background-position:
-    12% 55%,
-    12% 55%,
-    60% 30%,
-    60% 30%,
-    78% 78%,
-    78% 78%;
-  background-repeat: no-repeat;
-  animation-delay: 1.2s;
+@keyframes newyearPulse {
+  0%   { transform: translateX(-50%) scale(1); }
+  50%  { transform: translateX(-50%) scale(1.03); }
+  100% { transform: translateX(-50%) scale(1); }
 }
 
 html.theme-newyear main,
@@ -850,21 +821,4 @@ html.theme-newyear footer {
 
 html.theme-newyear .weather-widget {
   z-index: 5;
-}
-
-@keyframes fireworksBurst {
-  0% {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  12% {
-    opacity: 0.9;
-  }
-  45% {
-    opacity: 0.5;
-  }
-  100% {
-    opacity: 0;
-    transform: scale(1.2);
-  }
 }

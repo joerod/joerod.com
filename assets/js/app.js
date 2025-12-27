@@ -33,12 +33,17 @@ document.addEventListener("DOMContentLoaded", () => {
     document.documentElement.classList.remove('theme-october');
   }
 
-  // 🎆 New Year's Day fireworks (test override allowed)
-  if (FORCE_NEWYEAR_FIREWORKS || (now.getMonth() === 0 && now.getDate() === 1)) {
+  // 🎆 New Year fireworks (test override allowed)
+  const isNewYearWindow =
+    (now.getMonth() === 11 && now.getDate() === 31) ||
+    (now.getMonth() === 0 && now.getDate() <= 5);
+  if (FORCE_NEWYEAR_FIREWORKS || isNewYearWindow) {
     document.documentElement.classList.add('theme-newyear');
   } else {
     document.documentElement.classList.remove('theme-newyear');
   }
+  try { ensureNewYearFireworks(); } catch (_) {}
+  try { ensureNewYearBanner(now, FORCE_NEWYEAR_FIREWORKS || isNewYearWindow); } catch (_) {}
 
   // 🎄 December: activate plaid Christmas theme (through Dec 25)
   if (now.getMonth() === 11 && now.getDate() <= 25) {
@@ -77,6 +82,196 @@ document.addEventListener("DOMContentLoaded", () => {
     try { ensureChristmasCountdown(); } catch (_) {} // cleanup if present
   }
 });
+
+// ---------- NEW YEAR FIREWORKS (canvas) ----------
+let newYearFireworks = null;
+let newYearBanner = null;
+
+function ensureNewYearBanner(now, active) {
+  if (!active) {
+    if (newYearBanner && newYearBanner.parentNode) newYearBanner.parentNode.removeChild(newYearBanner);
+    newYearBanner = null;
+    return;
+  }
+  if (!newYearBanner) {
+    const banner = document.createElement('div');
+    banner.className = 'newyear-banner';
+    banner.setAttribute('role', 'status');
+    banner.setAttribute('aria-live', 'polite');
+    document.body.appendChild(banner);
+    newYearBanner = banner;
+  }
+  const displayYear = now.getMonth() === 11 ? now.getFullYear() + 1 : now.getFullYear();
+  newYearBanner.textContent = `Happy New Year ${displayYear}`;
+}
+
+function ensureNewYearFireworks() {
+  const active = document.documentElement.classList.contains('theme-newyear');
+  if (!active) {
+    stopNewYearFireworks();
+    return;
+  }
+  if (newYearFireworks) return;
+  startNewYearFireworks();
+}
+
+function startNewYearFireworks() {
+  const canvas = document.createElement('canvas');
+  canvas.className = 'newyear-fireworks';
+  canvas.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(canvas);
+
+  const ctx = canvas.getContext('2d');
+  const colors = ['#ff3b3b', '#ffd93d', '#4adeff', '#7c3aed', '#34d399', '#ff7b00'];
+
+  const state = {
+    canvas,
+    ctx,
+    width: 0,
+    height: 0,
+    fireworks: [],
+    particles: [],
+    lastTime: 0,
+    nextBurst: 0,
+    raf: null,
+    onResize: null
+  };
+
+  const resize = () => {
+    const dpr = window.devicePixelRatio || 1;
+    state.width = window.innerWidth;
+    state.height = window.innerHeight;
+    canvas.width = state.width * dpr;
+    canvas.height = state.height * dpr;
+    canvas.style.width = `${state.width}px`;
+    canvas.style.height = `${state.height}px`;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  };
+
+  const rand = (min, max) => Math.random() * (max - min) + min;
+  const pick = (list) => list[Math.floor(Math.random() * list.length)];
+
+  const createFirework = () => {
+    const sx = rand(state.width * 0.2, state.width * 0.8);
+    const sy = state.height + 20;
+    const tx = rand(state.width * 0.15, state.width * 0.85);
+    const ty = rand(state.height * 0.15, state.height * 0.5);
+    const color = pick(colors);
+    state.fireworks.push({
+      x: sx,
+      y: sy,
+      sx,
+      sy,
+      tx,
+      ty,
+      speed: rand(4.5, 7.5),
+      color
+    });
+  };
+
+  const explode = (x, y, color) => {
+    const count = Math.floor(rand(70, 120));
+    for (let i = 0; i < count; i++) {
+      const angle = rand(0, Math.PI * 2);
+      const speed = rand(1.8, 5.8);
+      state.particles.push({
+        x,
+        y,
+        lastX: x,
+        lastY: y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        friction: rand(0.97, 0.985),
+        gravity: rand(0.03, 0.06),
+        alpha: 1,
+        decay: rand(0.008, 0.016),
+        width: rand(1.1, 2.2),
+        color
+      });
+    }
+  };
+
+  const loop = (ts) => {
+    if (!newYearFireworks) return;
+    if (!state.lastTime) state.lastTime = ts;
+    const delta = ts - state.lastTime;
+    state.lastTime = ts;
+
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
+    ctx.fillRect(0, 0, state.width, state.height);
+    ctx.globalCompositeOperation = 'lighter';
+
+    if (ts > state.nextBurst) {
+      createFirework();
+      if (Math.random() > 0.6) createFirework();
+      state.nextBurst = ts + rand(420, 900);
+    }
+
+    for (let i = state.fireworks.length - 1; i >= 0; i--) {
+      const fw = state.fireworks[i];
+      const dx = fw.tx - fw.x;
+      const dy = fw.ty - fw.y;
+      const dist = Math.hypot(dx, dy);
+      const step = fw.speed * (delta / 16.7);
+      if (dist <= step) {
+        explode(fw.tx, fw.ty, fw.color);
+        state.fireworks.splice(i, 1);
+        continue;
+      }
+      fw.x += (dx / dist) * step;
+      fw.y += (dy / dist) * step;
+
+      ctx.beginPath();
+      ctx.fillStyle = fw.color;
+      ctx.arc(fw.x, fw.y, 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    for (let i = state.particles.length - 1; i >= 0; i--) {
+      const p = state.particles[i];
+      p.lastX = p.x;
+      p.lastY = p.y;
+      p.vx *= p.friction;
+      p.vy *= p.friction;
+      p.vy += p.gravity;
+      p.x += p.vx * (delta / 16.7);
+      p.y += p.vy * (delta / 16.7);
+      p.alpha -= p.decay;
+
+      if (p.alpha <= 0) {
+        state.particles.splice(i, 1);
+        continue;
+      }
+
+      ctx.globalAlpha = Math.max(p.alpha, 0);
+      ctx.strokeStyle = p.color;
+      ctx.lineWidth = p.width;
+      ctx.beginPath();
+      ctx.moveTo(p.lastX, p.lastY);
+      ctx.lineTo(p.x, p.y);
+      ctx.stroke();
+    }
+
+    ctx.globalAlpha = 1;
+    state.raf = requestAnimationFrame(loop);
+  };
+
+  resize();
+  state.onResize = resize;
+  window.addEventListener('resize', state.onResize);
+  state.raf = requestAnimationFrame(loop);
+  newYearFireworks = state;
+}
+
+function stopNewYearFireworks() {
+  if (!newYearFireworks) return;
+  const { canvas, raf, onResize } = newYearFireworks;
+  if (raf) cancelAnimationFrame(raf);
+  if (onResize) window.removeEventListener('resize', onResize);
+  if (canvas && canvas.parentNode) canvas.parentNode.removeChild(canvas);
+  newYearFireworks = null;
+}
 
 // ---------- CHRISTMAS VIDEO LIGHTS (randomized bulbs) ----------
 function debounce(fn, wait = 150) {
