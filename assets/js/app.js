@@ -34,11 +34,17 @@ document.addEventListener("DOMContentLoaded", () => {
     document.documentElement.classList.remove('theme-october');
   }
 
-  // 🎆 New Year fireworks
+  // 🎆 New Year theme (banner + styling)
   const isNewYearWindow =
     (now.getMonth() === 11 && now.getDate() >= 30) ||
     (now.getMonth() === 0 && now.getDate() <= 3);
   applyNewYearTheme(now, isNewYearWindow);
+
+  // 🎆 Fireworks window (New Year + July 4)
+  const isFireworksWindow =
+    isNewYearWindow ||
+    (now.getMonth() === 6 && now.getDate() === 4);
+  applyFireworksTheme(isFireworksWindow);
 
   // 🎄 December: activate plaid Christmas theme (through Dec 25)
   if (now.getMonth() === 11 && now.getDate() <= 25) {
@@ -84,11 +90,15 @@ let newYearBanner = null;
 let snowLayer = null;
 
 function applyNewYearTheme(now, isNewYearWindow) {
+  document.documentElement.classList.toggle('theme-newyear', !!isNewYearWindow);
+  try { ensureNewYearBanner(now, !!isNewYearWindow); } catch (_) {}
+}
+
+function applyFireworksTheme(isFireworksWindow) {
   const mode = featureOverrides.fireworks || "auto";
-  const enabled = mode === "on" ? true : mode === "off" ? false : !!isNewYearWindow;
-  document.documentElement.classList.toggle('theme-newyear', enabled);
+  const enabled = mode === "on" ? true : mode === "off" ? false : !!isFireworksWindow;
+  document.documentElement.classList.toggle('theme-fireworks', enabled);
   try { ensureNewYearFireworks(); } catch (_) {}
-  try { ensureNewYearBanner(now, enabled); } catch (_) {}
 }
 
 function ensureNewYearBanner(now, active) {
@@ -110,7 +120,7 @@ function ensureNewYearBanner(now, active) {
 }
 
 function ensureNewYearFireworks() {
-  const active = document.documentElement.classList.contains('theme-newyear');
+  const active = document.documentElement.classList.contains('theme-fireworks');
   if (!active) {
     stopNewYearFireworks();
     return;
@@ -1281,11 +1291,12 @@ function loadRandomVideo() {
         (now.getMonth() === 11 && now.getDate() >= 30) ||
         (now.getMonth() === 0 && now.getDate() <= 3);
       applyNewYearTheme(now, isNewYearWindow);
-      if ((featureOverrides.snow || "auto") === "on") {
-        applySnowTheme(true);
-      } else if ((featureOverrides.snow || "auto") === "off") {
-        applySnowTheme(false);
-      }
+      const isFireworksWindow =
+        isNewYearWindow ||
+        (now.getMonth() === 6 && now.getDate() === 4);
+      applyFireworksTheme(isFireworksWindow);
+      if ((featureOverrides.snow || "auto") === "on") applySnowTheme(true);
+      else if ((featureOverrides.snow || "auto") === "off") applySnowTheme(false);
     } catch (e) {}
   })();
 })();
