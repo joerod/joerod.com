@@ -1256,6 +1256,7 @@ function loadRandomVideo() {
     slot.innerHTML =
       `<iframe src="https://www.youtube-nocookie.com/embed/${video.id}?rel=0&modestbranding=1&enablejsapi=1"
                 frameborder="0"
+                loading="lazy"
                 allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowfullscreen
                 referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
@@ -1264,11 +1265,26 @@ function loadRandomVideo() {
 
 // ---------- BOOTSTRAP ----------
 (function boot() {
+  const isMobile = window.matchMedia && window.matchMedia("(max-width: 768px)").matches;
+  const runWhenIdle = (fn, timeout = 1500) => {
+    if (typeof requestIdleCallback === "function") {
+      requestIdleCallback(fn, { timeout });
+    } else {
+      setTimeout(fn, timeout);
+    }
+  };
+
   try { updateNYTime(); setInterval(updateNYTime, 1000 * 30); } catch (e) {}
   try { loadWeather(); } catch (e) {}
-  try { loadBitcoinPrice(); } catch (e) {}
-  try { loadStocks(); } catch (e) {}
-  try { buildSportsScores(); } catch (e) {}
+  if (isMobile) {
+    runWhenIdle(() => { try { loadBitcoinPrice(); } catch (e) {} }, 1200);
+    runWhenIdle(() => { try { loadStocks(); } catch (e) {} }, 1800);
+    runWhenIdle(() => { try { buildSportsScores(); } catch (e) {} }, 2400);
+  } else {
+    try { loadBitcoinPrice(); } catch (e) {}
+    try { loadStocks(); } catch (e) {}
+    try { buildSportsScores(); } catch (e) {}
+  }
   (async () => {
     try {
       const res = await fetch('/api/site-config', { cache: 'no-store' });
@@ -1284,7 +1300,11 @@ function loadRandomVideo() {
         };
       }
     } catch (e) {}
-    try { loadRandomVideo(); } catch (e) {}
+    if (isMobile) {
+      runWhenIdle(() => { try { loadRandomVideo(); } catch (e) {} }, 1500);
+    } else {
+      try { loadRandomVideo(); } catch (e) {}
+    }
     try {
       const now = new Date();
       const isNewYearWindow =
