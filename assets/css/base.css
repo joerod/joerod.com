@@ -172,7 +172,14 @@ footer { padding: 2rem; text-align: center; backdrop-filter: blur(20px); backgro
   body { padding-top: 70px; overflow-y: auto; height: auto; min-height: 100vh; }
   .fixed-header { padding: 10px 15px; }
   .site-title { font-size: 2rem; }
-  .weather-widget { position: static; margin: 1rem auto; width: 100%; max-width: 300px; max-height: none; order: -1; }
+  .weather-widget {
+    position: static !important;
+    margin: 1rem auto;
+    width: 100%;
+    max-width: 300px;
+    max-height: none;
+    order: -1;
+  }
   main { padding: 0.5rem; order: 0; }
   .video-container { margin: 0.6rem 0; max-width: 100%; padding-bottom: 56.25%; }
   .video-controls { max-width: 100%; }
@@ -193,8 +200,17 @@ footer { padding: 2rem; text-align: center; backdrop-filter: blur(20px); backgro
   body { padding-top: 60px; }
   .fixed-header { padding: 8px 15px; }
   .site-title { font-size: 1.8rem; }
-  .weather-widget { position: fixed; top: 70px; right: 10px; margin: 0; max-width: 220px; font-size: 0.8rem; }
-  .video-container { max-width: 70%; margin: 0.5rem auto; }
+  .weather-widget {
+    position: static !important;
+    top: auto;
+    right: auto;
+    margin: 0.8rem auto;
+    max-width: 300px;
+    font-size: 0.8rem;
+    order: -1;
+  }
+  main { order: 0; }
+  .video-container { max-width: 100%; margin: 0.5rem auto; }
   .scores-scroll { max-height: 160px; }
 }
 @media (hover: none) and (pointer: coarse) {
