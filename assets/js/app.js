@@ -112,7 +112,12 @@ function ensureNewYearBanner(now, active) {
     banner.className = 'newyear-banner';
     banner.setAttribute('role', 'status');
     banner.setAttribute('aria-live', 'polite');
-    document.body.appendChild(banner);
+    const header = document.querySelector('.fixed-header');
+    if (header && header.parentNode) {
+      header.parentNode.insertBefore(banner, header.nextSibling);
+    } else {
+      document.body.appendChild(banner);
+    }
     newYearBanner = banner;
   }
   const displayYear = now.getMonth() === 11 ? now.getFullYear() + 1 : now.getFullYear();

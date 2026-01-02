@@ -807,6 +807,23 @@ html.theme-newyear .newyear-banner {
   animation: newyearPulse 2.8s ease-in-out infinite;
 }
 
+@media (max-width: 768px) {
+  html.theme-newyear .newyear-banner {
+    position: static;
+    transform: none;
+    align-self: center;
+    margin: 0.7rem auto 0;
+    font-size: 1.2rem;
+    padding: 6px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  html.theme-newyear .newyear-banner {
+    font-size: 1.05rem;
+  }
+}
+
 @keyframes newyearPulse {
   0%   { transform: translateX(-50%) scale(1); }
   50%  { transform: translateX(-50%) scale(1.03); }
