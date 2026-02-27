@@ -88,9 +88,19 @@ module.exports = async function (context, req) {
   } catch (e) {
     context.log("summary error", e);
     context.res = {
-      status: 500,
+      status: 200,
       headers: { "content-type": "application/json" },
-      body: { ok: false, error: String(e.message || e) }
+      body: {
+        ok: false,
+        error: String(e.message || e),
+        totalVisits: 0,
+        visitsLast24h: 0,
+        uniqueSessions: 0,
+        uniqueSessions24h: 0,
+        uniqueSessions7d: 0,
+        uniqueSessions30d: 0,
+        topSessions: []
+      }
     };
   }
 };
