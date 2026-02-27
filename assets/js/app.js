@@ -1251,21 +1251,136 @@ function pickVideoList() {
   return regular_videos;
 }
 
-function loadRandomVideo() {
-  const list = pickVideoList();
-  const index = Math.floor(Math.random() * list.length);
-  const video = list[index];
+const VIDEO_SESSION_STORAGE_KEY = "joerod_video_session_state_v1";
 
+function videoListKey(list) {
+  return list.map((v) => v.id).join(",");
+}
+
+function shuffleArray(items) {
+  const copy = items.slice();
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const tmp = copy[i];
+    copy[i] = copy[j];
+    copy[j] = tmp;
+  }
+  return copy;
+}
+
+function readVideoState() {
+  try {
+    const raw = sessionStorage.getItem(VIDEO_SESSION_STORAGE_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch (_) {
+    return null;
+  }
+}
+
+function writeVideoState(state) {
+  try {
+    sessionStorage.setItem(VIDEO_SESSION_STORAGE_KEY, JSON.stringify(state));
+  } catch (_) {}
+}
+
+function buildFreshVideoState(list, key) {
+  return {
+    listKey: key,
+    remaining: shuffleArray(list.map((v) => v.id)),
+    history: [],
+    position: -1
+  };
+}
+
+function getVideoStateForList(list) {
+  const ids = list.map((v) => v.id);
+  const key = videoListKey(list);
+  const state = readVideoState();
+  if (!state || state.listKey !== key) {
+    const fresh = buildFreshVideoState(list, key);
+    writeVideoState(fresh);
+    return fresh;
+  }
+  const idSet = new Set(ids);
+  state.remaining = Array.isArray(state.remaining) ? state.remaining.filter((id) => idSet.has(id)) : [];
+  state.history = Array.isArray(state.history) ? state.history.filter((id) => idSet.has(id)) : [];
+  state.position = Number.isInteger(state.position) ? Math.max(-1, Math.min(state.position, state.history.length - 1)) : -1;
+  writeVideoState(state);
+  return state;
+}
+
+function renderVideoById(videoId) {
   const slot = document.querySelector('.video');
   if (slot) {
     slot.innerHTML =
-      `<iframe src="https://www.youtube-nocookie.com/embed/${video.id}?rel=0&modestbranding=1&enablejsapi=1"
+      `<iframe src="https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1&enablejsapi=1"
                 frameborder="0"
                 loading="lazy"
                 allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowfullscreen
                 referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
   }
+}
+
+function syncVideoButtons(state) {
+  const prevBtn = document.getElementById("video-prev");
+  if (!prevBtn) return;
+  const hasPrev = state && Number.isInteger(state.position) && state.position > 0;
+  prevBtn.setAttribute("aria-disabled", hasPrev ? "false" : "true");
+  prevBtn.style.opacity = hasPrev ? "1" : "0.5";
+  prevBtn.style.pointerEvents = hasPrev ? "auto" : "none";
+}
+
+function loadRandomVideo() {
+  const list = pickVideoList();
+  if (!Array.isArray(list) || list.length === 0) return;
+
+  const state = getVideoStateForList(list);
+  const allIds = list.map((v) => v.id);
+
+  if (state.position < state.history.length - 1) {
+    state.position += 1;
+    const id = state.history[state.position];
+    writeVideoState(state);
+    renderVideoById(id);
+    syncVideoButtons(state);
+    return;
+  }
+
+  if (!Array.isArray(state.remaining) || state.remaining.length === 0) {
+    state.remaining = shuffleArray(allIds);
+    const lastId = state.history[state.history.length - 1];
+    if (lastId && state.remaining.length > 1 && state.remaining[state.remaining.length - 1] === lastId) {
+      const swapIndex = Math.floor(Math.random() * (state.remaining.length - 1));
+      const tmp = state.remaining[state.remaining.length - 1];
+      state.remaining[state.remaining.length - 1] = state.remaining[swapIndex];
+      state.remaining[swapIndex] = tmp;
+    }
+  }
+
+  const nextId = state.remaining.pop();
+  if (!nextId) return;
+  state.history.push(nextId);
+  state.position = state.history.length - 1;
+  writeVideoState(state);
+  renderVideoById(nextId);
+  syncVideoButtons(state);
+}
+
+function loadPreviousVideo() {
+  const list = pickVideoList();
+  if (!Array.isArray(list) || list.length === 0) return;
+  const state = getVideoStateForList(list);
+  if (!Number.isInteger(state.position) || state.position <= 0) {
+    syncVideoButtons(state);
+    return;
+  }
+  state.position -= 1;
+  const id = state.history[state.position];
+  writeVideoState(state);
+  renderVideoById(id);
+  syncVideoButtons(state);
 }
 
 // ---------- BOOTSTRAP ----------
