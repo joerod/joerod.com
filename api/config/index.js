@@ -5,8 +5,25 @@ function cleanVideoId(raw) {
   if (!raw) return null;
   const text = String(raw).trim();
   if (!text) return null;
-  const idMatch = text.match(/[a-zA-Z0-9_-]{6,}/);
-  return idMatch ? idMatch[0] : null;
+  // Already an 11-char YouTube ID
+  if (/^[a-zA-Z0-9_-]{11}$/.test(text)) return text;
+
+  // Common YouTube URL formats:
+  // - youtube.com/watch?v=VIDEO_ID
+  // - youtu.be/VIDEO_ID
+  // - youtube.com/shorts/VIDEO_ID
+  // - youtube.com/embed/VIDEO_ID
+  const patterns = [
+    /[?&]v=([a-zA-Z0-9_-]{11})/,
+    /youtu\.be\/([a-zA-Z0-9_-]{11})/,
+    /\/shorts\/([a-zA-Z0-9_-]{11})/,
+    /\/embed\/([a-zA-Z0-9_-]{11})/
+  ];
+  for (const rx of patterns) {
+    const m = text.match(rx);
+    if (m && m[1]) return m[1];
+  }
+  return null;
 }
 
 function normalizeCategory(raw) {

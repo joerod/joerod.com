@@ -41,6 +41,24 @@ function setStatus(msg, ok = true) {
 
 function td(text){ const el=document.createElement("td"); el.textContent = text; return el; }
 
+function cleanYoutubeId(raw) {
+  if (!raw) return null;
+  const text = String(raw).trim();
+  if (!text) return null;
+  if (/^[a-zA-Z0-9_-]{11}$/.test(text)) return text;
+  const patterns = [
+    /[?&]v=([a-zA-Z0-9_-]{11})/,
+    /youtu\.be\/([a-zA-Z0-9_-]{11})/,
+    /\/shorts\/([a-zA-Z0-9_-]{11})/,
+    /\/embed\/([a-zA-Z0-9_-]{11})/
+  ];
+  for (const rx of patterns) {
+    const m = text.match(rx);
+    if (m && m[1]) return m[1];
+  }
+  return null;
+}
+
 function renderVisitors(rows) {
   const body = document.getElementById("visitors-body");
   body.innerHTML = "";
@@ -178,8 +196,10 @@ async function saveConfig() {
       const input = tr.querySelector("input");
       const select = tr.querySelector("select");
       if (!input || !select) return;
-      const id = input.value.trim();
+      const id = cleanYoutubeId(input.value);
       if (!id) return;
+      // Normalize field visually so admins can confirm what will be saved.
+      input.value = id;
       videos.push({ id, category: select.value });
     });
   }
