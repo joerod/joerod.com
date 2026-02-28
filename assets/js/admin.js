@@ -234,8 +234,24 @@ async function saveConfig() {
 
 async function refresh() {
   setStatus("Loading...", true);
+  const warnings = [];
   try {
-    const summary = await fetchJson("/api/summary");
+    let summary = null;
+    try {
+      summary = await fetchJson("/api/summary");
+    } catch (e) {
+      summary = {
+        totalVisits: 0,
+        uniqueSessions: 0,
+        visitsLast24h: 0,
+        uniqueSessions24h: 0,
+        uniqueSessions7d: 0,
+        uniqueSessions30d: 0,
+        topSessions: []
+      };
+      warnings.push("summary unavailable");
+    }
+
     const el = document.getElementById("ping-status");
     if (el) el.textContent = "OK";
     document.getElementById("kpi-total").textContent = summary.totalVisits ?? "â€”";
@@ -245,10 +261,27 @@ async function refresh() {
     document.getElementById("kpi-unique-7d").textContent = summary.uniqueSessions7d ?? "â€”";
     document.getElementById("kpi-unique-30d").textContent = summary.uniqueSessions30d ?? "â€”";
     renderVisitors(summary.topSessions || summary.sessions || []);
-    const loc = await fetchJson("/api/locations");
+
+    let loc = null;
+    try {
+      loc = await fetchJson("/api/locations");
+    } catch (e) {
+      loc = { locations: [] };
+      warnings.push("locations unavailable");
+    }
     renderLocations(loc.locations || loc.topIPs || []);
-    await loadConfig();
-    setStatus("Loaded.", true);
+
+    try {
+      await loadConfig();
+    } catch (e) {
+      warnings.push("config unavailable");
+    }
+
+    if (warnings.length) {
+      setStatus("Loaded with warnings: " + warnings.join(", "), false);
+    } else {
+      setStatus("Loaded.", true);
+    }
   } catch (e) {
     const el = document.getElementById("ping-status");
     if (el) el.textContent = "Error";
