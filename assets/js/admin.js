@@ -234,7 +234,6 @@ async function saveConfig() {
 
 async function refresh() {
   setStatus("Loading...", true);
-  const warnings = [];
   try {
     let summary = null;
     try {
@@ -249,7 +248,7 @@ async function refresh() {
         uniqueSessions30d: 0,
         topSessions: []
       };
-      warnings.push("summary unavailable");
+      try { console.warn("summary unavailable", e); } catch {}
     }
 
     const el = document.getElementById("ping-status");
@@ -267,21 +266,17 @@ async function refresh() {
       loc = await fetchJson("/api/locations");
     } catch (e) {
       loc = { locations: [] };
-      warnings.push("locations unavailable");
+      try { console.warn("locations unavailable", e); } catch {}
     }
     renderLocations(loc.locations || loc.topIPs || []);
 
     try {
       await loadConfig();
     } catch (e) {
-      warnings.push("config unavailable");
+      try { console.warn("config unavailable", e); } catch {}
     }
 
-    if (warnings.length) {
-      setStatus("Loaded with warnings: " + warnings.join(", "), false);
-    } else {
-      setStatus("Loaded.", true);
-    }
+    setStatus("Loaded.", true);
   } catch (e) {
     const el = document.getElementById("ping-status");
     if (el) el.textContent = "Error";
