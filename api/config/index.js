@@ -63,6 +63,17 @@ function readBody(req) {
 }
 
 module.exports = async function (context, req) {
+  const fallbackBody = {
+    ok: true,
+    degraded: true,
+    hasStocksKey: false,
+    stocksKeyLast4: null,
+    usingDefaults: true,
+    videos: flattenDefaultVideos(),
+    defaultVideos: flattenDefaultVideos(),
+    overrides: { fireworks: "auto", snow: "auto" }
+  };
+  const method = (req.method || "get").toLowerCase();
   try {
     const { container } = getCosmos();
     let resource = null;
@@ -74,7 +85,7 @@ module.exports = async function (context, req) {
     }
     const existing = resource || { id: "config", pk: "config" };
 
-    if (req.method && req.method.toLowerCase() === "post") {
+    if (method === "post") {
       const body = readBody(req);
       const stocksKey = body.stocksKey ? String(body.stocksKey).trim() : "";
       const hasVideos = Object.prototype.hasOwnProperty.call(body, "videos");
@@ -120,6 +131,7 @@ module.exports = async function (context, req) {
       headers: { "content-type": "application/json" },
       body: {
         ok: true,
+        degraded: false,
         hasStocksKey: !!(existing.stocks && existing.stocks.fmpKey),
         stocksKeyLast4: (existing.stocks && existing.stocks.fmpKey)
           ? String(existing.stocks.fmpKey).slice(-4)
@@ -132,10 +144,25 @@ module.exports = async function (context, req) {
     };
   } catch (e) {
     context.log("config error", e);
+    if (method === "post") {
+      context.res = {
+        status: 503,
+        headers: { "content-type": "application/json" },
+        body: {
+          ok: false,
+          error: "Config storage is unavailable. Save could not be completed.",
+          detail: String(e.message || e)
+        }
+      };
+      return;
+    }
     context.res = {
-      status: 500,
+      status: 200,
       headers: { "content-type": "application/json" },
-      body: { ok: false, error: String(e.message || e) }
+      body: {
+        ...fallbackBody,
+        error: String(e.message || e)
+      }
     };
   }
 };
