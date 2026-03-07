@@ -2,6 +2,12 @@ const { getCosmos } = require("../_shared");
 const { DEFAULT_BY_CATEGORY } = require("../_video-defaults");
 
 module.exports = async function (context, req) {
+  const fallbackBody = {
+    ok: true,
+    degraded: true,
+    youtube: { byCategory: DEFAULT_BY_CATEGORY },
+    overrides: { fireworks: "auto", snow: "auto" }
+  };
   try {
     const { container } = getCosmos();
     let resource = null;
@@ -30,6 +36,7 @@ module.exports = async function (context, req) {
       headers: { "content-type": "application/json" },
       body: {
         ok: true,
+        degraded: false,
         youtube: { byCategory: finalByCategory },
         overrides: (resource && resource.overrides) || { fireworks: "auto", snow: "auto" }
       }
@@ -37,9 +44,12 @@ module.exports = async function (context, req) {
   } catch (e) {
     context.log("site-config error", e);
     context.res = {
-      status: 500,
+      status: 200,
       headers: { "content-type": "application/json" },
-      body: { ok: false, error: String(e.message || e) }
+      body: {
+        ...fallbackBody,
+        error: String((e && e.message) || e)
+      }
     };
   }
 };
