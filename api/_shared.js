@@ -1,11 +1,25 @@
 const crypto = require("crypto");
 
-if (!global.crypto && crypto.webcrypto) {
-  // Provide Web Crypto for SDKs that rely on globalThis.crypto in Node 18.
-  global.crypto = crypto.webcrypto;
+try {
+  if (!global.crypto && crypto.webcrypto) {
+    // Best-effort Web Crypto polyfill for older Node runtimes.
+    global.crypto = crypto.webcrypto;
+  }
+} catch (_) {
+  // Never fail module load on runtime-specific global mutations.
 }
 
-const { CosmosClient } = require("@azure/cosmos");
+let _CosmosClient = null;
+function getCosmosClientCtor() {
+  if (_CosmosClient) return _CosmosClient;
+  // Lazy load so a package/runtime mismatch doesn't crash every function at startup.
+  const mod = require("@azure/cosmos");
+  _CosmosClient = mod && mod.CosmosClient;
+  if (!_CosmosClient) {
+    throw new Error("Unable to load @azure/cosmos CosmosClient");
+  }
+  return _CosmosClient;
+}
 
 function requireEnv(name) {
   const v = process.env[name];
@@ -24,6 +38,7 @@ function getClientIp(req) {
 
 function getCosmos() {
   const conn = requireEnv("db_connect");
+  const CosmosClient = getCosmosClientCtor();
   const client = new CosmosClient(conn);
   const databaseId = process.env.COSMOS_DB_NAME || "joerod-com";
   const containerId = process.env.COSMOS_CONTAINER_NAME || "site-info";
