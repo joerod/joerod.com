@@ -59,4 +59,25 @@ function flattenDefaultVideos() {
   return out;
 }
 
-module.exports = { DEFAULT_BY_CATEGORY, flattenDefaultVideos };
+function mergeVideosByCategory(videos) {
+  const byCategory = {
+    halloween: DEFAULT_BY_CATEGORY.halloween.map((v) => ({ id: v.id })),
+    xmas: DEFAULT_BY_CATEGORY.xmas.map((v) => ({ id: v.id })),
+    holiday: DEFAULT_BY_CATEGORY.holiday.map((v) => ({ id: v.id })),
+    regular: DEFAULT_BY_CATEGORY.regular.map((v) => ({ id: v.id }))
+  };
+
+  const seen = new Set(flattenDefaultVideos().map((v) => `${v.category}:${v.id}`));
+  for (const item of Array.isArray(videos) ? videos : []) {
+    if (!item || !item.id) continue;
+    const category = Object.prototype.hasOwnProperty.call(byCategory, item.category) ? item.category : "regular";
+    const key = `${category}:${item.id}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    byCategory[category].push({ id: item.id });
+  }
+
+  return byCategory;
+}
+
+module.exports = { DEFAULT_BY_CATEGORY, flattenDefaultVideos, mergeVideosByCategory };
