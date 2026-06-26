@@ -1,5 +1,5 @@
 const { getCosmos } = require("../_shared");
-const { DEFAULT_BY_CATEGORY, flattenDefaultVideos } = require("../_video-defaults");
+const { DEFAULT_BY_CATEGORY, flattenDefaultVideos, mergeVideosByCategory } = require("../_video-defaults");
 
 function cleanVideoId(raw) {
   if (!raw) return null;
@@ -89,7 +89,10 @@ module.exports = async function (context, req) {
       const body = readBody(req);
       const stocksKey = body.stocksKey ? String(body.stocksKey).trim() : "";
       const hasVideos = Object.prototype.hasOwnProperty.call(body, "videos");
-      const videos = normalizeVideos(body.videos);
+      const mergedByCategory = mergeVideosByCategory(normalizeVideos(body.videos));
+      const videos = Object.keys(mergedByCategory).flatMap((category) =>
+        mergedByCategory[category].map((v) => ({ id: v.id, category }))
+      );
       const overrides = body.overrides || {};
       const normalizedOverrides = {
         fireworks: normalizeOverride(overrides.fireworks),
@@ -124,7 +127,10 @@ module.exports = async function (context, req) {
 
     const customVideos = (existing.youtube && existing.youtube.videos) || [];
     const usingDefaults = !customVideos.length;
-    const videos = usingDefaults ? flattenDefaultVideos() : customVideos;
+    const mergedByCategory = usingDefaults ? DEFAULT_BY_CATEGORY : mergeVideosByCategory(customVideos);
+    const videos = Object.keys(mergedByCategory).flatMap((category) =>
+      mergedByCategory[category].map((v) => ({ id: v.id, category }))
+    );
 
     context.res = {
       status: 200,

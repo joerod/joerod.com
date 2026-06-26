@@ -1,5 +1,5 @@
 const { getCosmos } = require("../_shared");
-const { DEFAULT_BY_CATEGORY } = require("../_video-defaults");
+const { DEFAULT_BY_CATEGORY, mergeVideosByCategory } = require("../_video-defaults");
 
 module.exports = async function (context, req) {
   const fallbackBody = {
@@ -18,18 +18,7 @@ module.exports = async function (context, req) {
       resource = null;
     }
     const videos = (resource && resource.youtube && resource.youtube.videos) || [];
-    const byCategory = { halloween: [], xmas: [], holiday: [], regular: [] };
-
-    for (const v of videos) {
-      if (!v || !v.id) continue;
-      const cat = (v.category && byCategory[v.category]) ? v.category : "regular";
-      byCategory[cat].push({ id: v.id });
-    }
-
-    const finalByCategory = {};
-    Object.keys(DEFAULT_BY_CATEGORY).forEach((cat) => {
-      finalByCategory[cat] = byCategory[cat].length ? byCategory[cat] : DEFAULT_BY_CATEGORY[cat];
-    });
+    const finalByCategory = mergeVideosByCategory(videos);
 
     context.res = {
       status: 200,

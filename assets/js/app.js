@@ -1200,6 +1200,7 @@ var regular_videos = [
   { id: '5UDoSc-fRpg' },
   { id: 'pCTfxOrX4k8' },
   { id: 'Dr0m5bWAgk0' },
+  { id: 'lMDkxFnUTZs' },
   { id: 'voDqfVthTpA' },
   { id: 'y8p1iG-6d-w' },
   { id: '-riX6Xbvb8w' },
