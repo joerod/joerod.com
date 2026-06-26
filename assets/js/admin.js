@@ -183,8 +183,10 @@ async function loadConfig() {
     const overrides = (data && data.overrides) || {};
     if (fireSel) fireSel.value = overrides.fireworks || "auto";
     if (snowSel) snowSel.value = overrides.snow || "auto";
+    return { ok: true, usingDefaults: !!data.usingDefaults, hasRows: list.length > 0 };
   } catch (e) {
-    setStatus("Error: " + e.message, false);
+    setStatus("Video settings unavailable: " + e.message, false);
+    return { ok: false, error: e.message };
   }
 }
 
@@ -235,10 +237,12 @@ async function saveConfig() {
 async function refresh() {
   setStatus("Loading...", true);
   try {
+    const warnings = [];
     let summary = null;
     try {
       summary = await fetchJson("/api/summary");
     } catch (e) {
+      warnings.push("summary unavailable");
       summary = {
         totalVisits: 0,
         uniqueSessions: 0,
@@ -251,6 +255,10 @@ async function refresh() {
       try { console.warn("summary unavailable", e); } catch {}
     }
 
+    if (summary && summary.ok === false && summary.error) {
+      warnings.push(summary.error);
+    }
+
     const el = document.getElementById("ping-status");
     if (el) el.textContent = "OK";
     document.getElementById("kpi-total").textContent = summary.totalVisits ?? "â€”";
@@ -261,22 +269,34 @@ async function refresh() {
     document.getElementById("kpi-unique-30d").textContent = summary.uniqueSessions30d ?? "â€”";
     renderVisitors(summary.topSessions || summary.sessions || []);
 
+    if ((Number(summary.totalVisits) || 0) === 0 && !(summary && summary.ok === false)) {
+      warnings.push("no visits recorded yet");
+    }
+
     let loc = null;
     try {
       loc = await fetchJson("/api/locations");
     } catch (e) {
+      warnings.push("locations unavailable");
       loc = { locations: [] };
       try { console.warn("locations unavailable", e); } catch {}
     }
+    if (loc && loc.ok === false && loc.error) {
+      warnings.push(loc.error);
+    }
     renderLocations(loc.locations || loc.topIPs || []);
 
-    try {
-      await loadConfig();
-    } catch (e) {
-      try { console.warn("config unavailable", e); } catch {}
+    const configResult = await loadConfig();
+    if (!configResult || configResult.ok === false) {
+      warnings.push("video settings unavailable");
     }
 
-    setStatus("Loaded.", true);
+    if (warnings.length) {
+      const uniqueWarnings = Array.from(new Set(warnings));
+      setStatus("Loaded with warnings: " + uniqueWarnings.join("; "), false);
+    } else {
+      setStatus("Loaded.", true);
+    }
   } catch (e) {
     const el = document.getElementById("ping-status");
     if (el) el.textContent = "Error";
