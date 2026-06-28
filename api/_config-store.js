@@ -131,17 +131,21 @@ async function readFromGitHub() {
   };
 }
 
-async function readFromLocalFile() {
-  const localPath = path.resolve(__dirname, "..", "data", "site-config.json");
-  try {
-    const text = await fs.readFile(localPath, "utf8");
-    return {
-      source: "local",
-      config: normalizeConfig(JSON.parse(text))
-    };
-  } catch (e) {
-    return null;
+async function readFromBundledSeed() {
+  const bundledPaths = [
+    path.resolve(__dirname, "site-config.seed.json"),
+    path.resolve(__dirname, "..", "data", "site-config.json")
+  ];
+  for (const localPath of bundledPaths) {
+    try {
+      const text = await fs.readFile(localPath, "utf8");
+      return {
+        source: "local",
+        config: normalizeConfig(JSON.parse(text))
+      };
+    } catch (e) {}
   }
+  return null;
 }
 
 async function writeToGitHub(config) {
@@ -224,8 +228,8 @@ async function readSiteConfig() {
     if (github) return github;
   }
 
-  const local = await readFromLocalFile();
-  if (local) return local;
+  const bundled = await readFromBundledSeed();
+  if (bundled) return bundled;
 
   try {
     return await readFromCosmos();
