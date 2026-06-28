@@ -1,0 +1,11 @@
+{
+  "id": "config",
+  "pk": "config",
+  "youtube": {
+    "videos": []
+  },
+  "overrides": {
+    "fireworks": "auto",
+    "snow": "auto"
+  }
+}
