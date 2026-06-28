@@ -1,3 +1,5 @@
+const fs = require("fs/promises");
+const path = require("path");
 const { getCosmos } = require("./_shared");
 
 const DEFAULT_CONFIG = {
@@ -129,6 +131,19 @@ async function readFromGitHub() {
   };
 }
 
+async function readFromLocalFile() {
+  const localPath = path.resolve(__dirname, "..", "data", "site-config.json");
+  try {
+    const text = await fs.readFile(localPath, "utf8");
+    return {
+      source: "local",
+      config: normalizeConfig(JSON.parse(text))
+    };
+  } catch (e) {
+    return null;
+  }
+}
+
 async function writeToGitHub(config) {
   const owner = process.env.GITHUB_OWNER;
   const repo = process.env.GITHUB_REPO;
@@ -208,6 +223,9 @@ async function readSiteConfig() {
     const github = await readFromGitHub();
     if (github) return github;
   }
+
+  const local = await readFromLocalFile();
+  if (local) return local;
 
   try {
     return await readFromCosmos();
