@@ -1,5 +1,6 @@
 const fs = require("fs/promises");
 const path = require("path");
+const crypto = require("crypto");
 const { getCosmos } = require("./_shared");
 
 const DEFAULT_CONFIG = {
@@ -13,7 +14,11 @@ function hasGitHubConfig() {
   return !!(
     process.env.GITHUB_OWNER &&
     process.env.GITHUB_REPO &&
-    process.env.GITHUB_TOKEN
+    (process.env.GITHUB_TOKEN || (
+      process.env.GITHUB_APP_ID &&
+      process.env.GITHUB_APP_INSTALLATION_ID &&
+      (process.env.GITHUB_APP_PRIVATE_KEY || process.env.GITHUB_APP_PRIVATE_KEY_BASE64)
+    ))
   );
 }
 
@@ -39,43 +44,103 @@ function encodeRepoPath(repoPath) {
     .join("/");
 }
 
-function normalizeVideoItem(item, category) {
-  const raw = item && typeof item === "object" ? (item.id || item.url || item) : item;
-  const id = String(raw || "").trim();
-  if (!id) return null;
-  return { id, category };
+function base64Url(input) {
+  return Buffer.from(input).toString("base64").replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
 }
 
-function flattenByCategory(byCategory) {
-  if (!byCategory || typeof byCategory !== "object") return [];
-  const out = [];
-  const seen = new Set();
-  for (const category of ["regular", "halloween", "xmas", "holiday"]) {
-    const list = Array.isArray(byCategory[category]) ? byCategory[category] : [];
-    for (const item of list) {
-      const video = normalizeVideoItem(item, category);
-      if (!video) continue;
-      const key = `${video.category}:${video.id}`;
-      if (seen.has(key)) continue;
-      seen.add(key);
-      out.push(video);
-    }
+function parsePrivateKey() {
+  const b64 = process.env.GITHUB_APP_PRIVATE_KEY_BASE64;
+  if (b64) {
+    return Buffer.from(String(b64).trim(), "base64").toString("utf8");
   }
-  return out;
+  const raw = process.env.GITHUB_APP_PRIVATE_KEY;
+  if (!raw) return null;
+  return String(raw).replace(/\\n/g, "\n");
+}
+
+function makeAppJwt() {
+  const appId = process.env.GITHUB_APP_ID;
+  const privateKey = parsePrivateKey();
+  if (!appId || !privateKey) {
+    throw new Error("Missing GitHub App credentials");
+  }
+
+  const now = Math.floor(Date.now() / 1000);
+  const payload = {
+    iat: now - 30,
+    exp: now + 9 * 60,
+    iss: String(appId)
+  };
+  const header = { alg: "RS256", typ: "JWT" };
+  const signingInput = `${base64Url(JSON.stringify(header))}.${base64Url(JSON.stringify(payload))}`;
+  const signer = crypto.createSign("RSA-SHA256");
+  signer.update(signingInput);
+  signer.end();
+  const signature = signer.sign(privateKey);
+  return `${signingInput}.${base64Url(signature)}`;
+}
+
+async function getGitHubInstallationToken() {
+  if (process.env.GITHUB_TOKEN) {
+    return process.env.GITHUB_TOKEN;
+  }
+
+  const cache = global.__joerodGithubAppToken || {};
+  const now = Date.now();
+  if (cache.token && cache.expiresAt && cache.expiresAt - now > 60_000) {
+    return cache.token;
+  }
+
+  const installationId = process.env.GITHUB_APP_INSTALLATION_ID;
+  const jwt = makeAppJwt();
+  const res = await fetch(`https://api.github.com/app/installations/${installationId}/access_tokens`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+      Accept: "application/vnd.github+json",
+      "X-GitHub-Api-Version": "2022-11-28",
+      "User-Agent": `${process.env.GITHUB_OWNER}/${process.env.GITHUB_REPO} site-config`
+    }
+  });
+  const data = await res.json().catch(() => null);
+  if (!res.ok) {
+    const msg = (data && (data.message || data.error)) || `GitHub App token request failed with HTTP ${res.status}`;
+    throw new Error(msg);
+  }
+  const token = data && data.token;
+  const expiresAt = data && data.expires_at ? Date.parse(data.expires_at) : (Date.now() + 50 * 60 * 1000);
+  global.__joerodGithubAppToken = { token, expiresAt };
+  return token;
+}
+
+function getGitHubAuthKind() {
+  if (process.env.GITHUB_TOKEN) return "token";
+  if (process.env.GITHUB_APP_ID && process.env.GITHUB_APP_INSTALLATION_ID && (process.env.GITHUB_APP_PRIVATE_KEY || process.env.GITHUB_APP_PRIVATE_KEY_BASE64)) {
+    return "app";
+  }
+  return null;
+}
+
+async function getGitHubAuthToken() {
+  const kind = getGitHubAuthKind();
+  if (kind === "token") {
+    return process.env.GITHUB_TOKEN;
+  }
+  if (kind === "app") {
+    return await getGitHubInstallationToken();
+  }
+  throw new Error("Missing GitHub auth settings");
 }
 
 function normalizeConfig(raw) {
   const source = raw && typeof raw === "object" ? raw : {};
   const youtube = source.youtube && typeof source.youtube === "object" ? source.youtube : {};
   const overrides = source.overrides && typeof source.overrides === "object" ? source.overrides : {};
-  const videos = Array.isArray(youtube.videos)
-    ? youtube.videos
-    : flattenByCategory(youtube.byCategory);
   return {
     id: source.id || "config",
     pk: source.pk || "config",
     youtube: {
-      videos
+      videos: Array.isArray(youtube.videos) ? youtube.videos : []
     },
     overrides: {
       fireworks: overrides.fireworks || "auto",
@@ -88,7 +153,7 @@ function normalizeConfig(raw) {
 async function readFromGitHub() {
   const owner = process.env.GITHUB_OWNER;
   const repo = process.env.GITHUB_REPO;
-  const token = process.env.GITHUB_TOKEN;
+  const token = await getGitHubAuthToken();
   const branch = getGitHubBranch();
   const configPath = getGitHubConfigPath();
   const url = `${getGitHubApiBase()}/${encodeRepoPath(configPath)}?ref=${encodeURIComponent(branch)}`;
@@ -131,27 +196,10 @@ async function readFromGitHub() {
   };
 }
 
-async function readFromBundledSeed() {
-  const bundledPaths = [
-    path.resolve(__dirname, "site-config.seed.json"),
-    path.resolve(__dirname, "..", "data", "site-config.json")
-  ];
-  for (const localPath of bundledPaths) {
-    try {
-      const text = await fs.readFile(localPath, "utf8");
-      return {
-        source: "local",
-        config: normalizeConfig(JSON.parse(text))
-      };
-    } catch (e) {}
-  }
-  return null;
-}
-
 async function writeToGitHub(config) {
   const owner = process.env.GITHUB_OWNER;
   const repo = process.env.GITHUB_REPO;
-  const token = process.env.GITHUB_TOKEN;
+  const token = await getGitHubAuthToken();
   const branch = getGitHubBranch();
   const configPath = getGitHubConfigPath();
   const normalized = normalizeConfig(config);
@@ -227,9 +275,6 @@ async function readSiteConfig() {
     const github = await readFromGitHub();
     if (github) return github;
   }
-
-  const bundled = await readFromBundledSeed();
-  if (bundled) return bundled;
 
   try {
     return await readFromCosmos();
