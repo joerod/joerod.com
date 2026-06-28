@@ -1,5 +1,3 @@
-const fs = require("fs/promises");
-const path = require("path");
 const { getCosmos } = require("./_shared");
 
 const DEFAULT_CONFIG = {
@@ -39,15 +37,43 @@ function encodeRepoPath(repoPath) {
     .join("/");
 }
 
+function normalizeVideoItem(item, category) {
+  const raw = item && typeof item === "object" ? (item.id || item.url || item) : item;
+  const id = String(raw || "").trim();
+  if (!id) return null;
+  return { id, category };
+}
+
+function flattenByCategory(byCategory) {
+  if (!byCategory || typeof byCategory !== "object") return [];
+  const out = [];
+  const seen = new Set();
+  for (const category of ["regular", "halloween", "xmas", "holiday"]) {
+    const list = Array.isArray(byCategory[category]) ? byCategory[category] : [];
+    for (const item of list) {
+      const video = normalizeVideoItem(item, category);
+      if (!video) continue;
+      const key = `${video.category}:${video.id}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      out.push(video);
+    }
+  }
+  return out;
+}
+
 function normalizeConfig(raw) {
   const source = raw && typeof raw === "object" ? raw : {};
   const youtube = source.youtube && typeof source.youtube === "object" ? source.youtube : {};
   const overrides = source.overrides && typeof source.overrides === "object" ? source.overrides : {};
+  const videos = Array.isArray(youtube.videos)
+    ? youtube.videos
+    : flattenByCategory(youtube.byCategory);
   return {
     id: source.id || "config",
     pk: source.pk || "config",
     youtube: {
-      videos: Array.isArray(youtube.videos) ? youtube.videos : []
+      videos
     },
     overrides: {
       fireworks: overrides.fireworks || "auto",
