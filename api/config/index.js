@@ -1,4 +1,4 @@
-const { getCosmos } = require("../_shared");
+const { readSiteConfig, writeSiteConfig, DEFAULT_CONFIG } = require("../_config-store");
 const { DEFAULT_BY_CATEGORY, flattenDefaultVideos, mergeVideosByCategory } = require("../_video-defaults");
 
 function cleanVideoId(raw) {
@@ -75,15 +75,8 @@ module.exports = async function (context, req) {
   };
   const method = (req.method || "get").toLowerCase();
   try {
-    const { container } = getCosmos();
-    let resource = null;
-    try {
-      const res = await container.item("config", "config").read();
-      resource = res && res.resource;
-    } catch (e) {
-      resource = null;
-    }
-    const existing = resource || { id: "config", pk: "config" };
+    const loaded = await readSiteConfig();
+    const existing = loaded && loaded.config ? loaded.config : DEFAULT_CONFIG;
 
     if (method === "post") {
       const body = readBody(req);
@@ -107,7 +100,7 @@ module.exports = async function (context, req) {
       }
       existing.overrides = Object.assign({}, existing.overrides, normalizedOverrides);
 
-      await container.items.upsert(existing);
+      await writeSiteConfig(existing);
 
       context.res = {
         status: 200,
