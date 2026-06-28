@@ -59,6 +59,46 @@ function cleanYoutubeId(raw) {
   return null;
 }
 
+function flattenVideosFromConfig(data) {
+  const videos = [];
+  const seen = new Set();
+  const byCategory = data && data.youtube && data.youtube.byCategory;
+  if (byCategory && typeof byCategory === "object") {
+    ["regular", "halloween", "xmas", "holiday"].forEach((category) => {
+      const list = Array.isArray(byCategory[category]) ? byCategory[category] : [];
+      list.forEach((item) => {
+        const id = cleanYoutubeId(item && (item.id || item.url || item));
+        if (!id) return;
+        const key = `${category}:${id}`;
+        if (seen.has(key)) return;
+        seen.add(key);
+        videos.push({ id, category });
+      });
+    });
+    return videos;
+  }
+
+  const flat = Array.isArray(data && data.videos) ? data.videos : [];
+  flat.forEach((item) => {
+    const id = cleanYoutubeId(item && (item.id || item.url || item));
+    if (!id) return;
+    const category = (item && item.category) || "regular";
+    const key = `${category}:${id}`;
+    if (seen.has(key)) return;
+    seen.add(key);
+    videos.push({ id, category });
+  });
+  return videos;
+}
+
+async function loadStaticConfig() {
+  try {
+    return await fetchJson("/data/site-config.json");
+  } catch {
+    return null;
+  }
+}
+
 function renderVisitors(rows) {
   const body = document.getElementById("visitors-body");
   body.innerHTML = "";
@@ -74,9 +114,9 @@ function renderVisitors(rows) {
   }
   for (const r of rows) {
     const tr=document.createElement("tr");
-    tr.appendChild(td(r.sessionId || "â€”"));
-    tr.appendChild(td(String(r.visits ?? "â€”")));
-    tr.appendChild(td(r.lastSeenUtc || "â€”"));
+    tr.appendChild(td(r.sessionId || "—"));
+    tr.appendChild(td(String(r.visits ?? "—")));
+    tr.appendChild(td(r.lastSeenUtc || "—"));
     body.appendChild(tr);
   }
 }
@@ -96,9 +136,9 @@ function renderLocations(rows) {
   }
   for (const r of rows) {
     const tr=document.createElement("tr");
-    tr.appendChild(td(r.ip || "â€”"));
-    tr.appendChild(td(String(r.visits ?? "â€”")));
-    tr.appendChild(td(r.geo || "â€”"));
+    tr.appendChild(td(r.ip || "—"));
+    tr.appendChild(td(String(r.visits ?? "—")));
+    tr.appendChild(td(r.geo || "—"));
     body.appendChild(tr);
   }
 }
@@ -171,8 +211,19 @@ async function loadConfig() {
     const data = await fetchJson("/api/config");
     const body = document.getElementById("youtube-rows");
     if (body) body.innerHTML = "";
-    const list = Array.isArray(data.videos) ? data.videos : [];
+    let list = Array.isArray(data.videos) ? data.videos : [];
     defaultVideosCache = Array.isArray(data.defaultVideos) ? data.defaultVideos : [];
+
+    if (!list.length) {
+      const staticConfig = await loadStaticConfig();
+      list = flattenVideosFromConfig(staticConfig);
+      if (staticConfig && Array.isArray(staticConfig.videos)) {
+        defaultVideosCache = staticConfig.videos;
+      } else if (staticConfig && staticConfig.youtube && staticConfig.youtube.byCategory) {
+        defaultVideosCache = flattenVideosFromConfig(staticConfig);
+      }
+    }
+
     list.forEach((v) => addVideoRow(v));
     updateVideoCount();
     const defaults = document.getElementById("youtube-defaults");
@@ -184,7 +235,21 @@ async function loadConfig() {
     if (fireSel) fireSel.value = overrides.fireworks || "auto";
     if (snowSel) snowSel.value = overrides.snow || "auto";
   } catch (e) {
-    setStatus("Error: " + e.message, false);
+    try {
+      const staticConfig = await loadStaticConfig();
+      const body = document.getElementById("youtube-rows");
+      if (body) body.innerHTML = "";
+      const list = flattenVideosFromConfig(staticConfig);
+      defaultVideosCache = list.slice();
+      list.forEach((v) => addVideoRow(v));
+      updateVideoCount();
+      const defaults = document.getElementById("youtube-defaults");
+      if (defaults) defaults.textContent = list.length ? "Loaded from bundled site config" : "";
+      setStatus(list.length ? "Loaded bundled video list." : ("Error: " + e.message), !!list.length);
+      return;
+    } catch {
+      setStatus("Error: " + e.message, false);
+    }
   }
 }
 
@@ -253,12 +318,12 @@ async function refresh() {
 
     const el = document.getElementById("ping-status");
     if (el) el.textContent = "OK";
-    document.getElementById("kpi-total").textContent = summary.totalVisits ?? "â€”";
-    document.getElementById("kpi-unique").textContent = summary.uniqueSessions ?? "â€”";
-    document.getElementById("kpi-24h").textContent = summary.visitsLast24h ?? "â€”";
-    document.getElementById("kpi-unique-24h").textContent = summary.uniqueSessions24h ?? "â€”";
-    document.getElementById("kpi-unique-7d").textContent = summary.uniqueSessions7d ?? "â€”";
-    document.getElementById("kpi-unique-30d").textContent = summary.uniqueSessions30d ?? "â€”";
+    document.getElementById("kpi-total").textContent = summary.totalVisits ?? "—";
+    document.getElementById("kpi-unique").textContent = summary.uniqueSessions ?? "—";
+    document.getElementById("kpi-24h").textContent = summary.visitsLast24h ?? "—";
+    document.getElementById("kpi-unique-24h").textContent = summary.uniqueSessions24h ?? "—";
+    document.getElementById("kpi-unique-7d").textContent = summary.uniqueSessions7d ?? "—";
+    document.getElementById("kpi-unique-30d").textContent = summary.uniqueSessions30d ?? "—";
     renderVisitors(summary.topSessions || summary.sessions || []);
 
     let loc = null;
