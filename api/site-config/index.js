@@ -1,4 +1,4 @@
-const { getCosmos } = require("../_shared");
+const { readSiteConfig, DEFAULT_CONFIG } = require("../_config-store");
 const { DEFAULT_BY_CATEGORY, mergeVideosByCategory } = require("../_video-defaults");
 
 module.exports = async function (context, req) {
@@ -9,14 +9,8 @@ module.exports = async function (context, req) {
     overrides: { fireworks: "auto", snow: "auto" }
   };
   try {
-    const { container } = getCosmos();
-    let resource = null;
-    try {
-      const res = await container.item("config", "config").read();
-      resource = res && res.resource;
-    } catch (e) {
-      resource = null;
-    }
+    const loaded = await readSiteConfig();
+    const resource = loaded && loaded.config ? loaded.config : DEFAULT_CONFIG;
     const videos = (resource && resource.youtube && resource.youtube.videos) || [];
     const finalByCategory = mergeVideosByCategory(videos);
 
