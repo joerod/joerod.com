@@ -26,6 +26,7 @@ jobs:
           action: "upload"
           app_location: "/"          # repo root (contains index.html)
           api_location: "api"        # /api folder (Azure Functions)
+          api_build_command: "npm install --omit=dev"
           output_location: ""        # no build output because we are not building
           skip_app_build: true       # don't run a front-end build step
 
