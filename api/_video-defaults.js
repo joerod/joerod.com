@@ -46,7 +46,11 @@ const DEFAULT_BY_CATEGORY = {
     { id: "73ytL_HAwt8" }, { id: "M4nFSdNNFQw" },
     { id: "EiTYwecY41c" }, { id: "W45DRy7M1no" },
     { id: "4ORMeSJsYIM" }, { id: "eSOSJ68xOBA" },
-    { id: "6OG3ZQKgHbI" }, { id: "sOQKRjP3ZJk" }
+    { id: "Zst0_PYbPug" }, { id: "_JZom_gVfuw" },
+    { id: "KU5V5WZVcVE" }, { id: "3g1Tu2Ulrk0" },
+    { id: "8PqowwECuUA" }, { id: "NOG3eus4ZSo" },
+    { id: "z5rRZdiu1UE" }, { id: "6OG3ZQKgHbI" },
+    { id: "sOQKRjP3ZJk" }
   ]
 };
 
