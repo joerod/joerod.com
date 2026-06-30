@@ -45,7 +45,8 @@ const DEFAULT_BY_CATEGORY = {
     { id: "KS6f1MKpLGM" }, { id: "zE7PKRjrid4" },
     { id: "73ytL_HAwt8" }, { id: "M4nFSdNNFQw" },
     { id: "EiTYwecY41c" }, { id: "W45DRy7M1no" },
-    { id: "4ORMeSJsYIM" }, { id: "eSOSJ68xOBA" }
+    { id: "4ORMeSJsYIM" }, { id: "eSOSJ68xOBA" },
+    { id: "6OG3ZQKgHbI" }, { id: "sOQKRjP3ZJk" }
   ]
 };
 
