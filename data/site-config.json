@@ -2,6 +2,10 @@
   "id": "config",
   "pk": "config",
   "youtube": {
+    "videos": [
+      { "id": "6OG3ZQKgHbI", "category": "regular" },
+      { "id": "sOQKRjP3ZJk", "category": "regular" }
+    ],
     "byCategory": {
       "regular": [
         "CMNry4PE93Y",
@@ -51,7 +55,9 @@
         "3g1Tu2Ulrk0",
         "8PqowwECuUA",
         "NOG3eus4ZSo",
-        "z5rRZdiu1UE"
+        "z5rRZdiu1UE",
+        "6OG3ZQKgHbI",
+        "sOQKRjP3ZJk"
       ],
       "halloween": [
         "Ht3gFCqpFkE",
