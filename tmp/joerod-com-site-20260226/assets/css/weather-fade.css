@@ -1,0 +1,12 @@
+.weather-widget {
+  opacity: 1;
+  transition: opacity 0.6s ease;
+}
+
+.weather-widget.fade-out {
+  opacity: 0.18;
+}
+
+.weather-widget.fade-out:hover {
+  opacity: 1;
+}

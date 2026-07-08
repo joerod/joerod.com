@@ -1,0 +1,20 @@
+{
+  "id": "config",
+  "pk": "config",
+  "youtube": {
+    "videos": [
+      {
+        "id": "sOQKRjP3ZJk",
+        "category": "regular"
+      },
+      {
+        "id": "6OG3ZQKgHbI",
+        "category": "regular"
+      }
+    ]
+  },
+  "overrides": {
+    "fireworks": "auto",
+    "snow": "auto"
+  }
+}
