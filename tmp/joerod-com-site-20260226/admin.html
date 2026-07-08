@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JoeRod.com Admin</title>
+  <style>
+    :root {
+      --admin-bg: #f4f6f9;
+      --admin-panel: #ffffff;
+      --admin-border: #d4d9e1;
+      --admin-header: #1f3b73;
+      --admin-header-light: #2b4c8f;
+      --admin-accent: #2563eb;
+      --admin-text: #1f2937;
+      --admin-muted: #6b7280;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--admin-bg); color: var(--admin-text); font-family: "Segoe UI", Tahoma, Verdana, Arial, sans-serif; }
+    header.fixed-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: linear-gradient(180deg, var(--admin-header) 0%, var(--admin-header-light) 100%);
+      color: #fff;
+      border-bottom: 1px solid #0b1b3a;
+      box-shadow: 0 2px 0 rgba(255,255,255,0.12) inset;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      padding: 0 18px;
+    }
+    .site-title { font-weight: 700; letter-spacing: .02em; font-size: 20px; }
+    main { max-width: 980px; margin: 18px auto 50px; padding: 0 18px; }
+    h1 { font-size: 24px; margin: 0; }
+    .subtle { color: var(--admin-muted); font-size: 13px; }
+    .muted { color: var(--admin-muted); font-size: 13px; }
+    .panel {
+      background: var(--admin-panel);
+      border: 1px solid var(--admin-border);
+      border-radius: 8px;
+      padding: 14px;
+      box-shadow: 0 1px 0 rgba(255,255,255,0.6) inset;
+    }
+    .toolbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .spacer { height: 12px; }
+    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 12px; }
+    .kpi { grid-column: span 4; }
+    @media (max-width: 900px){ .kpi { grid-column: span 6; } }
+    @media (max-width: 540px){ .kpi { grid-column: span 12; } }
+    .kpi .label { color: var(--admin-muted); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+    .kpi .value { font-size: 28px; font-weight: 700; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 9px 8px; border-bottom: 1px solid #e5e7eb; font-size: 13px; color: var(--admin-text); }
+    th { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--admin-muted); }
+    .btn {
+      cursor: pointer;
+      border: 1px solid #1d4ed8;
+      background: #2563eb;
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+    }
+    .btn.secondary {
+      border-color: #c7ceda;
+      background: #eef2f7;
+      color: #1f2937;
+    }
+    .btn:hover { filter: brightness(0.98); }
+    .badge { font-size: 12px; padding: 4px 8px; border-radius: 999px; border: 1px solid var(--admin-border); background: #eef2ff; color: #1e3a8a; }
+    .error { color: #b91c1c; }
+    .ok { color: #047857; }
+  </style>
+  <script defer src="./assets/js/admin.js"></script>
+</head>
+<body>
+  <header class="fixed-header">
+    <div class="site-title">JoeRod.com Admin Portal</div>
+  </header>
+
+  <main>
+    <div class="panel">
+      <div class="toolbar" style="justify-content: space-between;">
+        <div>
+          <h1>Site Metrics</h1>
+          <div class="subtle">Classic admin view for site activity and traffic.</div>
+        </div>
+        <div class="toolbar">
+          <span class="badge">API: <span id="ping-status">Checking...</span></span>
+          <button id="refresh" class="btn">Refresh</button>
+          <a class="btn secondary" href="/.auth/logout?post_logout_redirect_uri=/">Logout</a>
+        </div>
+      </div>
+    </div>
+
+    <div id="status" class="spacer subtle"></div>
+
+    <section class="grid">
+      <div class="panel kpi">
+        <div class="label">Total visits</div>
+        <div id="kpi-total" class="value">—</div>
+      </div>
+      <div class="panel kpi">
+        <div class="label">Unique sessions</div>
+        <div id="kpi-unique" class="value">—</div>
+      </div>
+      <div class="panel kpi">
+        <div class="label">Visits (last 24h)</div>
+        <div id="kpi-24h" class="value">—</div>
+      </div>
+    </section>
+
+    <div class="spacer"></div>
+
+    <section class="grid">
+      <div class="panel kpi">
+        <div class="label">Unique hits (24h)</div>
+        <div id="kpi-unique-24h" class="value">—</div>
+      </div>
+      <div class="panel kpi">
+        <div class="label">Unique hits (7d)</div>
+        <div id="kpi-unique-7d" class="value">—</div>
+      </div>
+      <div class="panel kpi">
+        <div class="label">Unique hits (30d)</div>
+        <div id="kpi-unique-30d" class="value">—</div>
+      </div>
+    </section>
+
+    <div class="spacer"></div>
+
+    <section class="panel">
+      <h2 style="margin:0 0 6px; font-size:16px;">Visitors</h2>
+      <p class="subtle" style="margin:0 0 10px;">Top sessions and recent activity.</p>
+      <div style="overflow:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Session</th>
+              <th>Visits</th>
+              <th>Last seen (UTC)</th>
+            </tr>
+          </thead>
+          <tbody id="visitors-body">
+            <tr><td colspan="3" class="subtle">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="spacer"></div>
+
+    <section class="panel">
+      <h2 style="margin:0 0 6px; font-size:16px;">Locations</h2>
+      <p class="subtle" style="margin:0 0 10px;">IP-based view. If you later add geo fields (country/region/city), they will show here.</p>
+      <div style="overflow:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>IP</th>
+              <th>Visits</th>
+              <th>Geo</th>
+            </tr>
+          </thead>
+          <tbody id="locations-body">
+            <tr><td colspan="3" class="subtle">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="spacer"></div>
+
+    <section class="panel">
+      <h2 style="margin:0 0 6px; font-size:16px;">Content Settings</h2>
+      <p class="subtle" style="margin:0 0 10px;">Update the YouTube video list for the home page.</p>
+      <div class="grid">
+        <div class="panel" style="grid-column: span 12;">
+          <div class="label">Theme overrides</div>
+          <div class="subtle" style="margin:4px 0 10px;">Set to Auto to follow date/weather. On forces the effect, Off disables it.</div>
+          <div class="toolbar" style="gap:12px; flex-wrap:wrap;">
+            <label style="display:flex; align-items:center; gap:8px;">
+              Fireworks
+              <select id="override-fireworks" style="padding:6px; border:1px solid var(--admin-border); border-radius:6px;">
+                <option value="auto">Auto</option>
+                <option value="on">On</option>
+                <option value="off">Off</option>
+              </select>
+            </label>
+            <label style="display:flex; align-items:center; gap:8px;">
+              Snow
+              <select id="override-snow" style="padding:6px; border:1px solid var(--admin-border); border-radius:6px;">
+                <option value="auto">Auto</option>
+                <option value="on">On</option>
+                <option value="off">Off</option>
+              </select>
+            </label>
+          </div>
+          <div class="spacer"></div>
+          <details open>
+            <summary class="label" style="cursor:pointer;">YouTube videos by category</summary>
+            <table style="width:100%; border-collapse: collapse; margin-top:6px;">
+              <thead>
+                <tr>
+                  <th>Video ID / URL</th>
+                  <th>Category</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="youtube-rows"></tbody>
+            </table>
+            <div class="spacer"></div>
+            <div class="toolbar">
+              <button id="add-video" class="btn secondary">Add video</button>
+              <button id="load-default-videos" class="btn secondary">Load defaults</button>
+              <div class="subtle" id="youtube-count">0 videos</div>
+              <div class="subtle" id="youtube-defaults"></div>
+            </div>
+          </details>
+        </div>
+      </div>
+      <div class="spacer"></div>
+      <div class="toolbar">
+        <button id="save-config" class="btn">Save Settings</button>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
