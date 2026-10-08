@@ -647,75 +647,6 @@ async function loadBitcoinPrice() {
 }
 loadBitcoinPrice();
 
-// ---------- STOCKS ----------
-let stocksTimer = null;
-function isMarketOpenNY() {
-  // rough check: Mon–Fri, 9:30–16:05 ET
-  const now = new Date();
-  const ny = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }));
-  const day = ny.getDay(); // 0 Sun ... 6 Sat
-  const hours = ny.getHours();
-  const minutes = ny.getMinutes();
-  const afterOpen = (hours > 9 || (hours === 9 && minutes >= 30));
-  const beforeClose = (hours < 16 || (hours === 16 && minutes <= 5));
-  const isWeekday = day >= 1 && day <= 5;
-  return isWeekday && afterOpen && beforeClose;
-}
-
-async function loadStocks() {
-  const el = document.getElementById('stocks-body');
-  if (!el) return;
-  el.innerHTML = `
-    <div class="stock-row">
-      <span class="stock-name">Loading...</span>
-      <span class="stock-value"></span>
-      <span class="stock-change"></span>
-    </div>`;
-
-  const render = (rows) => {
-    el.innerHTML = '';
-    rows.forEach(r => {
-      const row = document.createElement('div');
-      row.className = 'stock-row';
-      const chgClass = (r.changePercent ?? 0) >= 0 ? 'up' : 'down';
-      const pct = (r.changePercent != null)
-        ? `${(r.changePercent).toFixed(2)}%`
-        : '';
-      row.innerHTML = `
-        <span class="stock-name">${r.name}</span>
-        <span class="stock-value">$${r.price != null ? r.price.toFixed(2) : '—'}</span>
-        <span class="stock-change ${chgClass}">${pct}</span>
-      `;
-      el.appendChild(row);
-    });
-  };
-
-  try {
-    const res = await fetch('/api/stocks', { cache: 'no-store' });
-    const data = await res.json();
-    if (!res.ok || !data || !data.ok || !Array.isArray(data.rows)) {
-      throw new Error('API failed');
-    }
-    render(data.rows);
-  } catch (e) {
-    el.innerHTML = `
-      <div class="stock-row">
-        <span class="stock-name">Stock data unavailable</span>
-        <span class="stock-value"></span>
-        <span class="stock-change"></span>
-      </div>`;
-  }
-
-  if (isMarketOpenNY()) {
-    if (!stocksTimer) {
-      stocksTimer = setInterval(loadStocks, 5 * 60 * 1000);
-    }
-  } else if (stocksTimer) {
-    clearInterval(stocksTimer);
-    stocksTimer = null;
-  }
-}
-
 // ---------- SPORTS (NY teams only) ----------
 const TEAM_ORDER_PRIORITY = [
   'Mets',
@@ -1451,11 +1382,9 @@ function loadPreviousVideo() {
   try { loadWeather(); } catch (e) {}
   if (isMobile) {
     runWhenIdle(() => { try { loadBitcoinPrice(); } catch (e) {} }, 1200);
-    runWhenIdle(() => { try { loadStocks(); } catch (e) {} }, 1800);
     runWhenIdle(() => { try { buildSportsScores(); } catch (e) {} }, 2400);
   } else {
     try { loadBitcoinPrice(); } catch (e) {}
-    try { loadStocks(); } catch (e) {}
     try { buildSportsScores(); } catch (e) {}
   }
   (async () => {

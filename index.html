@@ -66,7 +66,20 @@
         </svg>
         Stock Prices
       </div>
-      <div id="stocks-body"></div>
+      <div class="stock-tickers" aria-label="Stock prices">
+        <tv-single-ticker symbol="NASDAQ:AAPL" theme="dark" transparent-background aria-label="Apple (AAPL) stock price">
+          <span class="stock-name">Apple</span>
+        </tv-single-ticker>
+        <tv-single-ticker symbol="NASDAQ:AMZN" theme="dark" transparent-background aria-label="Amazon (AMZN) stock price">
+          <span class="stock-name">Amazon</span>
+        </tv-single-ticker>
+        <tv-single-ticker symbol="NASDAQ:TSLA" theme="dark" transparent-background aria-label="Tesla (TSLA) stock price">
+          <span class="stock-name">Tesla</span>
+        </tv-single-ticker>
+        <tv-single-ticker symbol="NASDAQ:MSFT" theme="dark" transparent-background aria-label="Microsoft (MSFT) stock price">
+          <span class="stock-name">Microsoft</span>
+        </tv-single-ticker>
+      </div>
     </div>
 
     <div id="sports-scores" class="sports-scores">
@@ -130,5 +143,6 @@
       </a>
     </div>
   </footer>
+  <script type="module" src="https://widgets.tradingview-widget.com/w/en/tv-single-ticker.js"></script>
 </body>
 </html>
