@@ -647,6 +647,55 @@ async function loadBitcoinPrice() {
 }
 loadBitcoinPrice();
 
+// ---------- STOCKS ----------
+let stocksTimer = null;
+function isMarketOpenNY() {
+  const now = new Date();
+  const ny = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+  const minutes = ny.getHours() * 60 + ny.getMinutes();
+  return ny.getDay() >= 1 && ny.getDay() <= 5 && minutes >= 570 && minutes <= 965;
+}
+
+async function loadStocks() {
+  const el = document.getElementById('stocks-body');
+  if (!el) return;
+
+  try {
+    const response = await fetch('/api/stocks', { cache: 'no-store' });
+    const data = await response.json();
+    if (!response.ok || !data || !data.ok || !Array.isArray(data.rows)) throw new Error('Stock API unavailable');
+
+    el.replaceChildren();
+    data.rows.forEach((stock) => {
+      const row = document.createElement('div');
+      const name = document.createElement('span');
+      const price = document.createElement('span');
+      const change = document.createElement('span');
+      row.className = 'stock-row';
+      name.className = 'stock-name';
+      price.className = 'stock-value';
+      change.className = `stock-change ${stock.changePercent >= 0 ? 'up' : 'down'}`;
+      name.textContent = stock.name;
+      price.textContent = Number.isFinite(stock.price)
+        ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(stock.price)
+        : '—';
+      change.textContent = Number.isFinite(stock.changePercent)
+        ? `${stock.changePercent > 0 ? '+' : ''}${stock.changePercent.toFixed(2)}%`
+        : '—';
+      row.append(name, price, change);
+      el.appendChild(row);
+    });
+  } catch (_) {
+    el.innerHTML = '<div class="stock-row"><span class="stock-name">Stock quotes unavailable</span></div>';
+  }
+
+  if (isMarketOpenNY() && !stocksTimer) stocksTimer = setInterval(loadStocks, 5 * 60 * 1000);
+  if (!isMarketOpenNY() && stocksTimer) {
+    clearInterval(stocksTimer);
+    stocksTimer = null;
+  }
+}
+
 // ---------- SPORTS (NY teams only) ----------
 const TEAM_ORDER_PRIORITY = [
   'Mets',
@@ -1382,9 +1431,11 @@ function loadPreviousVideo() {
   try { loadWeather(); } catch (e) {}
   if (isMobile) {
     runWhenIdle(() => { try { loadBitcoinPrice(); } catch (e) {} }, 1200);
+    runWhenIdle(() => { try { loadStocks(); } catch (e) {} }, 1800);
     runWhenIdle(() => { try { buildSportsScores(); } catch (e) {} }, 2400);
   } else {
     try { loadBitcoinPrice(); } catch (e) {}
+    try { loadStocks(); } catch (e) {}
     try { buildSportsScores(); } catch (e) {}
   }
   (async () => {
