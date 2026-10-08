@@ -661,9 +661,16 @@ async function loadStocks() {
   if (!el) return;
 
   try {
-    const response = await fetch('/api/stocks', { cache: 'no-store' });
-    const data = await response.json();
-    if (!response.ok || !data || !data.ok || !Array.isArray(data.rows)) throw new Error('Stock API unavailable');
+    let data;
+    try {
+      const response = await fetch('/api/stocks', { cache: 'no-store' });
+      data = await response.json();
+      if (!response.ok || !data || !data.ok || !Array.isArray(data.rows)) throw new Error('Stock API unavailable');
+    } catch (_) {
+      const response = await fetch(`/stocks.json?ts=${Date.now()}`, { cache: 'no-store' });
+      data = await response.json();
+      if (!response.ok || !data || !data.ok || !Array.isArray(data.rows)) throw new Error('Stock snapshot unavailable');
+    }
 
     el.replaceChildren();
     data.rows.forEach((stock) => {
@@ -685,6 +692,10 @@ async function loadStocks() {
       row.append(name, price, change);
       el.appendChild(row);
     });
+    const updated = document.getElementById('stocks-updated');
+    if (updated && data.updatedAt) {
+      updated.textContent = `Updated ${new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', timeZoneName: 'short' }).format(new Date(data.updatedAt))}`;
+    }
   } catch (_) {
     el.innerHTML = '<div class="stock-row"><span class="stock-name">Stock quotes unavailable</span></div>';
   }

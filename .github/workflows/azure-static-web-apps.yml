@@ -7,6 +7,10 @@ on:
     types: [ opened, synchronize, reopened, closed ]
     branches: [ main ]
 
+concurrency:
+  group: joerod-swa-production
+  cancel-in-progress: false
+
 jobs:
   build_and_deploy_job:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')

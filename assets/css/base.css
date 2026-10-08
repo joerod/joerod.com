@@ -101,6 +101,7 @@ main {
 .stock-name { opacity: 0.95; text-align: left; }
 .stock-value { font-weight: 600; text-align: center; }
 .stock-change { font-size: 0.68rem; opacity: 0.9; text-align: center; }
+.stocks-updated { min-height: 0.85rem; font-size: 0.6rem; opacity: 0.68; text-align: right; }
 .up   { color: #a7f3d0; }
 .down { color: #fecaca; }
 

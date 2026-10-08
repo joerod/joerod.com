@@ -1,0 +1,30 @@
+{
+  "ok": true,
+  "updatedAt": "2026-10-08T19:12:13.972Z",
+  "rows": [
+    {
+      "name": "Apple",
+      "symbol": "AAPL",
+      "price": 341.085,
+      "changePercent": 1.31
+    },
+    {
+      "name": "Amazon",
+      "symbol": "AMZN",
+      "price": 254.67,
+      "changePercent": -2.02
+    },
+    {
+      "name": "Tesla",
+      "symbol": "TSLA",
+      "price": 372.06,
+      "changePercent": -1.52
+    },
+    {
+      "name": "Microsoft",
+      "symbol": "MSFT",
+      "price": 521.17,
+      "changePercent": -1.62
+    }
+  ]
+}
