@@ -82,10 +82,7 @@ module.exports = async function (context, req) {
       const body = readBody(req);
       const stocksKey = body.stocksKey ? String(body.stocksKey).trim() : "";
       const hasVideos = Object.prototype.hasOwnProperty.call(body, "videos");
-      const mergedByCategory = mergeVideosByCategory(normalizeVideos(body.videos));
-      const videos = Object.keys(mergedByCategory).flatMap((category) =>
-        mergedByCategory[category].map((v) => ({ id: v.id, category }))
-      );
+      const videos = normalizeVideos(body.videos);
       const overrides = body.overrides || {};
       const normalizedOverrides = {
         fireworks: normalizeOverride(overrides.fireworks),
@@ -96,7 +93,7 @@ module.exports = async function (context, req) {
         existing.stocks = Object.assign({}, existing.stocks, { fmpKey: stocksKey });
       }
       if (hasVideos) {
-        existing.youtube = Object.assign({}, existing.youtube, { videos });
+        existing.youtube = Object.assign({}, existing.youtube, { videos, replaceDefaults: true });
       }
       existing.overrides = Object.assign({}, existing.overrides, normalizedOverrides);
 
@@ -119,8 +116,11 @@ module.exports = async function (context, req) {
     }
 
     const customVideos = (existing.youtube && existing.youtube.videos) || [];
-    const usingDefaults = !customVideos.length;
-    const mergedByCategory = usingDefaults ? DEFAULT_BY_CATEGORY : mergeVideosByCategory(customVideos);
+    const replaceDefaults = existing.youtube && existing.youtube.replaceDefaults === true;
+    const usingDefaults = !replaceDefaults && !customVideos.length;
+    const mergedByCategory = usingDefaults
+      ? DEFAULT_BY_CATEGORY
+      : mergeVideosByCategory(customVideos, !replaceDefaults);
     const videos = Object.keys(mergedByCategory).flatMap((category) =>
       mergedByCategory[category].map((v) => ({ id: v.id, category }))
     );

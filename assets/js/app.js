@@ -1200,7 +1200,6 @@ var regular_videos = [
   { id: '5UDoSc-fRpg' },
   { id: 'pCTfxOrX4k8' },
   { id: 'Dr0m5bWAgk0' },
-  { id: 'lMDkxFnUTZs' },
   { id: 'voDqfVthTpA' },
   { id: 'y8p1iG-6d-w' },
   { id: '-riX6Xbvb8w' },
@@ -1239,16 +1238,10 @@ var halloween_videos = [
   { id: 'Ht3gFCqpFkE' },
   { id: 'aDm4L7gjYNs' },
   { id: 'gVgsadEybgQ' },
-  { id: 'bSxuXQCEC7' },
-  { id: 'HcrTqof683A' },
-  { id: 'cl3sud_uDhc' },
   { id: 'E16S5BAkzQ8' },
   { id: '3CAQ0iZKP08' },
-  { id: '7bmB4RhsYgQ' },
-  { id: 'IYmiSXEQ7ys' },
   { id: '5tIhwITwhSg' },
   { id: 'Vf-TZzGNQL0' },
-  { id: 'cLsAlBG8Qv4' },
   { id: 'bLiXjaPqSyY' }
 ];
 

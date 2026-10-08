@@ -140,7 +140,8 @@ function normalizeConfig(raw) {
     id: source.id || "config",
     pk: source.pk || "config",
     youtube: {
-      videos: Array.isArray(youtube.videos) ? youtube.videos : []
+      videos: Array.isArray(youtube.videos) ? youtube.videos : [],
+      replaceDefaults: youtube.replaceDefaults === true
     },
     overrides: {
       fireworks: overrides.fireworks || "auto",

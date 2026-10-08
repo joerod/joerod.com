@@ -1,112 +1,80 @@
-const https = require("https");
+const { readSiteConfig } = require("../_config-store");
 
 const SYMBOLS = ["AAPL", "AMZN", "TSLA", "MSFT"];
-const NAME_MAP = {
-  AAPL: "Apple",
-  AMZN: "Amazon",
-  TSLA: "Tesla",
-  MSFT: "Microsoft"
-};
+const NAME_MAP = { AAPL: "Apple", AMZN: "Amazon", TSLA: "Tesla", MSFT: "Microsoft" };
 const ORDER = ["Apple", "Amazon", "Tesla", "Microsoft"];
 
-function fetchText(url) {
-  return new Promise((resolve, reject) => {
-    const req = https.get(url, { headers: { "user-agent": "Mozilla/5.0" } }, (res) => {
-      let body = "";
-      res.on("data", (chunk) => (body += chunk));
-      res.on("end", () => {
-        if (res.statusCode < 200 || res.statusCode >= 300) {
-          reject(new Error(`HTTP ${res.statusCode}`));
-          return;
-        }
-        resolve(body);
-      });
-    });
-    req.setTimeout(8000, () => req.destroy(new Error("timeout")));
-    req.on("error", reject);
+async function fetchJson(url) {
+  const response = await fetch(url, {
+    headers: { "user-agent": "joerod.com stock dashboard" },
+    signal: AbortSignal.timeout(8000)
+  });
+  if (!response.ok) throw new Error(`Provider returned HTTP ${response.status}`);
+  return response.json();
+}
+
+async function fetchFmpRows(apiKey) {
+  const url = `https://financialmodelingprep.com/stable/quote?symbol=${encodeURIComponent(SYMBOLS.join(","))}&apikey=${encodeURIComponent(apiKey)}`;
+  const data = await fetchJson(url);
+  const bySymbol = new Map((Array.isArray(data) ? data : []).map((quote) => [quote.symbol, quote]));
+  return SYMBOLS.flatMap((symbol) => {
+    const quote = bySymbol.get(symbol);
+    const price = Number(quote && quote.price);
+    if (!Number.isFinite(price)) return [];
+    const changePercent = Number(quote.changePercentage);
+    return [{ name: NAME_MAP[symbol], price, changePercent: Number.isFinite(changePercent) ? changePercent : null }];
   });
 }
 
-async function fetchYahooRows() {
-  const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${encodeURIComponent(SYMBOLS.join(","))}`;
-  const text = await fetchText(url);
-  const parsed = JSON.parse(text);
-  const result = (parsed && parsed.quoteResponse && parsed.quoteResponse.result) || [];
-  const bySymbol = new Map(result.map((q) => [q.symbol, q]));
-  const rows = [];
-  for (const symbol of SYMBOLS) {
-    const q = bySymbol.get(symbol);
-    if (!q) continue;
-    const price = Number.isFinite(q.regularMarketPrice) ? q.regularMarketPrice : null;
-    const changePercent = Number.isFinite(q.regularMarketChangePercent) ? q.regularMarketChangePercent : null;
-    rows.push({
-      name: NAME_MAP[symbol],
-      price,
-      changePercent
-    });
-  }
-  return rows;
-}
-
-function parseStooqRow(csv) {
-  const lines = csv.trim().split("\n");
-  if (lines.length < 2) return null;
-  const parts = lines[1].split(",");
-  if (parts.length < 7) return null;
-  const open = parts[4] === "N/D" ? null : parseFloat(parts[4]);
-  const close = parts[6] === "N/D" ? null : parseFloat(parts[6]);
-  const price = Number.isFinite(close) ? close : null;
-  const changePercent = Number.isFinite(open) && open
-    ? ((close - open) / open) * 100
-    : null;
+async function fetchYahooRow(symbol) {
+  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?range=1d&interval=1d`;
+  const data = await fetchJson(url);
+  const result = data && data.chart && data.chart.result && data.chart.result[0];
+  const price = Number(result && result.meta.regularMarketPrice);
+  const previous = Number(result && (result.meta.chartPreviousClose || result.meta.previousClose));
+  if (!Number.isFinite(price)) throw new Error(`No quote for ${symbol}`);
   return {
+    name: NAME_MAP[symbol],
     price,
-    changePercent: Number.isFinite(changePercent) ? changePercent : null
+    changePercent: Number.isFinite(previous) && previous !== 0 ? ((price - previous) / previous) * 100 : null
   };
 }
 
-module.exports = async function (context, req) {
-  const emptyRows = ORDER.map((name) => ({ name, price: null, changePercent: null }));
+module.exports = async function (context) {
   try {
-    // Primary: Yahoo bulk quote endpoint (more reliable than per-symbol CSV scraping).
+    const loaded = await readSiteConfig();
+    const apiKey = loaded && loaded.config && loaded.config.stocks && loaded.config.stocks.fmpKey;
     let rows = [];
-    try {
-      rows = await fetchYahooRows();
-    } catch (e) {
-      context.log("stocks yahoo fallback", e);
+    const failures = [];
+
+    if (apiKey) {
+      try { rows = await fetchFmpRows(apiKey); }
+      catch (error) { failures.push(`FMP: ${error.message}`); }
     }
 
-    // Fallback: Stooq per-symbol if Yahoo failed or returned partial.
     if (rows.length < SYMBOLS.length) {
-      const byName = new Map(rows.map((r) => [r.name, r]));
+      const byName = new Map(rows.map((row) => [row.name, row]));
       for (const symbol of SYMBOLS) {
-        const name = NAME_MAP[symbol];
-        if (byName.has(name)) continue;
-        try {
-          const url = `https://stooq.com/q/l/?s=${encodeURIComponent(symbol)}.US&f=sd2t2ohlc&h&e=csv`;
-          const csv = await fetchText(url);
-          const data = parseStooqRow(csv) || { price: null, changePercent: null };
-          byName.set(name, { name, price: data.price, changePercent: data.changePercent });
-        } catch (e) {
-          byName.set(name, { name, price: null, changePercent: null });
-        }
+        if (byName.has(NAME_MAP[symbol])) continue;
+        try { byName.set(NAME_MAP[symbol], await fetchYahooRow(symbol)); }
+        catch (error) { failures.push(`${symbol}: ${error.message}`); }
       }
       rows = Array.from(byName.values());
     }
 
+    if (rows.length !== SYMBOLS.length) throw new Error(failures.join("; ") || "No quote data returned");
     rows.sort((a, b) => ORDER.indexOf(a.name) - ORDER.indexOf(b.name));
-
     context.res = {
       status: 200,
-      headers: { "content-type": "application/json" },
+      headers: { "content-type": "application/json", "cache-control": "no-store" },
       body: { ok: true, rows }
     };
-  } catch (e) {
-    context.log("stocks error", e);
+  } catch (error) {
+    context.log("stocks error", error);
     context.res = {
-      status: 200,
-      headers: { "content-type": "application/json" },
-      body: { ok: false, error: String(e.message || e), rows: emptyRows }
+      status: 503,
+      headers: { "content-type": "application/json", "cache-control": "no-store" },
+      body: { ok: false, error: String(error.message || error) }
     };
   }
 };

@@ -12,7 +12,10 @@ module.exports = async function (context, req) {
     const loaded = await readSiteConfig();
     const resource = loaded && loaded.config ? loaded.config : DEFAULT_CONFIG;
     const videos = (resource && resource.youtube && resource.youtube.videos) || [];
-    const finalByCategory = mergeVideosByCategory(videos);
+    const finalByCategory = mergeVideosByCategory(
+      videos,
+      !(resource.youtube && resource.youtube.replaceDefaults === true)
+    );
 
     context.res = {
       status: 200,

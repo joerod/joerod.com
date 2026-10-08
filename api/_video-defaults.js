@@ -1,10 +1,8 @@
 const DEFAULT_BY_CATEGORY = {
   halloween: [
     { id: "Ht3gFCqpFkE" }, { id: "aDm4L7gjYNs" }, { id: "gVgsadEybgQ" },
-    { id: "bSxuXQCEC7" }, { id: "HcrTqof683A" }, { id: "cl3sud_uDhc" },
-    { id: "E16S5BAkzQ8" }, { id: "3CAQ0iZKP08" }, { id: "7bmB4RhsYgQ" },
-    { id: "IYmiSXEQ7ys" }, { id: "5tIhwITwhSg" }, { id: "Vf-TZzGNQL0" },
-    { id: "cLsAlBG8Qv4" }, { id: "bLiXjaPqSyY" }
+    { id: "E16S5BAkzQ8" }, { id: "3CAQ0iZKP08" },
+    { id: "5tIhwITwhSg" }, { id: "Vf-TZzGNQL0" }, { id: "bLiXjaPqSyY" }
   ],
   xmas: [
     { id: "rgEP1niScLc" }, { id: "S7OWoc-j8qQ" }, { id: "hZ9q3PtiYu8" },
@@ -33,7 +31,7 @@ const DEFAULT_BY_CATEGORY = {
     { id: "GV01B5kVsC0" }, { id: "rzQAC8kPJxo" },
     { id: "7ujwjqIldwU" }, { id: "5UDoSc-fRpg" },
     { id: "pCTfxOrX4k8" }, { id: "Dr0m5bWAgk0" },
-    { id: "lMDkxFnUTZs" }, { id: "voDqfVthTpA" },
+    { id: "voDqfVthTpA" },
     { id: "y8p1iG-6d-w" }, { id: "-riX6Xbvb8w" },
     { id: "Abr_LU822rQ" }, { id: "9m_12SGXNKw" },
     { id: "JJmqCKtJnxM" }, { id: "NZJrGuC92U8" },
@@ -64,15 +62,15 @@ function flattenDefaultVideos() {
   return out;
 }
 
-function mergeVideosByCategory(videos) {
-  const byCategory = {
+function mergeVideosByCategory(videos, includeDefaults = true) {
+  const byCategory = includeDefaults ? {
     halloween: DEFAULT_BY_CATEGORY.halloween.map((v) => ({ id: v.id })),
     xmas: DEFAULT_BY_CATEGORY.xmas.map((v) => ({ id: v.id })),
     holiday: DEFAULT_BY_CATEGORY.holiday.map((v) => ({ id: v.id })),
     regular: DEFAULT_BY_CATEGORY.regular.map((v) => ({ id: v.id }))
-  };
+  } : { halloween: [], xmas: [], holiday: [], regular: [] };
 
-  const seen = new Set(flattenDefaultVideos().map((v) => `${v.category}:${v.id}`));
+  const seen = new Set(includeDefaults ? flattenDefaultVideos().map((v) => `${v.category}:${v.id}`) : []);
   for (const item of Array.isArray(videos) ? videos : []) {
     if (!item || !item.id) continue;
     const category = Object.prototype.hasOwnProperty.call(byCategory, item.category) ? item.category : "regular";
