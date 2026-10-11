@@ -2,7 +2,9 @@ const DEFAULT_BY_CATEGORY = {
   halloween: [
     { id: "Ht3gFCqpFkE" }, { id: "aDm4L7gjYNs" }, { id: "gVgsadEybgQ" },
     { id: "E16S5BAkzQ8" }, { id: "3CAQ0iZKP08" },
-    { id: "5tIhwITwhSg" }, { id: "Vf-TZzGNQL0" }, { id: "bLiXjaPqSyY" }
+    { id: "5tIhwITwhSg" }, { id: "Vf-TZzGNQL0" }, { id: "bLiXjaPqSyY" },
+    { id: "sMvQS5WAg0U" }, { id: "sOnqjkJTMaA" }, { id: "NSqkvsOv3VA" },
+    { id: "xFCrR3Uw6Mk" }, { id: "gLyamuqjXZ8" }, { id: "ek1ePFp-nBI" }
   ],
   xmas: [
     { id: "rgEP1niScLc" }, { id: "S7OWoc-j8qQ" }, { id: "hZ9q3PtiYu8" },

@@ -1233,7 +1233,13 @@ var halloween_videos = [
   { id: '3CAQ0iZKP08' },
   { id: '5tIhwITwhSg' },
   { id: 'Vf-TZzGNQL0' },
-  { id: 'bLiXjaPqSyY' }
+  { id: 'bLiXjaPqSyY' },
+  { id: 'sMvQS5WAg0U' },
+  { id: 'sOnqjkJTMaA' },
+  { id: 'NSqkvsOv3VA' },
+  { id: 'xFCrR3Uw6Mk' },
+  { id: 'gLyamuqjXZ8' },
+  { id: 'ek1ePFp-nBI' }
 ];
 
 function pickVideoList() {
