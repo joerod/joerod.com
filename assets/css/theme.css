@@ -140,6 +140,29 @@ html.theme-october footer {
   animation: borderShift 18s ease infinite;
 }
 
+.october-ghost {
+  position: fixed;
+  left: -96px;
+  width: 72px;
+  opacity: 0.27;
+  pointer-events: none;
+  z-index: 900;
+  filter: drop-shadow(0 0 14px rgba(255, 255, 255, 0.4));
+  animation: octoberGhostDrift 11s linear forwards;
+}
+
+.october-ghost svg { display: block; width: 100%; }
+
+@keyframes octoberGhostDrift {
+  from { transform: translateX(0) translateY(0); }
+  50% { transform: translateX(calc(50vw + 96px)) translateY(-24px); }
+  to { transform: translateX(calc(100vw + 192px)) translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .october-ghost { display: none; }
+}
+
 /* =========================
    🎄 DECEMBER PLAID THEME
    ========================= */

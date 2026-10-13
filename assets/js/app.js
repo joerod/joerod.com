@@ -6,12 +6,40 @@
 // ---------- THEME & FAVICON ----------
 let featureOverrides = { fireworks: "auto", snow: "auto" };
 
+function scheduleOctoberGhost() {
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (reducedMotion.matches) return;
+
+  function drift() {
+    if (!document.documentElement.classList.contains('theme-october') || reducedMotion.matches) return;
+    if (document.hidden) {
+      window.setTimeout(drift, 30000);
+      return;
+    }
+
+    const ghost = document.createElement('div');
+    ghost.className = 'october-ghost';
+    ghost.setAttribute('aria-hidden', 'true');
+    ghost.style.top = `${18 + Math.random() * 62}%`;
+    ghost.innerHTML = '<svg viewBox="0 0 80 96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="white" d="M40 4C19 4 8 20 8 42v48l12-9 10 9 10-9 10 9 10-9 12 9V42C72 20 61 4 40 4Z"/><ellipse cx="29" cy="43" rx="5" ry="8" fill="#35313b"/><ellipse cx="51" cy="43" rx="5" ry="8" fill="#35313b"/><ellipse cx="40" cy="64" rx="6" ry="9" fill="#35313b"/></svg>';
+    document.body.appendChild(ghost);
+
+    ghost.addEventListener('animationend', () => {
+      ghost.remove();
+      window.setTimeout(drift, 120000 + Math.random() * 120000);
+    }, { once: true });
+  }
+
+  window.setTimeout(drift, 45000 + Math.random() * 45000);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const now = new Date();
 
   // 🎃 October: swap to orange/black theme JR
   if (now.getMonth() === 9) {
     document.documentElement.classList.add('theme-october');
+    scheduleOctoberGhost();
     try {
       const orangeJR =
         "data:image/svg+xml," +
@@ -1238,7 +1266,15 @@ var halloween_videos = [
   { id: 'sOnqjkJTMaA' },
   { id: 'NSqkvsOv3VA' },
   { id: 'gLyamuqjXZ8' },
-  { id: 'ek1ePFp-nBI' }
+  { id: 'ek1ePFp-nBI' },
+  { id: 'wQAljlSmjC8' },
+  { id: 'BU2eYAO31Cc' },
+  { id: 'zaANSeQ3La4' },
+  { id: 'FZQvIJxG9Xs' },
+  { id: 'Gb-jRz7HWqs' },
+  { id: 'MBZ-POVsrlI' },
+  { id: 'vKXGMaD71Ck' },
+  { id: 'FnCdOQsX5kc' }
 ];
 
 function pickVideoList() {
