@@ -17,11 +17,12 @@ function scheduleOctoberGhost() {
       return;
     }
 
-    const ghost = document.createElement('div');
+    const ghost = document.createElement('img');
     ghost.className = 'october-ghost';
+    ghost.src = './assets/october-ghost.svg';
+    ghost.alt = '';
     ghost.setAttribute('aria-hidden', 'true');
     ghost.style.top = `${68 + Math.random() * 12}%`;
-    ghost.innerHTML = '<svg viewBox="0 0 80 96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="white" d="M40 4C19 4 8 20 8 42v48l12-9 10 9 10-9 10 9 10-9 12 9V42C72 20 61 4 40 4Z"/><ellipse cx="29" cy="43" rx="5" ry="8" fill="#35313b"/><ellipse cx="51" cy="43" rx="5" ry="8" fill="#35313b"/><ellipse cx="40" cy="64" rx="6" ry="9" fill="#35313b"/></svg>';
     document.body.appendChild(ghost);
 
     ghost.addEventListener('animationend', () => {
@@ -1275,7 +1276,9 @@ var halloween_videos = [
   { id: 'MBZ-POVsrlI' },
   { id: 'vKXGMaD71Ck' },
   { id: 'FnCdOQsX5kc' },
-  { id: 'JMao8sg4DPA' }
+  { id: 'JMao8sg4DPA' },
+  { id: 'BRA4wAl7Jkc' },
+  { id: 'j9Mg-GRS46Y' }
 ];
 
 function pickVideoList() {
