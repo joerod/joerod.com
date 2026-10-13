@@ -20,17 +20,17 @@ function scheduleOctoberGhost() {
     const ghost = document.createElement('div');
     ghost.className = 'october-ghost';
     ghost.setAttribute('aria-hidden', 'true');
-    ghost.style.top = `${18 + Math.random() * 62}%`;
+    ghost.style.top = `${68 + Math.random() * 12}%`;
     ghost.innerHTML = '<svg viewBox="0 0 80 96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="white" d="M40 4C19 4 8 20 8 42v48l12-9 10 9 10-9 10 9 10-9 12 9V42C72 20 61 4 40 4Z"/><ellipse cx="29" cy="43" rx="5" ry="8" fill="#35313b"/><ellipse cx="51" cy="43" rx="5" ry="8" fill="#35313b"/><ellipse cx="40" cy="64" rx="6" ry="9" fill="#35313b"/></svg>';
     document.body.appendChild(ghost);
 
     ghost.addEventListener('animationend', () => {
       ghost.remove();
-      window.setTimeout(drift, 120000 + Math.random() * 120000);
+      window.setTimeout(drift, 45000 + Math.random() * 30000);
     }, { once: true });
   }
 
-  window.setTimeout(drift, 45000 + Math.random() * 45000);
+  window.setTimeout(drift, 4000 + Math.random() * 2000);
 }
 
 document.addEventListener("DOMContentLoaded", () => {

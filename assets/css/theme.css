@@ -142,21 +142,23 @@ html.theme-october footer {
 
 .october-ghost {
   position: fixed;
-  left: -96px;
-  width: 72px;
-  opacity: 0.27;
+  left: -112px;
+  width: 90px;
+  opacity: 0.48;
   pointer-events: none;
   z-index: 900;
   filter: drop-shadow(0 0 14px rgba(255, 255, 255, 0.4));
-  animation: octoberGhostDrift 11s linear forwards;
+  animation: octoberGhostDrift 14s linear forwards;
 }
 
 .october-ghost svg { display: block; width: 100%; }
 
 @keyframes octoberGhostDrift {
   from { transform: translateX(0) translateY(0); }
-  50% { transform: translateX(calc(50vw + 96px)) translateY(-24px); }
-  to { transform: translateX(calc(100vw + 192px)) translateY(0); }
+  25% { transform: translateX(calc(25vw + 56px)) translateY(-10vh); }
+  50% { transform: translateX(calc(50vw + 112px)) translateY(-27vh); }
+  75% { transform: translateX(calc(75vw + 168px)) translateY(-35vh); }
+  to { transform: translateX(calc(100vw + 224px)) translateY(-55vh); }
 }
 
 @media (prefers-reduced-motion: reduce) {
