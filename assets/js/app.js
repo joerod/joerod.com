@@ -1403,7 +1403,7 @@ function renderVideoById(videoId) {
   const slot = document.querySelector('.video');
   if (slot) {
     slot.innerHTML =
-      `<iframe src="https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1&enablejsapi=1"
+      `<iframe src="https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1&enablejsapi=1&cc_load_policy=0"
                 frameborder="0"
                 loading="lazy"
                 allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
