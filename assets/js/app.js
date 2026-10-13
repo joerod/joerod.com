@@ -47,7 +47,7 @@ function scheduleOctoberGhost() {
     const duration = random(15000, 22000);
     const ghost = document.createElement('img');
     ghost.className = 'october-ghost';
-    ghost.src = './assets/october-ghost.svg?v=3';
+    ghost.src = './assets/october-ghost.svg?v=4';
     ghost.alt = '';
     ghost.setAttribute('aria-hidden', 'true');
     ghost.style.width = `${size}px`;
