@@ -9,29 +9,81 @@ let featureOverrides = { fireworks: "auto", snow: "auto" };
 function scheduleOctoberGhost() {
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   if (reducedMotion.matches) return;
+  const random = (min, max) => min + Math.random() * (max - min);
+  const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+  const curve = (start, control1, control2, end, t) =>
+    (1 - t) ** 3 * start + 3 * (1 - t) ** 2 * t * control1 +
+    3 * (1 - t) * t ** 2 * control2 + t ** 3 * end;
 
-  function drift() {
+  function appear() {
     if (!document.documentElement.classList.contains('theme-october') || reducedMotion.matches) return;
     if (document.hidden) {
-      window.setTimeout(drift, 30000);
+      window.setTimeout(appear, 5000);
       return;
     }
 
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+    const size = clamp(screenWidth * 0.16, 120, 180);
+    const materialize = Math.random() < 0.4;
+    const fromLeft = Math.random() < 0.5;
+    const randomY = () => random(screenHeight * 0.16, screenHeight * 0.72);
+    const start = {
+      x: materialize ? random(screenWidth * 0.06, screenWidth * 0.4) : (fromLeft ? -size : screenWidth + size),
+      y: randomY()
+    };
+    const end = {
+      x: materialize ? random(screenWidth * 0.6, screenWidth * 0.9) : (fromLeft ? screenWidth + size : -size),
+      y: randomY()
+    };
+    const control1 = {
+      x: start.x + (end.x - start.x) * 0.28,
+      y: clamp(start.y + random(-screenHeight * 0.32, screenHeight * 0.18), 0, screenHeight - size)
+    };
+    const control2 = {
+      x: start.x + (end.x - start.x) * 0.72,
+      y: clamp(end.y + random(-screenHeight * 0.18, screenHeight * 0.32), 0, screenHeight - size)
+    };
+    const duration = random(15000, 22000);
     const ghost = document.createElement('img');
     ghost.className = 'october-ghost';
-    ghost.src = './assets/october-ghost.svg';
+    ghost.src = './assets/october-ghost.svg?v=3';
     ghost.alt = '';
     ghost.setAttribute('aria-hidden', 'true');
-    ghost.style.top = `${68 + Math.random() * 12}%`;
+    ghost.style.width = `${size}px`;
     document.body.appendChild(ghost);
 
-    ghost.addEventListener('animationend', () => {
-      ghost.remove();
-      window.setTimeout(drift, 45000 + Math.random() * 30000);
-    }, { once: true });
+    let startedAt;
+    function float(timestamp) {
+      if (reducedMotion.matches || !document.documentElement.classList.contains('theme-october')) {
+        ghost.remove();
+        return;
+      }
+      if (startedAt === undefined) startedAt = timestamp;
+      const progress = Math.min((timestamp - startedAt) / duration, 1);
+      const eased = progress * progress * (3 - 2 * progress);
+      const x = curve(start.x, control1.x, control2.x, end.x, eased);
+      const y = curve(start.y, control1.y, control2.y, end.y, eased) +
+        Math.sin(progress * Math.PI * 6) * 12 * Math.sin(progress * Math.PI);
+      const angle = Math.sin(progress * Math.PI * 5) * 6;
+      const scale = 0.96 + Math.sin(progress * Math.PI * 4) * 0.05;
+      const fade = clamp(Math.min(progress / 0.18, (1 - progress) / 0.22), 0, 1);
+      const shimmer = 0.66 + Math.sin(progress * Math.PI * 8) * 0.08;
+      ghost.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${angle}deg) scale(${scale})`;
+      ghost.style.opacity = (fade * shimmer).toFixed(3);
+
+      if (progress < 1) {
+        window.requestAnimationFrame(float);
+      } else {
+        ghost.remove();
+        window.setTimeout(appear, random(15000, 35000));
+      }
+    }
+
+    window.requestAnimationFrame(float);
   }
 
-  window.setTimeout(drift, 4000 + Math.random() * 2000);
+  window.setTimeout(appear, random(2500, 4500));
 }
 
 document.addEventListener("DOMContentLoaded", () => {
