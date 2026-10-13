@@ -11,9 +11,11 @@ function scheduleOctoberGhost() {
   if (reducedMotion.matches) return;
   const random = (min, max) => min + Math.random() * (max - min);
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
-  const curve = (start, control1, control2, end, t) =>
-    (1 - t) ** 3 * start + 3 * (1 - t) ** 2 * t * control1 +
-    3 * (1 - t) * t ** 2 * control2 + t ** 3 * end;
+  const catmull = (before, start, end, after, t) => 0.5 * (
+    2 * start + (-before + end) * t +
+    (2 * before - 5 * start + 4 * end - after) * t * t +
+    (-before + 3 * start - 3 * end + after) * t * t * t
+  );
 
   function appear() {
     if (!document.documentElement.classList.contains('theme-october') || reducedMotion.matches) return;
@@ -25,26 +27,37 @@ function scheduleOctoberGhost() {
     const screenWidth = window.innerWidth;
     const screenHeight = window.innerHeight;
     const size = clamp(screenWidth * 0.16, 120, 180);
-    const materialize = Math.random() < 0.4;
-    const fromLeft = Math.random() < 0.5;
-    const randomY = () => random(screenHeight * 0.16, screenHeight * 0.72);
+    const apparition = Math.random() < 0.35;
+    const minX = screenWidth * 0.06;
+    const maxX = Math.max(minX, screenWidth - size - minX);
+    const minY = Math.max(85, screenHeight * 0.12);
+    const maxY = Math.max(minY, screenHeight - size - 35);
     const start = {
-      x: materialize ? random(screenWidth * 0.06, screenWidth * 0.4) : (fromLeft ? -size : screenWidth + size),
-      y: randomY()
+      x: random(minX, maxX),
+      y: random(minY, maxY)
     };
-    const end = {
-      x: materialize ? random(screenWidth * 0.6, screenWidth * 0.9) : (fromLeft ? screenWidth + size : -size),
-      y: randomY()
-    };
-    const control1 = {
-      x: start.x + (end.x - start.x) * 0.28,
-      y: clamp(start.y + random(-screenHeight * 0.32, screenHeight * 0.18), 0, screenHeight - size)
-    };
-    const control2 = {
-      x: start.x + (end.x - start.x) * 0.72,
-      y: clamp(end.y + random(-screenHeight * 0.18, screenHeight * 0.32), 0, screenHeight - size)
-    };
-    const duration = random(15000, 22000);
+    const points = [start];
+    if (!apparition) {
+      let horizontal = Math.random() < 0.5 ? -1 : 1;
+      let vertical = Math.random() < 0.5 ? -1 : 1;
+      for (let i = 1; i < 6; i++) {
+        if (i === 3 || i === 5) horizontal *= -1;
+        const previous = points[i - 1];
+        let x = clamp(previous.x + horizontal * random(screenWidth * 0.16, screenWidth * 0.32), minX, maxX);
+        if (Math.abs(x - previous.x) < screenWidth * 0.08) {
+          horizontal *= -1;
+          x = clamp(previous.x + horizontal * screenWidth * 0.2, minX, maxX);
+        }
+        let y = clamp(previous.y + vertical * random(screenHeight * 0.12, screenHeight * 0.24), minY, maxY);
+        if (Math.abs(y - previous.y) < screenHeight * 0.06) {
+          vertical *= -1;
+          y = clamp(previous.y + vertical * screenHeight * 0.16, minY, maxY);
+        }
+        points.push({ x, y });
+        vertical *= -1;
+      }
+    }
+    const duration = apparition ? random(7000, 11000) : random(18000, 26000);
     const ghost = document.createElement('img');
     ghost.className = 'october-ghost';
     ghost.src = './assets/october-ghost.svg?v=4';
@@ -61,13 +74,26 @@ function scheduleOctoberGhost() {
       }
       if (startedAt === undefined) startedAt = timestamp;
       const progress = Math.min((timestamp - startedAt) / duration, 1);
-      const eased = progress * progress * (3 - 2 * progress);
-      const x = curve(start.x, control1.x, control2.x, end.x, eased);
-      const y = curve(start.y, control1.y, control2.y, end.y, eased) +
-        Math.sin(progress * Math.PI * 6) * 12 * Math.sin(progress * Math.PI);
+      let x;
+      let y;
+      if (apparition) {
+        x = start.x + Math.sin(progress * Math.PI * 2) * 18;
+        y = start.y - progress * 20 + Math.sin(progress * Math.PI * 3) * 12;
+      } else {
+        const position = progress * (points.length - 1);
+        const segment = Math.min(points.length - 2, Math.floor(position));
+        const t = position - segment;
+        const before = points[Math.max(0, segment - 1)];
+        const from = points[segment];
+        const to = points[segment + 1];
+        const after = points[Math.min(points.length - 1, segment + 2)];
+        x = catmull(before.x, from.x, to.x, after.x, t);
+        y = catmull(before.y, from.y, to.y, after.y, t) + Math.sin(progress * Math.PI * 8) * 9;
+      }
       const angle = Math.sin(progress * Math.PI * 5) * 6;
       const scale = 0.96 + Math.sin(progress * Math.PI * 4) * 0.05;
-      const fade = clamp(Math.min(progress / 0.18, (1 - progress) / 0.22), 0, 1);
+      const elapsed = timestamp - startedAt;
+      const fade = clamp(Math.min(elapsed / 500, (duration - elapsed) / 500), 0, 1);
       const shimmer = 0.66 + Math.sin(progress * Math.PI * 8) * 0.08;
       ghost.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${angle}deg) scale(${scale})`;
       ghost.style.opacity = (fade * shimmer).toFixed(3);
@@ -76,7 +102,7 @@ function scheduleOctoberGhost() {
         window.requestAnimationFrame(float);
       } else {
         ghost.remove();
-        window.setTimeout(appear, random(15000, 35000));
+        window.setTimeout(appear, random(10000, 25000));
       }
     }
 
