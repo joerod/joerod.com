@@ -8,7 +8,8 @@ const DEFAULT_BY_CATEGORY = {
     { id: "wQAljlSmjC8" }, { id: "BU2eYAO31Cc" }, { id: "zaANSeQ3La4" },
     { id: "FZQvIJxG9Xs" }, { id: "Gb-jRz7HWqs" }, { id: "MBZ-POVsrlI" },
     { id: "vKXGMaD71Ck" }, { id: "FnCdOQsX5kc" }, { id: "JMao8sg4DPA" },
-    { id: "BRA4wAl7Jkc" }, { id: "j9Mg-GRS46Y" }, { id: "HjI1Of2lfhs" }
+    { id: "BRA4wAl7Jkc" }, { id: "j9Mg-GRS46Y" }, { id: "HjI1Of2lfhs" },
+    { id: "OI8SN_Rl518" }
   ],
   xmas: [
     { id: "rgEP1niScLc" }, { id: "S7OWoc-j8qQ" }, { id: "hZ9q3PtiYu8" },
