@@ -11,6 +11,8 @@ function scheduleOctoberGhost() {
   if (reducedMotion.matches) return;
   const random = (min, max) => min + Math.random() * (max - min);
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+  const lerp = (start, end, t) => start + (end - start) * t;
+  let activeGhosts = 0;
   const catmull = (before, start, end, after, t) => 0.5 * (
     2 * start + (-before + end) * t +
     (2 * before - 5 * start + 4 * end - after) * t * t +
@@ -19,15 +21,17 @@ function scheduleOctoberGhost() {
 
   function appear() {
     if (!document.documentElement.classList.contains('theme-october') || reducedMotion.matches) return;
+    window.setTimeout(appear, random(3500, 6500));
     if (document.hidden) {
-      window.setTimeout(appear, 5000);
       return;
     }
 
     const screenWidth = window.innerWidth;
     const screenHeight = window.innerHeight;
-    const size = clamp(screenWidth * 0.16, 120, 180);
-    const apparition = Math.random() < 0.35;
+    if (activeGhosts >= (screenWidth < 700 ? 2 : 3)) return;
+    const size = clamp(screenWidth * 0.16, 120, 180) * random(0.72, 1.08);
+    const apparition = Math.random() < 0.2;
+    const vanishing = !apparition && Math.random() < 0.55;
     const minX = screenWidth * 0.06;
     const maxX = Math.max(minX, screenWidth - size - minX);
     const minY = Math.max(85, screenHeight * 0.12);
@@ -57,7 +61,11 @@ function scheduleOctoberGhost() {
         vertical *= -1;
       }
     }
-    const duration = apparition ? random(7000, 11000) : random(18000, 26000);
+    const duration = apparition ? random(6500, 9500) : random(14000, 20000);
+    const returnOffset = {
+      x: (Math.random() < 0.5 ? -1 : 1) * random(screenWidth * 0.22, screenWidth * 0.42),
+      y: (Math.random() < 0.5 ? -1 : 1) * random(screenHeight * 0.12, screenHeight * 0.3)
+    };
     const ghost = document.createElement('img');
     ghost.className = 'october-ghost';
     ghost.src = './assets/october-ghost.svg?v=4';
@@ -65,11 +73,17 @@ function scheduleOctoberGhost() {
     ghost.setAttribute('aria-hidden', 'true');
     ghost.style.width = `${size}px`;
     document.body.appendChild(ghost);
+    activeGhosts++;
+
+    function removeGhost() {
+      ghost.remove();
+      activeGhosts--;
+    }
 
     let startedAt;
     function float(timestamp) {
       if (reducedMotion.matches || !document.documentElement.classList.contains('theme-october')) {
-        ghost.remove();
+        removeGhost();
         return;
       }
       if (startedAt === undefined) startedAt = timestamp;
@@ -91,25 +105,44 @@ function scheduleOctoberGhost() {
         y = catmull(before.y, from.y, to.y, after.y, t) + Math.sin(progress * Math.PI * 8) * 9;
       }
       const angle = Math.sin(progress * Math.PI * 5) * 6;
-      const scale = 0.96 + Math.sin(progress * Math.PI * 4) * 0.05;
+      let scale = 0.96 + Math.sin(progress * Math.PI * 4) * 0.05;
       const elapsed = timestamp - startedAt;
       const fade = clamp(Math.min(elapsed / 500, (duration - elapsed) / 500), 0, 1);
-      const shimmer = 0.66 + Math.sin(progress * Math.PI * 8) * 0.08;
+      let shimmer = 0.62 + Math.sin(progress * Math.PI * 8) * 0.08;
+      if (vanishing) {
+        if (progress >= 0.38 && progress < 0.46) {
+          const retreat = (progress - 0.38) / 0.08;
+          x += returnOffset.x * 0.2 * retreat;
+          y -= screenHeight * 0.12 * retreat;
+          scale = lerp(scale, 0.08, retreat * retreat);
+          shimmer *= 1 - retreat;
+        } else if (progress >= 0.46 && progress < 0.56) {
+          shimmer = 0;
+          scale = 0.08;
+        } else if (progress >= 0.56) {
+          x = clamp(x + returnOffset.x, minX, maxX);
+          y = clamp(y + returnOffset.y, minY, maxY);
+          if (progress < 0.64) {
+            const returnProgress = (progress - 0.56) / 0.08;
+            scale = lerp(0.08, scale, 1 - Math.pow(1 - returnProgress, 2));
+            shimmer *= returnProgress;
+          }
+        }
+      }
       ghost.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${angle}deg) scale(${scale})`;
       ghost.style.opacity = (fade * shimmer).toFixed(3);
 
       if (progress < 1) {
         window.requestAnimationFrame(float);
       } else {
-        ghost.remove();
-        window.setTimeout(appear, random(10000, 25000));
+        removeGhost();
       }
     }
 
     window.requestAnimationFrame(float);
   }
 
-  window.setTimeout(appear, random(2500, 4500));
+  window.setTimeout(appear, 700);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
