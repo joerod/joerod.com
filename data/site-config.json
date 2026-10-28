@@ -5,7 +5,9 @@
     "videos": [
       { "id": "6OG3ZQKgHbI", "category": "regular" },
       { "id": "sOQKRjP3ZJk", "category": "regular" },
-      { "id": "OI8SN_Rl518", "category": "halloween" }
+      { "id": "OI8SN_Rl518", "category": "halloween" },
+      { "id": "NSqkvsOv3VA", "category": "halloween" },
+      { "id": "ZVuToMilP0A", "category": "halloween" }
     ]
   },
   "overrides": {
