@@ -6,13 +6,13 @@
 // ---------- THEME & FAVICON ----------
 let featureOverrides = { fireworks: "auto", snow: "auto" };
 
-function scheduleSeasonalSprites(themeClass, imageSrc) {
+function scheduleOctoberGhost() {
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   if (reducedMotion.matches) return;
   const random = (min, max) => min + Math.random() * (max - min);
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
   const lerp = (start, end, t) => start + (end - start) * t;
-  let activeSprites = 0;
+  let activeGhosts = 0;
   const catmull = (before, start, end, after, t) => 0.5 * (
     2 * start + (-before + end) * t +
     (2 * before - 5 * start + 4 * end - after) * t * t +
@@ -20,7 +20,7 @@ function scheduleSeasonalSprites(themeClass, imageSrc) {
   );
 
   function appear() {
-    if (!document.documentElement.classList.contains(themeClass) || reducedMotion.matches) return;
+    if (!document.documentElement.classList.contains('theme-october') || reducedMotion.matches) return;
     window.setTimeout(appear, random(3500, 6500));
     if (document.hidden) {
       return;
@@ -28,7 +28,7 @@ function scheduleSeasonalSprites(themeClass, imageSrc) {
 
     const screenWidth = window.innerWidth;
     const screenHeight = window.innerHeight;
-    if (activeSprites >= (screenWidth < 700 ? 2 : 3)) return;
+    if (activeGhosts >= (screenWidth < 700 ? 2 : 3)) return;
     const size = clamp(screenWidth * 0.16, 120, 180) * random(0.72, 1.08);
     const apparition = Math.random() < 0.2;
     const vanishing = !apparition && Math.random() < 0.55;
@@ -66,24 +66,24 @@ function scheduleSeasonalSprites(themeClass, imageSrc) {
       x: (Math.random() < 0.5 ? -1 : 1) * random(screenWidth * 0.22, screenWidth * 0.42),
       y: (Math.random() < 0.5 ? -1 : 1) * random(screenHeight * 0.12, screenHeight * 0.3)
     };
-    const sprite = document.createElement('img');
-    sprite.className = 'seasonal-sprite';
-    sprite.src = imageSrc;
-    sprite.alt = '';
-    sprite.setAttribute('aria-hidden', 'true');
-    sprite.style.width = `${size}px`;
-    document.body.appendChild(sprite);
-    activeSprites++;
+    const ghost = document.createElement('img');
+    ghost.className = 'october-ghost';
+    ghost.src = './assets/october-ghost.svg?v=4';
+    ghost.alt = '';
+    ghost.setAttribute('aria-hidden', 'true');
+    ghost.style.width = `${size}px`;
+    document.body.appendChild(ghost);
+    activeGhosts++;
 
-    function removeSprite() {
-      sprite.remove();
-      activeSprites--;
+    function removeGhost() {
+      ghost.remove();
+      activeGhosts--;
     }
 
     let startedAt;
     function float(timestamp) {
-      if (reducedMotion.matches || !document.documentElement.classList.contains(themeClass)) {
-        removeSprite();
+      if (reducedMotion.matches || !document.documentElement.classList.contains('theme-october')) {
+        removeGhost();
         return;
       }
       if (startedAt === undefined) startedAt = timestamp;
@@ -108,7 +108,7 @@ function scheduleSeasonalSprites(themeClass, imageSrc) {
       let scale = 0.96 + Math.sin(progress * Math.PI * 4) * 0.05;
       const elapsed = timestamp - startedAt;
       const fade = clamp(Math.min(elapsed / 500, (duration - elapsed) / 500), 0, 1);
-      let shimmer = themeClass === 'theme-october' ? 0.62 + Math.sin(progress * Math.PI * 8) * 0.08 : 0.95;
+      let shimmer = 0.62 + Math.sin(progress * Math.PI * 8) * 0.08;
       if (vanishing) {
         if (progress >= 0.38 && progress < 0.46) {
           const retreat = (progress - 0.38) / 0.08;
@@ -129,13 +129,13 @@ function scheduleSeasonalSprites(themeClass, imageSrc) {
           }
         }
       }
-      sprite.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${angle}deg) scale(${scale})`;
-      sprite.style.opacity = (fade * shimmer).toFixed(3);
+      ghost.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${angle}deg) scale(${scale})`;
+      ghost.style.opacity = (fade * shimmer).toFixed(3);
 
       if (progress < 1) {
         window.requestAnimationFrame(float);
       } else {
-        removeSprite();
+        removeGhost();
       }
     }
 
@@ -151,7 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // 🎃 October: swap to orange/black theme JR
   if (now.getMonth() === 9) {
     document.documentElement.classList.add('theme-october');
-    scheduleSeasonalSprites('theme-october', './assets/october-ghost.svg?v=4');
+    scheduleOctoberGhost();
     try {
       const orangeJR =
         "data:image/svg+xml," +
@@ -176,10 +176,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (now.getMonth() === 10) {
     document.documentElement.classList.add('theme-thanksgiving');
-    const turkeyImage = './assets/november-turkey.png';
-    scheduleSeasonalSprites('theme-thanksgiving', turkeyImage);
+    // Cutout adapted from the lead turkey photograph at https://a-z-animals.com/animals/turkey/.
+    const turkeyImage = './assets/strutting-turkey.webp';
+    const crossing = document.createElement('div');
+    crossing.className = 'turkey-crossing';
+    crossing.setAttribute('aria-hidden', 'true');
+    for (let i = 0; i < 2; i++) {
+      const turkey = document.createElement('img');
+      turkey.src = turkeyImage;
+      turkey.alt = '';
+      crossing.appendChild(turkey);
+    }
+    document.body.appendChild(crossing);
     const icon = document.querySelector('link[rel="icon"]');
-    icon.type = 'image/png';
+    icon.type = 'image/webp';
     icon.href = turkeyImage;
   }
 

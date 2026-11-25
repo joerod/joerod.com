@@ -140,7 +140,7 @@ html.theme-october footer {
   animation: borderShift 18s ease infinite;
 }
 
-.seasonal-sprite {
+.october-ghost {
   position: fixed;
   top: 0;
   left: 0;
@@ -197,12 +197,42 @@ html.theme-thanksgiving .video-container {
   box-shadow: 0 15px 40px rgba(49, 15, 17, 0.45);
 }
 html.theme-thanksgiving .video-controls a { color: var(--harvest-cream); }
-html.theme-thanksgiving .seasonal-sprite {
-  filter: drop-shadow(0 3px 6px rgba(50, 18, 16, 0.55)) drop-shadow(0 0 1px #ffdfa8);
+.turkey-crossing {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 900;
+}
+.turkey-crossing img {
+  position: absolute;
+  left: 0;
+  bottom: 2vh;
+  width: clamp(88px, 12vw, 170px);
+  transform-origin: center bottom;
+  filter: drop-shadow(0 2px 3px rgba(40, 16, 10, 0.5));
+  animation: turkeyCross 18s linear -2s infinite both,
+             turkeyStep 0.48s ease-in-out infinite alternate;
+}
+.turkey-crossing img:nth-child(2) {
+  bottom: 9vh;
+  width: clamp(72px, 9vw, 130px);
+  scale: -1 1;
+  animation-direction: reverse, alternate-reverse;
+  animation-delay: 7s, 0s;
+}
+@keyframes turkeyCross {
+  0% { translate: calc(-100% - 12px) 0; }
+  88%, 100% { translate: calc(100vw + 12px) 0; }
+}
+@keyframes turkeyStep {
+  0% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-4px) rotate(0); }
+  100% { transform: translateY(0) rotate(2deg); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .seasonal-sprite { display: none; }
+  .october-ghost, .turkey-crossing { display: none; }
   html.theme-thanksgiving body,
   html.theme-thanksgiving .site-title { animation: none; }
 }
