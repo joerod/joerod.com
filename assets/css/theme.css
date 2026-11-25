@@ -140,7 +140,7 @@ html.theme-october footer {
   animation: borderShift 18s ease infinite;
 }
 
-.october-ghost {
+.seasonal-sprite {
   position: fixed;
   top: 0;
   left: 0;
@@ -151,8 +151,60 @@ html.theme-october footer {
   will-change: transform, opacity;
 }
 
+/* Thanksgiving follows the October theme's gradient, glass panels, and floating artwork. */
+html.theme-thanksgiving {
+  --harvest-gold: #ffce7d;
+  --harvest-cream: #fff2db;
+  --harvest-border: rgba(255, 195, 115, 0.58);
+  --text-color: var(--harvest-cream);
+}
+
+html.theme-thanksgiving body {
+  background: linear-gradient(-45deg, #351420, #65263a, #93421e, #75451c);
+  background-size: 400% 400%;
+  animation: octoberShift 18s ease infinite;
+}
+
+html.theme-thanksgiving .fixed-header,
+html.theme-thanksgiving footer {
+  background: rgba(53, 20, 32, 0.78);
+  border-color: var(--harvest-border);
+}
+html.theme-thanksgiving footer { border-top: 1px solid var(--harvest-border); }
+
+html.theme-thanksgiving .site-title {
+  color: var(--harvest-gold);
+  text-shadow: 0 2px 16px rgba(255, 172, 79, 0.28);
+  animation: harvestTitle 12s ease-in-out infinite;
+}
+@keyframes harvestTitle {
+  0%, 100% { color: var(--harvest-gold); }
+  50% { color: var(--harvest-cream); }
+}
+
+html.theme-thanksgiving .weather-widget,
+html.theme-thanksgiving .social-link {
+  background: rgba(65, 28, 25, 0.7);
+  border-color: var(--harvest-border);
+}
+html.theme-thanksgiving .social-link:hover { background: #743820; }
+html.theme-thanksgiving .crypto-price,
+html.theme-thanksgiving .stocks,
+html.theme-thanksgiving .sports-scores { border-color: var(--harvest-border); }
+
+html.theme-thanksgiving .video-container {
+  border: 1px solid var(--harvest-border);
+  box-shadow: 0 15px 40px rgba(49, 15, 17, 0.45);
+}
+html.theme-thanksgiving .video-controls a { color: var(--harvest-cream); }
+html.theme-thanksgiving .seasonal-sprite {
+  filter: drop-shadow(0 3px 6px rgba(50, 18, 16, 0.55)) drop-shadow(0 0 1px #ffdfa8);
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .october-ghost { display: none; }
+  .seasonal-sprite { display: none; }
+  html.theme-thanksgiving body,
+  html.theme-thanksgiving .site-title { animation: none; }
 }
 
 /* =========================
