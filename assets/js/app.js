@@ -145,6 +145,10 @@ function scheduleOctoberGhost() {
   window.setTimeout(appear, 700);
 }
 
+function isThanksgivingVideoSeason(date) {
+  return date.getMonth() === 10 && date.getDate() >= 17;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const now = new Date();
 
@@ -174,7 +178,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.documentElement.classList.remove('theme-october');
   }
 
-  if (now.getMonth() === 10) {
+  if (isThanksgivingVideoSeason(now)) {
     document.documentElement.classList.add('theme-thanksgiving');
     // Cutout adapted from the lead turkey photograph at https://a-z-animals.com/animals/turkey/.
     const turkeyImage = './assets/strutting-turkey.webp';
@@ -1415,10 +1419,12 @@ var halloween_videos = [
 ];
 
 function pickVideoList() {
+  const now = new Date();
+  const m = now.getMonth();
+  const d = now.getDate();
+  if (isThanksgivingVideoSeason(now)) return [{ id: 'AORGKS6y_qI' }];
+
   if (custom_by_category) {
-    const now = new Date();
-    const m = now.getMonth();
-    const d = now.getDate();
     if (m === 9 && custom_by_category.halloween && custom_by_category.halloween.length) return custom_by_category.halloween;
     if (m === 11 && d <= 25 && custom_by_category.xmas && custom_by_category.xmas.length) {
       if (d === 25) return [{ id: 'iaQBQp5tgcw' }];
@@ -1436,10 +1442,6 @@ function pickVideoList() {
     }
     if (custom_by_category.regular && custom_by_category.regular.length) return custom_by_category.regular;
   }
-  const now = new Date();
-  const m = now.getMonth(); // 0=Jan, 9=Oct, 10=Nov, 11=Dec
-  const d = now.getDate();
-
   // October default list
   if (m === 9) return halloween_videos;
 
@@ -1458,11 +1460,6 @@ function pickVideoList() {
     (m === 10 && d === 11)
   ) {
     return american_holiday_videos;
-  }
-
-  // Late November special mode (Nov 17–30)
-  if (m === 10 && d >= 17 && d <= 30) {
-    return [{ id: 'AORGKS6y_qI' }];
   }
 
   // Jan 1 reset vibes
